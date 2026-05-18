@@ -1,18 +1,19 @@
-# Personal Portfolio Draft
+# Le Ngoc Gia Huy Portfolio
 
-This repository hosts a lightweight static portfolio draft in English on GitHub Pages.
-
-## Files
-
-- `index.html` contains the full portfolio page, responsive styling, inline SVG visuals, and small interactions.
-- `.nojekyll` keeps GitHub Pages from applying Jekyll processing.
-
-## Edit Later
-
-Replace the placeholder name, role, location, email, social links, project titles, and project descriptions in `index.html`. When you provide real personal details and project images, the page can be updated into a finished portfolio.
+This repository hosts a lightweight static personal portfolio on GitHub Pages.
 
 ## Live Site
 
-After GitHub Pages finishes deploying, the site should be available at:
-
 https://breslee1707.github.io/
+
+## Profile Focus
+
+- AI Engineering
+- Retrieval-Augmented Generation (RAG) and LLM applications
+- Robotic vision and inspection systems
+- Reinforcement learning for autonomous robots
+- AIoT and health monitoring prototypes
+
+## Notes
+
+The portfolio content was drafted from the public-safe highlights in the CV. Sensitive personal details such as phone number, home address, and date of birth are intentionally not published here.
