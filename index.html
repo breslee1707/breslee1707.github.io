@@ -3,30 +3,415 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Your Name | Portfolio</title>
-  <meta name="description" content="A personal portfolio draft for a thoughtful digital maker.">
+  <title>Le Ngoc Gia Huy | AI Engineer Portfolio</title>
+  <meta name="description" content="AI Engineer portfolio for Le Ngoc Gia Huy, focused on RAG systems, robotic vision, reinforcement learning, and AIoT prototypes.">
   <style>
-    :root{color-scheme:light;--bg:#f7f8f5;--surface:#fff;--soft:#eef5f1;--text:#17201b;--muted:#66716b;--line:#d9dfd8;--accent:#0f766e;--accent2:#f97316;--blue:#2563eb;--shadow:0 24px 70px rgba(23,32,27,.11);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}html[data-theme=dark]{color-scheme:dark;--bg:#101512;--surface:#17201b;--soft:#1d2b25;--text:#f3f7f2;--muted:#a8b3ad;--line:#2f3f37;--accent:#2dd4bf;--accent2:#fb923c;--blue:#60a5fa;--shadow:0 24px 70px rgba(0,0,0,.28)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-size:16px;line-height:1.6}a{color:inherit;text-decoration:none}button{font:inherit}.wrap{width:min(100% - 40px,1120px);margin:auto}.header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg),transparent 8%);backdrop-filter:blur(18px)}.nav{min-height:74px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:24px}.brand{display:flex;align-items:center;gap:10px;font-weight:800}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:8px;background:var(--text);color:var(--bg);font-size:.82rem}.links{display:flex;justify-content:center;gap:8px}.links a,.theme{min-height:40px;padding:9px 13px;border-radius:8px;color:var(--muted);font-weight:750}.links a:hover,.theme:hover{background:var(--soft);color:var(--text)}.theme{border:1px solid var(--line);background:var(--surface);cursor:pointer}.hero{padding:46px 0 20px}.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.7fr);gap:56px;align-items:center}.eyebrow{margin:0 0 14px;color:var(--accent);font-size:.78rem;font-weight:850;text-transform:uppercase}h1,h2,h3{margin:0;line-height:1.08}h1{max-width:780px;font-size:3.45rem}h2{max-width:720px;font-size:2.5rem}h3{font-size:1.22rem}.lede{max-width:680px;margin:24px 0 0;color:var(--muted);font-size:1.1rem}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}.button{display:inline-flex;min-height:48px;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;padding:12px 18px;font-weight:750}.primary{border-color:var(--accent);background:var(--accent);color:#fff}.secondary{background:var(--surface)}.signals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:720px;margin:42px 0 0}.signals div{border-top:1px solid var(--line);padding-top:14px}.signals dt{color:var(--muted);font-size:.82rem}.signals dd{margin:0;font-weight:800}.portrait-shell{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(135deg,#eaf5f0,#f8efe6)}.portrait-shell svg{display:block;width:100%;height:auto}.note{position:absolute;right:22px;top:22px;width:min(72%,260px);border:1px solid var(--line);border-radius:8px;padding:16px;background:color-mix(in srgb,var(--surface),transparent 8%);box-shadow:0 18px 45px rgba(0,0,0,.14);backdrop-filter:blur(16px)}.note span{display:block;margin-bottom:8px;color:var(--accent2);font-size:.76rem;font-weight:850;text-transform:uppercase}.strip{border-block:1px solid var(--line);background:var(--surface)}.strip-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px}.strip p{min-height:132px;margin:0;padding:26px 24px;color:var(--muted);background:var(--surface)}.strip p:first-child{color:var(--text);font-weight:760}.section{padding:92px 0}.alt{background:var(--soft)}.section-head{margin-bottom:34px}.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.42fr);gap:44px;align-items:end}.section-head p,.about p,.contact p{margin:0;color:var(--muted)}.projects,.caps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card,.cap{overflow:hidden;border:1px solid var(--line);border-radius:8px;background:var(--surface)}.media{background:var(--soft)}.media svg{display:block;width:100%;height:auto}.body{padding:22px}.type{margin:0 0 10px;color:var(--accent2);font-size:.79rem;font-weight:820;text-transform:uppercase}.body p:not(.type),.cap p,.timeline p{margin:12px 0 0;color:var(--muted)}.tags{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;list-style:none}.tags li,.stack span{border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.84rem;font-weight:720}.cap{min-height:250px;padding:24px}.idx{display:inline-block;margin-bottom:50px;color:var(--blue);font-weight:850}.stack{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.timeline{border-top:1px solid var(--line)}.time-item{display:grid;grid-template-columns:220px minmax(0,1fr);gap:32px;border-bottom:1px solid var(--line);padding:28px 0}.date{color:var(--accent);font-weight:820}.about-grid,.contact-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(280px,.6fr);gap:60px}.about-copy{display:grid;gap:18px}.contact{padding:86px 0;background:var(--text);color:var(--bg)}.contact .eyebrow{color:var(--accent2)}.contact p{color:color-mix(in srgb,var(--bg),transparent 25%)}.contact .secondary{background:transparent;color:var(--bg)}.social{display:flex;flex-basis:100%;flex-wrap:wrap;gap:12px;margin-top:10px}.social a,.footer a{text-decoration:underline;text-underline-offset:5px;font-weight:780}.footer{padding:28px 0;background:var(--text);color:color-mix(in srgb,var(--bg),transparent 18%)}.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}.footer p{margin:0}@media(max-width:920px){.hero-grid,.split,.about-grid,.contact-grid,.projects,.caps,.strip-grid{grid-template-columns:1fr}.links{display:none}.nav{grid-template-columns:auto auto}}@media(max-width:640px){.wrap{width:min(100% - 28px,1120px)}h1{font-size:2.45rem}h2{font-size:1.95rem}.signals,.time-item{grid-template-columns:1fr}.note{position:static;width:100%;margin-top:12px}.section{padding:68px 0}.footer-inner{align-items:flex-start;flex-direction:column}}
+    :root {
+      color-scheme: light;
+      --bg: #f7f8f5;
+      --surface: #ffffff;
+      --soft: #eef5f1;
+      --text: #17201b;
+      --muted: #64716a;
+      --line: #d8dfd8;
+      --accent: #0f766e;
+      --accent-strong: #0b5f58;
+      --orange: #f97316;
+      --blue: #2563eb;
+      --shadow: 0 24px 70px rgba(23, 32, 27, .11);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101512;
+      --surface: #17201b;
+      --soft: #1d2b25;
+      --text: #f3f7f2;
+      --muted: #a8b3ad;
+      --line: #2f3f37;
+      --accent: #2dd4bf;
+      --accent-strong: #5eead4;
+      --orange: #fb923c;
+      --blue: #60a5fa;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .wrap { width: min(100% - 40px, 1120px); margin: auto; }
+
+    .header { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg), transparent 8%); backdrop-filter: blur(18px); }
+    .nav { min-height: 74px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 850; }
+    .mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 8px; background: var(--text); color: var(--bg); font-size: .78rem; }
+    .links { display: flex; justify-content: center; gap: 8px; }
+    .links a, .theme { min-height: 40px; padding: 9px 13px; border-radius: 8px; color: var(--muted); font-weight: 750; }
+    .links a:hover, .theme:hover { background: var(--soft); color: var(--text); }
+    .theme { border: 1px solid var(--line); background: var(--surface); cursor: pointer; }
+
+    .hero { padding: 48px 0 22px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .7fr); gap: 56px; align-items: center; }
+    .eyebrow { margin: 0 0 14px; color: var(--accent); font-size: .78rem; font-weight: 850; text-transform: uppercase; }
+    h1, h2, h3 { margin: 0; line-height: 1.08; }
+    h1 { max-width: 780px; font-size: 3.35rem; }
+    h2 { max-width: 760px; font-size: 2.45rem; }
+    h3 { font-size: 1.2rem; }
+    .lede { max-width: 700px; margin: 24px 0 0; color: var(--muted); font-size: 1.1rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 8px; padding: 12px 18px; font-weight: 780; }
+    .primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .primary:hover { background: var(--accent-strong); }
+    .secondary { background: var(--surface); }
+
+    .signals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; max-width: 720px; margin: 42px 0 0; }
+    .signals div { border-top: 1px solid var(--line); padding-top: 14px; }
+    .signals dt { color: var(--muted); font-size: .82rem; }
+    .signals dd { margin: 0; font-weight: 850; }
+
+    .portrait-shell { position: relative; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); background: linear-gradient(135deg, #eaf5f0, #f8efe6); }
+    .portrait-shell svg { display: block; width: 100%; height: auto; }
+    .note { position: absolute; right: 22px; top: 22px; width: min(72%, 270px); border: 1px solid var(--line); border-radius: 8px; padding: 16px; background: color-mix(in srgb, var(--surface), transparent 8%); box-shadow: 0 18px 45px rgba(0, 0, 0, .14); backdrop-filter: blur(16px); }
+    .note span { display: block; margin-bottom: 8px; color: var(--orange); font-size: .76rem; font-weight: 850; text-transform: uppercase; }
+
+    .strip { border-block: 1px solid var(--line); background: var(--surface); }
+    .strip-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; }
+    .strip p { min-height: 132px; margin: 0; padding: 26px 24px; color: var(--muted); background: var(--surface); }
+    .strip p:first-child { color: var(--text); font-weight: 780; }
+
+    .section { padding: 92px 0; }
+    .alt { background: var(--soft); }
+    .section-head { margin-bottom: 34px; }
+    .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .42fr); gap: 44px; align-items: end; }
+    .section-head p, .about p, .contact p { margin: 0; color: var(--muted); }
+
+    .projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .card, .cap { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .media { background: var(--soft); }
+    .media svg { display: block; width: 100%; height: auto; }
+    .body { padding: 22px; }
+    .type { margin: 0 0 10px; color: var(--orange); font-size: .79rem; font-weight: 850; text-transform: uppercase; }
+    .body p:not(.type), .cap p, .timeline p { margin: 12px 0 0; color: var(--muted); }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+    .tags li, .stack span { border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; color: var(--muted); font-size: .84rem; font-weight: 720; }
+
+    .caps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .cap { min-height: 250px; padding: 24px; }
+    .idx { display: inline-block; margin-bottom: 50px; color: var(--blue); font-weight: 850; }
+    .stack { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+
+    .timeline { border-top: 1px solid var(--line); }
+    .time-item { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; border-bottom: 1px solid var(--line); padding: 28px 0; }
+    .date { color: var(--accent); font-weight: 850; }
+    .about-grid, .contact-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(280px, .6fr); gap: 60px; }
+    .about-copy { display: grid; gap: 18px; }
+
+    .contact { padding: 86px 0; background: var(--text); color: var(--bg); }
+    .contact .eyebrow { color: var(--orange); }
+    .contact p { color: color-mix(in srgb, var(--bg), transparent 25%); }
+    .contact .secondary { background: transparent; color: var(--bg); }
+    .social { display: flex; flex-basis: 100%; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+    .social a, .footer a { text-decoration: underline; text-underline-offset: 5px; font-weight: 780; }
+    .footer { padding: 28px 0; background: var(--text); color: color-mix(in srgb, var(--bg), transparent 18%); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .footer p { margin: 0; }
+
+    @media (max-width: 920px) {
+      .hero-grid, .split, .about-grid, .contact-grid, .projects, .caps, .strip-grid { grid-template-columns: 1fr; }
+      .links { display: none; }
+      .nav { grid-template-columns: auto auto; justify-content: space-between; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 28px, 1120px); }
+      h1 { font-size: 2.35rem; }
+      h2 { font-size: 1.9rem; }
+      .signals, .time-item { grid-template-columns: 1fr; }
+      .note { position: static; width: 100%; margin-top: 12px; }
+      .section { padding: 68px 0; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
   </style>
 </head>
 <body>
-  <header class="header"><nav class="nav wrap"><a class="brand" href="#top"><span class="mark">YN</span><span>Your Name</span></a><div class="links"><a href="#work">Work</a><a href="#capabilities">Capabilities</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#contact">Contact</a></div><button class="theme" type="button" data-theme-toggle>Dark</button></nav></header>
+  <header class="header">
+    <nav class="nav wrap">
+      <a class="brand" href="#top"><span class="mark">LGH</span><span>Le Ngoc Gia Huy</span></a>
+      <div class="links">
+        <a href="#work">Work</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#experience">Experience</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <button class="theme" type="button" data-theme-toggle>Dark</button>
+    </nav>
+  </header>
+
   <main>
-    <section class="hero" id="top"><div class="wrap hero-grid"><div><p class="eyebrow">Available for selected projects</p><h1>Building digital products with calm craft and clear thinking.</h1><p class="lede">I am a multidisciplinary maker focused on useful interfaces, resilient systems, and elegant user experiences. This draft is ready for your real story, projects, and visuals.</p><div class="actions"><a class="button primary" href="#work">View Work</a><a class="button secondary" href="#contact">Get In Touch</a></div><dl class="signals"><div><dt>Focus</dt><dd>Product Design</dd></div><div><dt>Based In</dt><dd>Your City</dd></div><div><dt>Status</dt><dd>Open to Work</dd></div></dl></div><div><div class="portrait-shell"><svg viewBox="0 0 900 1120" role="img" aria-label="Abstract portrait placeholder"><rect width="900" height="1120" fill="#eaf5f0"/><rect x="105" y="120" width="690" height="880" rx="34" fill="#fff"/><circle cx="450" cy="500" r="285" fill="#d7f4ee"/><circle cx="450" cy="500" r="205" fill="#0f766e"/><rect x="318" y="690" width="264" height="118" rx="26" fill="#f97316"/><text x="450" y="535" text-anchor="middle" font-family="Segoe UI,Arial" font-size="148" font-weight="800" fill="#fff">YN</text><line x1="190" y1="880" x2="710" y2="880" stroke="#bfc9c3" stroke-width="2"/><text x="450" y="960" text-anchor="middle" font-family="Segoe UI,Arial" font-size="62" font-weight="800" fill="#17201b">YOUR NAME</text><text x="450" y="1018" text-anchor="middle" font-family="Segoe UI,Arial" font-size="24" fill="#66716b">PORTFOLIO DRAFT</text></svg><div class="note"><span>Current lane</span><strong>Designing clear systems for ambitious teams.</strong></div></div></div></div></section>
-    <section class="strip"><div class="wrap strip-grid"><p>Portfolio draft for a maker who can move from strategy to shipped details.</p><p>Replace this copy with your positioning, client wins, and strongest proof points.</p><p>Built as a lightweight static site that can be hosted for free.</p></div></section>
-    <section class="section" id="work"><div class="wrap section-head"><p class="eyebrow">Selected work</p><h2>Projects that show the shape of the practice.</h2></div><div class="wrap projects">
-      <article class="card"><div class="media"><svg viewBox="0 0 1400 900"><rect width="1400" height="900" fill="#f7f8f5"/><rect x="70" y="70" width="1260" height="760" rx="24" fill="#17201b"/><rect x="120" y="130" width="1160" height="650" rx="18" fill="#fff"/><rect x="155" y="170" width="220" height="60" rx="12" fill="#0f766e"/><rect x="410" y="170" width="250" height="60" rx="12" fill="#e6edff"/><rect x="695" y="170" width="250" height="60" rx="12" fill="#fff0df"/><rect x="980" y="170" width="250" height="60" rx="12" fill="#d7f4ee"/><rect x="165" y="460" width="86" height="150" rx="12" fill="#2563eb"/><rect x="335" y="390" width="86" height="220" rx="12" fill="#2563eb"/><rect x="505" y="320" width="86" height="290" rx="12" fill="#2563eb"/><rect x="790" y="305" width="410" height="230" rx="18" fill="#d7f4ee"/><circle cx="895" cy="415" r="65" fill="#f97316"/></svg></div><div class="body"><p class="type">Product strategy / Interface design</p><h3>Project Alpha</h3><p>A focused product experience for turning scattered operations into a calmer, measurable workflow.</p><ul class="tags"><li>UX</li><li>Design Systems</li><li>Frontend</li></ul></div></article>
-      <article class="card"><div class="media"><svg viewBox="0 0 1400 900"><rect width="1400" height="900" fill="#eef5f1"/><rect x="130" y="100" width="1140" height="700" rx="26" fill="#fff"/><rect x="250" y="150" width="220" height="530" rx="34" fill="#17201b"/><rect x="540" y="150" width="220" height="530" rx="34" fill="#17201b"/><rect x="830" y="150" width="220" height="530" rx="34" fill="#17201b"/><rect x="292" y="230" width="136" height="132" rx="66" fill="#0f766e"/><rect x="582" y="230" width="136" height="132" rx="66" fill="#0f766e"/><rect x="872" y="230" width="136" height="132" rx="66" fill="#0f766e"/><text x="700" y="760" text-anchor="middle" font-family="Segoe UI,Arial" font-size="62" font-weight="800" fill="#17201b">Mobile Flow</text></svg></div><div class="body"><p class="type">Mobile experience / Prototyping</p><h3>Project Beacon</h3><p>A mobile-first concept that makes daily decisions faster with a crisp information hierarchy.</p><ul class="tags"><li>Research</li><li>Prototype</li><li>Testing</li></ul></div></article>
-      <article class="card"><div class="media"><svg viewBox="0 0 1400 900"><rect width="1400" height="900" fill="#fbf7ef"/><rect x="95" y="95" width="1210" height="710" rx="24" fill="#fff"/><rect x="155" y="155" width="420" height="250" rx="18" fill="#17201b"/><text x="365" y="330" text-anchor="middle" font-family="Segoe UI,Arial" font-size="148" font-weight="800" fill="#fff">N</text><rect x="640" y="155" width="250" height="110" rx="18" fill="#0f766e"/><rect x="930" y="155" width="250" height="110" rx="18" fill="#f97316"/><rect x="640" y="300" width="250" height="110" rx="18" fill="#2563eb"/><rect x="930" y="300" width="250" height="110" rx="18" fill="#d7f4ee"/><text x="165" y="735" font-family="Segoe UI,Arial" font-size="62" font-weight="800" fill="#17201b">Brand System</text></svg></div><div class="body"><p class="type">Brand system / Web build</p><h3>Project Northstar</h3><p>A flexible web presence with reusable content blocks, strong visual rhythm, and a clear conversion path.</p><ul class="tags"><li>Brand</li><li>Web</li><li>Content</li></ul></div></article>
-    </div></section>
-    <section class="section alt" id="capabilities"><div class="wrap section-head split"><div><p class="eyebrow">Capabilities</p><h2>Useful across the messy middle of building.</h2></div><p>This section can become your skills, tool stack, services, or a tighter profile of how you work.</p></div><div class="wrap caps"><article class="cap"><span class="idx">01</span><h3>Product Thinking</h3><p>Translate ambiguous needs into priorities, flows, and decisions a team can act on.</p></article><article class="cap"><span class="idx">02</span><h3>Interface Craft</h3><p>Design responsive screens, reusable components, and visual systems that feel considered.</p></article><article class="cap"><span class="idx">03</span><h3>Frontend Build</h3><p>Turn concepts into accessible, performant web experiences that are straightforward to maintain.</p></article></div><div class="wrap stack"><span>Figma</span><span>HTML</span><span>CSS</span><span>JavaScript</span><span>React</span><span>Notion</span></div></section>
-    <section class="section" id="experience"><div class="wrap section-head split"><div><p class="eyebrow">Experience</p><h2>A simple timeline for real milestones.</h2></div><a class="button secondary" href="#contact">Request full resume</a></div><div class="wrap timeline"><article class="time-item"><span class="date">2024 - Present</span><div><h3>Role Title at Company</h3><p>Led practical product improvements, partnered with stakeholders, and shipped features from concept through launch.</p></div></article><article class="time-item"><span class="date">2022 - 2024</span><div><h3>Previous Role or Freelance Practice</h3><p>Built websites, prototypes, and workflow tools for clients or internal teams across different project scopes.</p></div></article></div></section>
-    <section class="section alt" id="about"><div class="wrap about-grid"><div><p class="eyebrow">About</p><h2>I like clear systems, kind collaboration, and work that earns its place.</h2></div><div class="about-copy about"><p>Use this area for a short personal story: what you care about, how you solve problems, and what makes your perspective useful.</p><p>The final version can include a stronger photo, awards, education, languages, location, and the kind of opportunities you want next.</p></div></div></section>
-    <section class="contact" id="contact"><div class="wrap contact-grid"><div><p class="eyebrow">Contact</p><h2>Have a project or opportunity in mind?</h2><p>Send a note with the context, timeline, and what success would look like. I will reply with next steps.</p></div><div class="actions"><a class="button primary" href="mailto:hello@example.com">hello@example.com</a><button class="button secondary" type="button" data-copy data-email="hello@example.com">Copy Email</button><div class="social"><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">Dribbble</a></div></div></div></section>
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">AI Engineer Intern Candidate</p>
+          <h1>Building RAG systems, robotic vision, and autonomous agents.</h1>
+          <p class="lede">I am a Robotics and AI student at HCMUTE, focused on turning machine learning ideas into working prototypes. My recent work spans document question answering with RAG, robot inspection with computer vision, reinforcement learning for autonomous vehicles, and AIoT health monitoring.</p>
+          <div class="actions">
+            <a class="button primary" href="#work">View Work</a>
+            <a class="button secondary" href="#contact">Get In Touch</a>
+          </div>
+          <dl class="signals">
+            <div><dt>Focus</dt><dd>AI Engineering</dd></div>
+            <div><dt>Based In</dt><dd>Ho Chi Minh City</dd></div>
+            <div><dt>Education</dt><dd>Robotics & AI</dd></div>
+          </dl>
+        </div>
+
+        <div>
+          <div class="portrait-shell">
+            <svg viewBox="0 0 900 1120" role="img" aria-label="AI engineering portfolio visual">
+              <rect width="900" height="1120" fill="#eaf5f0"/>
+              <rect x="95" y="110" width="710" height="900" rx="34" fill="#ffffff"/>
+              <circle cx="450" cy="360" r="170" fill="#0f766e" opacity=".95"/>
+              <circle cx="360" cy="430" r="105" fill="#2563eb" opacity=".9"/>
+              <circle cx="540" cy="430" r="105" fill="#f97316" opacity=".9"/>
+              <path d="M260 645 C360 555 535 555 640 645" fill="none" stroke="#17201b" stroke-width="34" stroke-linecap="round"/>
+              <text x="450" y="400" text-anchor="middle" font-family="Segoe UI, Arial" font-size="140" font-weight="850" fill="#fff">LGH</text>
+              <rect x="170" y="720" width="560" height="58" rx="12" fill="#eef5f1"/>
+              <rect x="170" y="805" width="420" height="26" rx="13" fill="#d8dfd8"/>
+              <rect x="170" y="855" width="500" height="26" rx="13" fill="#d8dfd8"/>
+              <rect x="170" y="905" width="340" height="26" rx="13" fill="#d8dfd8"/>
+              <text x="450" y="758" text-anchor="middle" font-family="Segoe UI, Arial" font-size="28" font-weight="800" fill="#17201b">AI ENGINEERING</text>
+            </svg>
+            <div class="note"><span>Current lane</span><strong>Turning AI research ideas into practical systems and demos.</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="strip">
+      <div class="wrap strip-grid">
+        <p>Hands-on experience across LLM applications, robotics simulation, machine vision, and AIoT.</p>
+        <p>Built document ingestion and retrieval pipelines with OpenAI models, Qdrant, Supabase, and adaptive prompts.</p>
+        <p>Awarded in AIoT and robotics AI competitions, with internships at RegenX and ABB Robotics.</p>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="wrap section-head split">
+        <div>
+          <p class="eyebrow">Selected Work</p>
+          <h2>Projects with real engineering depth.</h2>
+        </div>
+        <p>These projects are taken from my CV and shaped for a public portfolio. More technical details and demos can be added as the site evolves.</p>
+      </div>
+
+      <div class="wrap projects">
+        <article class="card">
+          <div class="media">
+            <svg viewBox="0 0 1400 760" role="img" aria-label="RAG document question answering system diagram">
+              <rect width="1400" height="760" fill="#f7f8f5"/>
+              <rect x="80" y="90" width="1240" height="580" rx="24" fill="#17201b"/>
+              <rect x="130" y="150" width="280" height="420" rx="18" fill="#ffffff"/>
+              <rect x="170" y="210" width="200" height="20" rx="10" fill="#d8dfd8"/>
+              <rect x="170" y="260" width="170" height="20" rx="10" fill="#d8dfd8"/>
+              <rect x="170" y="310" width="220" height="20" rx="10" fill="#d8dfd8"/>
+              <rect x="525" y="210" width="350" height="100" rx="18" fill="#0f766e"/>
+              <rect x="525" y="380" width="350" height="100" rx="18" fill="#2563eb"/>
+              <rect x="990" y="210" width="250" height="270" rx="18" fill="#f97316"/>
+              <path d="M410 360 H525 M875 260 H990 M875 430 H990" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+              <text x="270" y="505" text-anchor="middle" font-family="Segoe UI, Arial" font-size="42" font-weight="800" fill="#17201b">Docs</text>
+              <text x="700" y="272" text-anchor="middle" font-family="Segoe UI, Arial" font-size="38" font-weight="800" fill="#ffffff">Embeddings</text>
+              <text x="700" y="442" text-anchor="middle" font-family="Segoe UI, Arial" font-size="38" font-weight="800" fill="#ffffff">Retrieval</text>
+              <text x="1115" y="360" text-anchor="middle" font-family="Segoe UI, Arial" font-size="42" font-weight="800" fill="#ffffff">Answer</text>
+            </svg>
+          </div>
+          <div class="body">
+            <p class="type">RAG / LLM Application / RegenX</p>
+            <h3>Document Question Answering System</h3>
+            <p>Developed a RAG-based assistant for internal documents, including ingestion, semantic chunking, vector embeddings, Qdrant search, Supabase metadata, reranking, and adaptive prompt templates with OpenAI models.</p>
+            <ul class="tags"><li>OpenAI API</li><li>Qdrant</li><li>Supabase</li><li>RAG</li></ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="media">
+            <svg viewBox="0 0 1400 760" role="img" aria-label="Robotic arm inspection system visual">
+              <rect width="1400" height="760" fill="#eef5f1"/>
+              <rect x="100" y="90" width="1200" height="580" rx="24" fill="#ffffff"/>
+              <circle cx="455" cy="475" r="86" fill="#17201b"/>
+              <rect x="415" y="260" width="80" height="230" rx="40" fill="#0f766e" transform="rotate(-28 455 475)"/>
+              <rect x="520" y="210" width="76" height="250" rx="38" fill="#2563eb" transform="rotate(38 558 335)"/>
+              <circle cx="565" cy="260" r="48" fill="#f97316"/>
+              <rect x="690" y="180" width="450" height="320" rx="18" fill="#17201b"/>
+              <rect x="735" y="230" width="160" height="110" rx="12" fill="#2dd4bf"/>
+              <rect x="930" y="230" width="160" height="110" rx="12" fill="#fb923c"/>
+              <rect x="735" y="385" width="355" height="28" rx="14" fill="#d8dfd8"/>
+              <text x="915" y="570" text-anchor="middle" font-family="Segoe UI, Arial" font-size="48" font-weight="800" fill="#17201b">Vision Inspection</text>
+            </svg>
+          </div>
+          <div class="body">
+            <p class="type">Computer Vision / Robotics / ABB</p>
+            <h3>AI-Based Robotic Arm Inspection</h3>
+            <p>Worked on robotic arm inspection using PyTorch, TensorFlow, OpenCV, RobotStudio simulation, MATLAB/Simulink kinematics, Autodesk Inventor assembly, and real-time socket communication in C#.</p>
+            <ul class="tags"><li>PyTorch</li><li>OpenCV</li><li>RobotStudio</li><li>C#</li></ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="media">
+            <svg viewBox="0 0 1400 760" role="img" aria-label="Autonomous vehicle reinforcement learning visual">
+              <rect width="1400" height="760" fill="#fbf7ef"/>
+              <rect x="110" y="105" width="1180" height="550" rx="24" fill="#ffffff"/>
+              <path d="M160 520 C320 320 500 600 700 380 C860 210 1040 260 1230 170" fill="none" stroke="#d8dfd8" stroke-width="70" stroke-linecap="round"/>
+              <path d="M160 520 C320 320 500 600 700 380 C860 210 1040 260 1230 170" fill="none" stroke="#17201b" stroke-width="8" stroke-dasharray="26 22" stroke-linecap="round"/>
+              <rect x="530" y="375" width="220" height="110" rx="26" fill="#0f766e" transform="rotate(-18 640 430)"/>
+              <circle cx="575" cy="490" r="34" fill="#17201b"/>
+              <circle cx="710" cy="448" r="34" fill="#17201b"/>
+              <circle cx="632" cy="370" r="24" fill="#f97316"/>
+              <g stroke="#2563eb" stroke-width="8" fill="none" opacity=".8">
+                <path d="M650 380 L820 270"/><path d="M650 380 L830 380"/><path d="M650 380 L780 500"/>
+              </g>
+              <text x="700" y="620" text-anchor="middle" font-family="Segoe UI, Arial" font-size="48" font-weight="800" fill="#17201b">RL Navigation</text>
+            </svg>
+          </div>
+          <div class="body">
+            <p class="type">Reinforcement Learning / ROS</p>
+            <h3>Autonomous 3-Wheeled Vehicle</h3>
+            <p>Built an autonomous navigation prototype using LIDAR, Gazebo simulation, ROS, Stable-Baselines3, PPO/DQN training, and deployment to a physical robot platform.</p>
+            <ul class="tags"><li>ROS</li><li>Gazebo</li><li>PPO</li><li>DQN</li></ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="media">
+            <svg viewBox="0 0 1400 760" role="img" aria-label="AIoT health monitoring dashboard visual">
+              <rect width="1400" height="760" fill="#edf3ff"/>
+              <rect x="100" y="90" width="1200" height="580" rx="24" fill="#ffffff"/>
+              <rect x="155" y="155" width="305" height="150" rx="18" fill="#0f766e"/>
+              <rect x="500" y="155" width="305" height="150" rx="18" fill="#2563eb"/>
+              <rect x="845" y="155" width="305" height="150" rx="18" fill="#f97316"/>
+              <path d="M170 520 C280 430 360 560 480 460 C610 350 700 480 820 370 C930 270 1020 340 1160 250" fill="none" stroke="#17201b" stroke-width="18" stroke-linecap="round"/>
+              <circle cx="480" cy="460" r="18" fill="#0f766e"/><circle cx="820" cy="370" r="18" fill="#2563eb"/><circle cx="1160" cy="250" r="18" fill="#f97316"/>
+              <text x="700" y="635" text-anchor="middle" font-family="Segoe UI, Arial" font-size="48" font-weight="800" fill="#17201b">Health Risk Signals</text>
+            </svg>
+          </div>
+          <div class="body">
+            <p class="type">AIoT / Forecasting / Dashboard</p>
+            <h3>AIoT Health Monitoring System</h3>
+            <p>Designed an elderly health risk monitoring concept with IoT sensors, Wise-PaaS data storage, Python forecasting with Scikit-learn, and a dashboard for alerts and trend tracking.</p>
+            <ul class="tags"><li>IoT</li><li>Scikit-learn</li><li>Wise-PaaS</li><li>Dashboard</li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section alt" id="capabilities">
+      <div class="wrap section-head split">
+        <div>
+          <p class="eyebrow">Capabilities</p>
+          <h2>Applied AI skills for prototypes that can move toward production.</h2>
+        </div>
+        <p>I enjoy the full path from data and model experimentation to integration, evaluation, and a usable interface.</p>
+      </div>
+      <div class="wrap caps">
+        <article class="cap"><span class="idx">01</span><h3>LLM & RAG Engineering</h3><p>Document ingestion, vector search, prompt design, metadata handling, reranking, and practical answer generation workflows.</p></article>
+        <article class="cap"><span class="idx">02</span><h3>Robotics & Computer Vision</h3><p>Robot simulation, kinematics, visual inspection, image classification, OpenCV pipelines, and real-time integration.</p></article>
+        <article class="cap"><span class="idx">03</span><h3>ML Prototyping</h3><p>Training and evaluating models for reinforcement learning, forecasting, NLP, computer vision, and AIoT use cases.</p></article>
+      </div>
+      <div class="wrap stack">
+        <span>Python</span><span>PyTorch</span><span>TensorFlow</span><span>OpenCV</span><span>OpenAI API</span><span>RAG</span><span>Qdrant</span><span>Supabase</span><span>ROS</span><span>Gazebo</span><span>Docker</span><span>Linux</span><span>JavaScript</span>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="wrap section-head split">
+        <div>
+          <p class="eyebrow">Experience & Education</p>
+          <h2>A timeline shaped by AI, robotics, and applied projects.</h2>
+        </div>
+        <a class="button secondary" href="#contact">Request full resume</a>
+      </div>
+      <div class="wrap timeline">
+        <article class="time-item"><span class="date">Aug 2024 - Feb 2025</span><div><h3>AI Engineer Intern, RegenX</h3><p>Built a RAG-based document QA workflow with OpenAI models, Qdrant, Supabase, semantic chunking, dynamic chunk sizing, and retrieval reranking.</p></div></article>
+        <article class="time-item"><span class="date">Jan 2024 - Jul 2024</span><div><h3>Robotics / AI Intern, ABB Robotics</h3><p>Worked on robotic arm inspection, robot simulation, computer vision classification, and real-time control integration.</p></div></article>
+        <article class="time-item"><span class="date">2021 - Present</span><div><h3>HCMC University of Technology and Education</h3><p>Studying Robotics and AI with coursework in artificial intelligence, machine vision, robot programming, software architecture, IoT, and project-based robotics.</p></div></article>
+        <article class="time-item"><span class="date">Awards</span><div><h3>AIoT and Robotics Competitions</h3><p>1st Prize at ADVANTECH AIOT competition and 3rd Prize in the MTA Apply AI for Robotic Arms Challenge by Bossard.</p></div></article>
+      </div>
+    </section>
+
+    <section class="section alt" id="about">
+      <div class="wrap about-grid">
+        <div>
+          <p class="eyebrow">About</p>
+          <h2>I like learning fast, building clearly, and making AI ideas testable.</h2>
+        </div>
+        <div class="about-copy about">
+          <p>My work sits between AI research, robotics, and software implementation. I am comfortable experimenting with models, reading technical documentation, wiring APIs, and creating demos that make an idea easier to evaluate.</p>
+          <p>I am currently looking for opportunities where I can contribute to AI engineering, LLM applications, computer vision, robotics, and data-driven product prototypes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="wrap contact-grid">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Have an AI project or internship opportunity?</h2>
+          <p>Send a short note with the role, project context, and timeline. I will reply with next steps and any relevant project details.</p>
+        </div>
+        <div class="actions">
+          <a class="button primary" href="mailto:giahuyworkmail@gmail.com">giahuyworkmail@gmail.com</a>
+          <button class="button secondary" type="button" data-copy data-email="giahuyworkmail@gmail.com">Copy Email</button>
+          <div class="social">
+            <a href="https://www.linkedin.com/in/lengocgiahuy1810/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://github.com/breslee1707" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer class="footer"><div class="wrap footer-inner"><p>Copyright <span data-year></span> Your Name. All rights reserved.</p><a href="#top">Back to top</a></div></footer>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p>Copyright <span data-year></span> Le Ngoc Gia Huy. All rights reserved.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
   <script>
-    const root=document.documentElement,themeButton=document.querySelector('[data-theme-toggle]'),year=document.querySelector('[data-year]'),copy=document.querySelector('[data-copy]');function setTheme(t){root.setAttribute('data-theme',t);localStorage.setItem('portfolio-theme',t);if(themeButton)themeButton.textContent=t==='dark'?'Light':'Dark'}setTheme(localStorage.getItem('portfolio-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));if(year)year.textContent=new Date().getFullYear();if(themeButton)themeButton.addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));if(copy)copy.addEventListener('click',async()=>{const e=copy.dataset.email;try{await navigator.clipboard.writeText(e);copy.textContent='Copied';setTimeout(()=>copy.textContent='Copy Email',1600)}catch{location.href='mailto:'+e}});
+    const root = document.documentElement;
+    const themeButton = document.querySelector('[data-theme-toggle]');
+    const year = document.querySelector('[data-year]');
+    const copy = document.querySelector('[data-copy]');
+
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      localStorage.setItem('portfolio-theme', theme);
+      if (themeButton) themeButton.textContent = theme === 'dark' ? 'Light' : 'Dark';
+    }
+
+    setTheme(localStorage.getItem('portfolio-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    if (year) year.textContent = new Date().getFullYear();
+
+    if (themeButton) {
+      themeButton.addEventListener('click', () => setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+    }
+
+    if (copy) {
+      copy.addEventListener('click', async () => {
+        const email = copy.dataset.email;
+        try {
+          await navigator.clipboard.writeText(email);
+          copy.textContent = 'Copied';
+          setTimeout(() => copy.textContent = 'Copy Email', 1600);
+        } catch {
+          location.href = 'mailto:' + email;
+        }
+      });
+    }
   </script>
 </body>
 </html>
