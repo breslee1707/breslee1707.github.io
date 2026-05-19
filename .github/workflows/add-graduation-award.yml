@@ -50,3 +50,5 @@ jobs:
           git add index.html
           git commit -m "Add graduation award to portfolio"
           git push
+
+# trigger: 2026-05-19-add-award
