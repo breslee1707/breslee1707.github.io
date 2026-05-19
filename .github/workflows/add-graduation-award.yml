@@ -27,12 +27,13 @@ jobs:
           workflow_path = Path('.github/workflows/portfolio-update.yml')
           html = html_path.read_text(encoding='utf-8')
 
-          compact_css = '''    .proof-certificate { width: min(100%, 360px); margin: 18px auto 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 14px 32px rgba(20, 28, 45, .08); }
-    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }
-    .proof-certificate figcaption { display: grid; gap: 6px; border-top: 1px solid var(--line); padding: 12px 14px; }
-    .proof-certificate span { color: var(--orange); font-size: .72rem; font-weight: 850; text-transform: uppercase; }
-    .proof-certificate strong { font-size: .92rem; line-height: 1.35; }
-'''
+          compact_css = (
+              '    .proof-certificate { width: min(100%, 360px); margin: 18px auto 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 14px 32px rgba(20, 28, 45, .08); }\n'
+              '    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }\n'
+              '    .proof-certificate figcaption { display: grid; gap: 6px; border-top: 1px solid var(--line); padding: 12px 14px; }\n'
+              '    .proof-certificate span { color: var(--orange); font-size: .72rem; font-weight: 850; text-transform: uppercase; }\n'
+              '    .proof-certificate strong { font-size: .92rem; line-height: 1.35; }\n'
+          )
 
           css_pattern = re.compile(
               r"    \.proof-certificate \{[^}]+\}\n"
@@ -54,10 +55,10 @@ jobs:
               html = html.replace('    <section class="section alt" id="work">', figure + '\n    <section class="section alt" id="work">', 1)
 
           html = html.replace(
-              '<img src="data:image/webp;base64,',
-              '<img loading="lazy" decoding="async" src="data:image/webp;base64,',
+              '<figure class="wrap proof-certificate">\n        <img src="data:image/webp;base64,',
+              '<figure class="wrap proof-certificate">\n        <img loading="lazy" decoding="async" src="data:image/webp;base64,',
               1,
-          ) if '<figure class="wrap proof-certificate">\n        <img src="data:image/webp;base64,' in html else html
+          )
 
           html_path.write_text(html, encoding='utf-8')
           PY
@@ -73,4 +74,4 @@ jobs:
           git commit -m "Refine graduation award image display"
           git push
 
-# trigger: 2026-05-19-compact-award-image
+# trigger: 2026-05-19-compact-award-image-v2
