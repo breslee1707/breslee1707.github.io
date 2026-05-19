@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Insert graduation award figure
+      - name: Refine graduation award figure
         run: |
           python <<'PY'
           from pathlib import Path
@@ -26,29 +26,51 @@ jobs:
           html_path = Path('index.html')
           workflow_path = Path('.github/workflows/portfolio-update.yml')
           html = html_path.read_text(encoding='utf-8')
-          workflow = workflow_path.read_text(encoding='utf-8')
-          cert = re.search(r"cert = '([^']+)'", workflow).group(1)
 
-          if '.proof-certificate {' not in html:
-              css = '    .proof-certificate { margin-top: 18px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }\n    .proof-certificate img { display: block; width: 100%; height: auto; }\n    .proof-certificate figcaption { display: grid; gap: 8px; border-top: 1px solid var(--line); padding: 18px 20px; }\n    .proof-certificate span { color: var(--orange); font-size: .78rem; font-weight: 850; text-transform: uppercase; }\n    .proof-certificate strong { font-size: 1.05rem; }\n'
-              html = html.replace('    .proof-list { display: grid; gap: 18px; }\n', '    .proof-list { display: grid; gap: 18px; }\n' + css, 1)
+          compact_css = '''    .proof-certificate { width: min(100%, 360px); margin: 18px auto 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 14px 32px rgba(20, 28, 45, .08); }
+    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }
+    .proof-certificate figcaption { display: grid; gap: 6px; border-top: 1px solid var(--line); padding: 12px 14px; }
+    .proof-certificate span { color: var(--orange); font-size: .72rem; font-weight: 850; text-transform: uppercase; }
+    .proof-certificate strong { font-size: .92rem; line-height: 1.35; }
+'''
+
+          css_pattern = re.compile(
+              r"    \.proof-certificate \{[^}]+\}\n"
+              r"    \.proof-certificate img \{[^}]+\}\n"
+              r"    \.proof-certificate figcaption \{[^}]+\}\n"
+              r"    \.proof-certificate span \{[^}]+\}\n"
+              r"    \.proof-certificate strong \{[^}]+\}\n",
+              re.S,
+          )
+          if css_pattern.search(html):
+              html = css_pattern.sub(compact_css, html, count=1)
+          else:
+              html = html.replace('    .proof-list { display: grid; gap: 18px; }\n', '    .proof-list { display: grid; gap: 18px; }\n' + compact_css, 1)
 
           if 'Highest graduation project score award certificate' not in html:
+              workflow = workflow_path.read_text(encoding='utf-8')
+              cert = re.search(r"cert = '([^']+)'", workflow).group(1)
               figure = f'\n      <figure class="wrap proof-certificate">\n        <img src="data:image/webp;base64,{cert}" alt="Highest graduation project score award certificate for Le Ngoc Gia Huy">\n        <figcaption><span>Graduation project recognition</span><strong>Highest graduation project score in Robotics and AI, semester 2/2024-2025.</strong></figcaption>\n      </figure>\n'
               html = html.replace('    <section class="section alt" id="work">', figure + '\n    <section class="section alt" id="work">', 1)
 
+          html = html.replace(
+              '<img src="data:image/webp;base64,',
+              '<img loading="lazy" decoding="async" src="data:image/webp;base64,',
+              1,
+          ) if '<figure class="wrap proof-certificate">\n        <img src="data:image/webp;base64,' in html else html
+
           html_path.write_text(html, encoding='utf-8')
           PY
-      - name: Commit graduation award
+      - name: Commit graduation award refinements
         run: |
           if git diff --quiet; then
-            echo "No graduation award changes needed."
+            echo "No graduation award refinements needed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Add graduation award to portfolio"
+          git commit -m "Refine graduation award image display"
           git push
 
-# trigger: 2026-05-19-add-award
+# trigger: 2026-05-19-compact-award-image
