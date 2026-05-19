@@ -88,9 +88,9 @@
     .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .42fr); gap: 44px; align-items: end; }
     .section-head p, .about p, .contact p { margin: 0; color: var(--muted); }
 
-    .proof-grid { display: grid; grid-template-columns: .82fr 1fr; gap: 18px; align-items: stretch; }
+    .proof-grid { display: grid; grid-template-columns: .82fr 1fr; gap: 18px; align-items: start; }
     .proof-photo, .proof-card, .card, .cap { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
-    .proof-photo img { display: block; width: 100%; height: 100%; min-height: 440px; object-fit: cover; object-position: 50% 38%; }
+    .proof-photo img { display: block; width: 100%; height: auto; min-height: 0; max-height: 720px; object-fit: contain; object-position: center top; background: var(--surface); }
     .proof-card { display: grid; align-content: end; gap: 18px; min-height: 270px; padding: 26px; }
     .proof-card strong { font-size: clamp(2rem, 6vw, 4.2rem); line-height: .95; }
     .proof-card p { margin: 0; color: var(--muted); }
