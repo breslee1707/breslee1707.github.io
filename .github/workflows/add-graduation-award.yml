@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Prevent award photo cropping
+      - name: Improve awards section layout
         run: |
           python <<'PY'
           from pathlib import Path
@@ -26,32 +26,86 @@ jobs:
           html_path = Path('index.html')
           html = html_path.read_text(encoding='utf-8')
 
-          # Keep the Advantech award photo fully visible instead of cropping the sides.
-          html = re.sub(
-              r"    \.proof-grid \{[^}]+\}\n",
-              "    .proof-grid { display: grid; grid-template-columns: .82fr 1fr; gap: 18px; align-items: start; }\n",
-              html,
-              count=1,
+          css = (
+              '    .proof-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: stretch; }\n'
+              '    .proof-card, .card, .cap { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }\n'
+              '    .award-card { display: flex; flex-direction: column; min-height: 0; padding: 0; }\n'
+              '    .award-media { margin: 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--surface), var(--bg) 16%); }\n'
+              '    .award-media img { display: block; width: 100%; height: auto; max-height: 520px; object-fit: contain; object-position: center; background: var(--surface); }\n'
+              '    .award-body { display: grid; gap: 16px; padding: 24px; }\n'
+              '    .proof-card strong { font-size: clamp(2rem, 4.6vw, 3.7rem); line-height: .95; }\n'
+              '    .proof-card p { margin: 0; color: var(--muted); }\n'
+              '    .proof-certificate { width: 100%; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }\n'
+              '    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }\n'
+              '    .proof-certificate figcaption { display: grid; gap: 5px; border-top: 1px solid var(--line); padding: 10px 12px; }\n'
+              '    .proof-certificate span { color: var(--orange); font-size: .68rem; font-weight: 850; text-transform: uppercase; }\n'
+              '    .proof-certificate strong { font-size: .86rem; line-height: 1.35; }\n'
           )
-          html = re.sub(
-              r"    \.proof-photo img \{[^}]+\}\n",
-              "    .proof-photo img { display: block; width: 100%; height: auto; min-height: 0; max-height: 720px; object-fit: contain; object-position: center top; background: var(--surface); }\n",
-              html,
-              count=1,
+          old_css = re.compile(
+              r"    \.proof-grid \{[^}]+\}\n"
+              r"    \.proof-photo, \.proof-card, \.card, \.cap \{[^}]+\}\n"
+              r"    \.proof-photo img \{[^}]+\}\n"
+              r"    \.proof-card \{[^}]+\}\n"
+              r"    \.proof-card strong \{[^}]+\}\n"
+              r"    \.proof-card p \{[^}]+\}\n"
+              r"    \.proof-list \{[^}]+\}\n"
+              r"    \.proof-certificate \{[^}]+\}\n"
+              r"    \.proof-certificate img \{[^}]+\}\n"
+              r"    \.proof-certificate figcaption \{[^}]+\}\n"
+              r"    \.proof-certificate span \{[^}]+\}\n"
+              r"    \.proof-certificate strong \{[^}]+\}\n",
+              re.S,
           )
+          html, css_count = old_css.subn(css, html, count=1)
+          if css_count != 1:
+              raise SystemExit('Awards CSS block not found')
+
+          start = html.index('      <div class="wrap proof-grid">')
+          end = html.index('    </section>', start)
+          block = html[start:end]
+
+          if 'award-card' not in block:
+              photo_match = re.search(r'<figure class="proof-photo">\s*(<img .*?>)\s*</figure>', block, re.S)
+              articles = re.findall(r'<article class="proof-card">(.*?)</article>', block, re.S)
+              if not photo_match or len(articles) < 2:
+                  raise SystemExit('Awards markup not found')
+              photo_img = photo_match.group(1)
+              first_body = articles[0].strip()
+              second_body = articles[1].strip()
+              new_block = (
+                  '      <div class="wrap proof-grid">\n'
+                  '        <article class="proof-card award-card">\n'
+                  '          <figure class="award-media">\n'
+                  f'            {photo_img}\n'
+                  '          </figure>\n'
+                  '          <div class="award-body">\n'
+                  '            ' + first_body.replace('\n', '\n            ') + '\n'
+                  '          </div>\n'
+                  '        </article>\n'
+                  '        <article class="proof-card award-card">\n'
+                  '          <div class="award-body">\n'
+                  '            ' + second_body.replace('\n', '\n            ') + '\n'
+                  '          </div>\n'
+                  '        </article>\n'
+                  '      </div>\n'
+              )
+              html = html[:start] + new_block + html[end:]
+
+          # Remove an obsolete mobile rule that targeted the old standalone proof-photo element.
+          html = html.replace('      .proof-photo img { height: auto; min-height: 0; }\n', '')
 
           html_path.write_text(html, encoding='utf-8')
           PY
-      - name: Commit award photo display fix
+      - name: Commit awards layout
         run: |
           if git diff --quiet; then
-            echo "No award photo display changes needed."
+            echo "No awards layout changes needed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Prevent award photo cropping"
+          git commit -m "Improve awards section layout"
           git push
 
-# trigger: 2026-05-19-prevent-award-photo-cropping
+# trigger: 2026-05-19-awards-card-layout
