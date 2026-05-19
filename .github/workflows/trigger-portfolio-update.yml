@@ -19,3 +19,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run portfolio-update.yml --ref main
+
+# trigger: 2026-05-19-portfolio-refresh
