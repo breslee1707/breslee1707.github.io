@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Move graduation award into score card
+      - name: Prevent award photo cropping
         run: |
           python <<'PY'
           from pathlib import Path
@@ -26,58 +26,32 @@ jobs:
           html_path = Path('index.html')
           html = html_path.read_text(encoding='utf-8')
 
-          fig_re = re.compile(r'\n\s*<figure class="wrap proof-certificate">.*?</figure>\n', re.S)
-          fig_match = fig_re.search(html)
-          if fig_match:
-              figure = fig_match.group(0).strip().replace('class="wrap proof-certificate"', 'class="proof-certificate"')
-              html = html[:fig_match.start()] + '\n' + html[fig_match.end():]
-          else:
-              inline_re = re.compile(r'<figure class="proof-certificate">.*?</figure>', re.S)
-              inline_match = inline_re.search(html)
-              figure = inline_match.group(0) if inline_match else ''
-
-          card_marker = '<strong>Top Graduation Project Score</strong>'
-          if figure and card_marker in html and '<figure class="proof-certificate">' not in html.split(card_marker, 1)[1].split('</article>', 1)[0]:
-              target = (
-                  '<p>Awarded for achieving the highest graduation project score in the Robotics and AI program for semester 2/2024-2025.</p>\n'
-                  '            <ul class="tags"><li>Graduation Project</li><li>Robotics & AI</li><li>Academic Award</li></ul>'
-              )
-              replacement = (
-                  '<p>Awarded for achieving the highest graduation project score in the Robotics and AI program for semester 2/2024-2025.</p>\n'
-                  '            ' + figure.replace('\n', '\n            ') + '\n'
-                  '            <ul class="tags"><li>Graduation Project</li><li>Robotics & AI</li><li>Academic Award</li></ul>'
-              )
-              html = html.replace(target, replacement, 1)
-
-          card_css = (
-              '    .proof-certificate { width: 100%; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }\n'
-              '    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }\n'
-              '    .proof-certificate figcaption { display: grid; gap: 5px; border-top: 1px solid var(--line); padding: 10px 12px; }\n'
-              '    .proof-certificate span { color: var(--orange); font-size: .68rem; font-weight: 850; text-transform: uppercase; }\n'
-              '    .proof-certificate strong { font-size: .86rem; line-height: 1.35; }\n'
+          # Keep the Advantech award photo fully visible instead of cropping the sides.
+          html = re.sub(
+              r"    \.proof-grid \{[^}]+\}\n",
+              "    .proof-grid { display: grid; grid-template-columns: .82fr 1fr; gap: 18px; align-items: start; }\n",
+              html,
+              count=1,
           )
-          css_pattern = re.compile(
-              r"    \.proof-certificate \{[^}]+\}\n"
-              r"    \.proof-certificate img \{[^}]+\}\n"
-              r"    \.proof-certificate figcaption \{[^}]+\}\n"
-              r"    \.proof-certificate span \{[^}]+\}\n"
-              r"    \.proof-certificate strong \{[^}]+\}\n",
-              re.S,
+          html = re.sub(
+              r"    \.proof-photo img \{[^}]+\}\n",
+              "    .proof-photo img { display: block; width: 100%; height: auto; min-height: 0; max-height: 720px; object-fit: contain; object-position: center top; background: var(--surface); }\n",
+              html,
+              count=1,
           )
-          html = css_pattern.sub(card_css, html, count=1)
 
           html_path.write_text(html, encoding='utf-8')
           PY
-      - name: Commit graduation award placement
+      - name: Commit award photo display fix
         run: |
           if git diff --quiet; then
-            echo "No graduation award placement changes needed."
+            echo "No award photo display changes needed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Move graduation award into score card"
+          git commit -m "Prevent award photo cropping"
           git push
 
-# trigger: 2026-05-19-move-award-into-card
+# trigger: 2026-05-19-prevent-award-photo-cropping
