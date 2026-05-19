@@ -1,0 +1,52 @@
+name: Add graduation award
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-graduation-award.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  add-award:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Insert graduation award figure
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          html_path = Path('index.html')
+          workflow_path = Path('.github/workflows/portfolio-update.yml')
+          html = html_path.read_text(encoding='utf-8')
+          workflow = workflow_path.read_text(encoding='utf-8')
+          cert = re.search(r"cert = '([^']+)'", workflow).group(1)
+
+          if '.proof-certificate {' not in html:
+              css = '    .proof-certificate { margin-top: 18px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }\n    .proof-certificate img { display: block; width: 100%; height: auto; }\n    .proof-certificate figcaption { display: grid; gap: 8px; border-top: 1px solid var(--line); padding: 18px 20px; }\n    .proof-certificate span { color: var(--orange); font-size: .78rem; font-weight: 850; text-transform: uppercase; }\n    .proof-certificate strong { font-size: 1.05rem; }\n'
+              html = html.replace('    .proof-list { display: grid; gap: 18px; }\n', '    .proof-list { display: grid; gap: 18px; }\n' + css, 1)
+
+          if 'Highest graduation project score award certificate' not in html:
+              figure = f'\n      <figure class="wrap proof-certificate">\n        <img src="data:image/webp;base64,{cert}" alt="Highest graduation project score award certificate for Le Ngoc Gia Huy">\n        <figcaption><span>Graduation project recognition</span><strong>Highest graduation project score in Robotics and AI, semester 2/2024-2025.</strong></figcaption>\n      </figure>\n'
+              html = html.replace('    <section class="section alt" id="work">', figure + '\n    <section class="section alt" id="work">', 1)
+
+          html_path.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit graduation award
+        run: |
+          if git diff --quiet; then
+            echo "No graduation award changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add graduation award to portfolio"
+          git push
