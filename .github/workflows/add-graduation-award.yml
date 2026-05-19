@@ -17,24 +17,45 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Refine graduation award figure
+      - name: Move graduation award into score card
         run: |
           python <<'PY'
           from pathlib import Path
           import re
 
           html_path = Path('index.html')
-          workflow_path = Path('.github/workflows/portfolio-update.yml')
           html = html_path.read_text(encoding='utf-8')
 
-          compact_css = (
-              '    .proof-certificate { width: min(100%, 360px); margin: 18px auto 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 14px 32px rgba(20, 28, 45, .08); }\n'
-              '    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }\n'
-              '    .proof-certificate figcaption { display: grid; gap: 6px; border-top: 1px solid var(--line); padding: 12px 14px; }\n'
-              '    .proof-certificate span { color: var(--orange); font-size: .72rem; font-weight: 850; text-transform: uppercase; }\n'
-              '    .proof-certificate strong { font-size: .92rem; line-height: 1.35; }\n'
-          )
+          fig_re = re.compile(r'\n\s*<figure class="wrap proof-certificate">.*?</figure>\n', re.S)
+          fig_match = fig_re.search(html)
+          if fig_match:
+              figure = fig_match.group(0).strip().replace('class="wrap proof-certificate"', 'class="proof-certificate"')
+              html = html[:fig_match.start()] + '\n' + html[fig_match.end():]
+          else:
+              inline_re = re.compile(r'<figure class="proof-certificate">.*?</figure>', re.S)
+              inline_match = inline_re.search(html)
+              figure = inline_match.group(0) if inline_match else ''
 
+          card_marker = '<strong>Top Graduation Project Score</strong>'
+          if figure and card_marker in html and '<figure class="proof-certificate">' not in html.split(card_marker, 1)[1].split('</article>', 1)[0]:
+              target = (
+                  '<p>Awarded for achieving the highest graduation project score in the Robotics and AI program for semester 2/2024-2025.</p>\n'
+                  '            <ul class="tags"><li>Graduation Project</li><li>Robotics & AI</li><li>Academic Award</li></ul>'
+              )
+              replacement = (
+                  '<p>Awarded for achieving the highest graduation project score in the Robotics and AI program for semester 2/2024-2025.</p>\n'
+                  '            ' + figure.replace('\n', '\n            ') + '\n'
+                  '            <ul class="tags"><li>Graduation Project</li><li>Robotics & AI</li><li>Academic Award</li></ul>'
+              )
+              html = html.replace(target, replacement, 1)
+
+          card_css = (
+              '    .proof-certificate { width: 100%; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }\n'
+              '    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }\n'
+              '    .proof-certificate figcaption { display: grid; gap: 5px; border-top: 1px solid var(--line); padding: 10px 12px; }\n'
+              '    .proof-certificate span { color: var(--orange); font-size: .68rem; font-weight: 850; text-transform: uppercase; }\n'
+              '    .proof-certificate strong { font-size: .86rem; line-height: 1.35; }\n'
+          )
           css_pattern = re.compile(
               r"    \.proof-certificate \{[^}]+\}\n"
               r"    \.proof-certificate img \{[^}]+\}\n"
@@ -43,35 +64,20 @@ jobs:
               r"    \.proof-certificate strong \{[^}]+\}\n",
               re.S,
           )
-          if css_pattern.search(html):
-              html = css_pattern.sub(compact_css, html, count=1)
-          else:
-              html = html.replace('    .proof-list { display: grid; gap: 18px; }\n', '    .proof-list { display: grid; gap: 18px; }\n' + compact_css, 1)
-
-          if 'Highest graduation project score award certificate' not in html:
-              workflow = workflow_path.read_text(encoding='utf-8')
-              cert = re.search(r"cert = '([^']+)'", workflow).group(1)
-              figure = f'\n      <figure class="wrap proof-certificate">\n        <img src="data:image/webp;base64,{cert}" alt="Highest graduation project score award certificate for Le Ngoc Gia Huy">\n        <figcaption><span>Graduation project recognition</span><strong>Highest graduation project score in Robotics and AI, semester 2/2024-2025.</strong></figcaption>\n      </figure>\n'
-              html = html.replace('    <section class="section alt" id="work">', figure + '\n    <section class="section alt" id="work">', 1)
-
-          html = html.replace(
-              '<figure class="wrap proof-certificate">\n        <img src="data:image/webp;base64,',
-              '<figure class="wrap proof-certificate">\n        <img loading="lazy" decoding="async" src="data:image/webp;base64,',
-              1,
-          )
+          html = css_pattern.sub(card_css, html, count=1)
 
           html_path.write_text(html, encoding='utf-8')
           PY
-      - name: Commit graduation award refinements
+      - name: Commit graduation award placement
         run: |
           if git diff --quiet; then
-            echo "No graduation award refinements needed."
+            echo "No graduation award placement changes needed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Refine graduation award image display"
+          git commit -m "Move graduation award into score card"
           git push
 
-# trigger: 2026-05-19-compact-award-image-v2
+# trigger: 2026-05-19-move-award-into-card
