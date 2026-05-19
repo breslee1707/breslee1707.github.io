@@ -1,0 +1,21 @@
+name: Trigger portfolio update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/trigger-portfolio-update.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch portfolio update workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run portfolio-update.yml --ref main
