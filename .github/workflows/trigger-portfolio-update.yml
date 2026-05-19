@@ -18,6 +18,6 @@ jobs:
       - name: Dispatch portfolio update workflow
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run portfolio-update.yml --ref main
+        run: gh workflow run portfolio-update.yml --repo breslee1707/breslee1707.github.io --ref main
 
-# trigger: 2026-05-19-portfolio-refresh
+# trigger: 2026-05-19-portfolio-refresh-2
