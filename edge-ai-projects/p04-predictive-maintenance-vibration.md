@@ -3,8 +3,8 @@
 ## Nguồn gốc nên học
 
 - Edge Impulse Industrial Compressor Predictive Maintenance - Nordic Thingy:53: https://docs.edgeimpulse.com/projects/expert-network/compressor-predictive-maintenance-nordic-thingy53
-- Edge Impulse Predictive Maintenance - Nordic Thingy:91: https://docs.edgeimpulse.com/experts/predictive-maintenance-and-defect-detection-projects/predictive-maintenance-with-nordic-thingy91
-- Edge Impulse deployment docs: https://docs.edgeimpulse.com/docs/edge-impulse-studio/deployment
+- Edge Impulse Predictive Maintenance - Nordic Thingy:91: https://docs.edgeimpulse.com/projects/expert-network/predictive-maintenance-with-nordic-thingy91
+- Edge Impulse deployment docs: https://docs.edgeimpulse.com/studio/projects/deployment
 
 ## Mục tiêu
 
