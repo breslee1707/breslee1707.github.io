@@ -2,7 +2,7 @@
 
 ## Nguồn gốc nên học
 
-- TensorFlow Lite Object Detection overview: https://www.tensorflow.org/lite/models/object_detection/overview
+- LiteRT ObjectDetector task library: https://ai.google.dev/edge/litert/libraries/task_library/object_detector
 - TensorFlow examples Raspberry Pi object detection: https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/raspberry_pi
 - Raspberry Pi Picamera2 + TensorFlow Lite: https://www.raspberrypi.com/news/using-the-picamera2-library-with-tensorflow-lite/
 
