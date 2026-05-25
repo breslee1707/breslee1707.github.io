@@ -2,7 +2,7 @@
 
 ## Nguồn gốc nên học
 
-- TensorFlow Lite Micro Magic Wand example: https://github.com/tensorflow/tflite-micro/tree/main/tensorflow/lite/micro/examples/magic_wand
+- TensorFlow Lite Micro Arduino Magic Wand example: https://github.com/tensorflow/tflite-micro-arduino-examples/tree/main/examples/magic_wand
 - Magic Wand project by Pete Warden: https://github.com/petewarden/magic_wand
 
 ## Mục tiêu
