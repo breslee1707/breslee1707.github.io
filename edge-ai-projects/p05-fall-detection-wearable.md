@@ -2,7 +2,7 @@
 
 ## Nguồn gốc nên học
 
-- Edge Impulse Arduino x K-Way TinyML Fall Detection: https://docs.edgeimpulse.com/experts/accelerometer-and-activity-projects/arduino-kway-fall-detection
+- Edge Impulse Arduino x K-Way TinyML Fall Detection: https://docs.edgeimpulse.com/projects/expert-network/arduino-kway-fall-detection
 - Edge Impulse Bluetooth Fall Detection - Arduino Nano 33 BLE Sense: https://docs.edgeimpulse.com/projects/expert-network/bluetooth-fall-detection-arduino-nano-33
 
 ## Mục tiêu
