@@ -1,4 +1,4 @@
-name: Add graduation award
+name: Luxury portfolio redesign
 
 on:
   workflow_dispatch:
@@ -11,101 +11,49 @@ permissions:
   contents: write
 
 jobs:
-  add-award:
+  redesign:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Improve awards section layout
+      - name: Build dark luxury portfolio
         run: |
           python <<'PY'
           from pathlib import Path
+          import base64
           import re
+          import zlib
 
-          html_path = Path('index.html')
-          html = html_path.read_text(encoding='utf-8')
+          old = Path('index.html').read_text(encoding='utf-8')
 
-          css = (
-              '    .proof-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: stretch; }\n'
-              '    .proof-card, .card, .cap { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }\n'
-              '    .award-card { display: flex; flex-direction: column; min-height: 0; padding: 0; }\n'
-              '    .award-media { margin: 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--surface), var(--bg) 16%); }\n'
-              '    .award-media img { display: block; width: 100%; height: auto; max-height: 520px; object-fit: contain; object-position: center; background: var(--surface); }\n'
-              '    .award-body { display: grid; gap: 16px; padding: 24px; }\n'
-              '    .proof-card strong { font-size: clamp(2rem, 4.6vw, 3.7rem); line-height: .95; }\n'
-              '    .proof-card p { margin: 0; color: var(--muted); }\n'
-              '    .proof-certificate { width: 100%; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }\n'
-              '    .proof-certificate img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7f3ea; }\n'
-              '    .proof-certificate figcaption { display: grid; gap: 5px; border-top: 1px solid var(--line); padding: 10px 12px; }\n'
-              '    .proof-certificate span { color: var(--orange); font-size: .68rem; font-weight: 850; text-transform: uppercase; }\n'
-              '    .proof-certificate strong { font-size: .86rem; line-height: 1.35; }\n'
-          )
-          old_css = re.compile(
-              r"    \.proof-grid \{[^}]+\}\n"
-              r"    \.proof-photo, \.proof-card, \.card, \.cap \{[^}]+\}\n"
-              r"    \.proof-photo img \{[^}]+\}\n"
-              r"    \.proof-card \{[^}]+\}\n"
-              r"    \.proof-card strong \{[^}]+\}\n"
-              r"    \.proof-card p \{[^}]+\}\n"
-              r"    \.proof-list \{[^}]+\}\n"
-              r"    \.proof-certificate \{[^}]+\}\n"
-              r"    \.proof-certificate img \{[^}]+\}\n"
-              r"    \.proof-certificate figcaption \{[^}]+\}\n"
-              r"    \.proof-certificate span \{[^}]+\}\n"
-              r"    \.proof-certificate strong \{[^}]+\}\n",
-              re.S,
-          )
-          html, css_count = old_css.subn(css, html, count=1)
-          if css_count != 1:
-              raise SystemExit('Awards CSS block not found')
+          def image_for(alt):
+              pattern = r'<img[^>]+src="(data:image/[^\"]+)"[^>]+alt="' + re.escape(alt) + r'"'
+              match = re.search(pattern, old, re.S)
+              if not match:
+                  raise SystemExit(f'Missing image with alt: {alt}')
+              return match.group(1)
 
-          start = html.index('      <div class="wrap proof-grid">')
-          end = html.index('    </section>', start)
-          block = html[start:end]
+          profile = image_for('Portrait of Le Ngoc Gia Huy')
+          award = image_for('Le Ngoc Gia Huy receiving first prize at Advantech AIoT InnoWorks 2022')
+          graduation = image_for('Highest graduation project score award certificate for Le Ngoc Gia Huy')
 
-          if 'award-card' not in block:
-              photo_match = re.search(r'<figure class="proof-photo">\s*(<img .*?>)\s*</figure>', block, re.S)
-              articles = re.findall(r'<article class="proof-card">(.*?)</article>', block, re.S)
-              if not photo_match or len(articles) < 2:
-                  raise SystemExit('Awards markup not found')
-              photo_img = photo_match.group(1)
-              first_body = articles[0].strip()
-              second_body = articles[1].strip()
-              new_block = (
-                  '      <div class="wrap proof-grid">\n'
-                  '        <article class="proof-card award-card">\n'
-                  '          <figure class="award-media">\n'
-                  f'            {photo_img}\n'
-                  '          </figure>\n'
-                  '          <div class="award-body">\n'
-                  '            ' + first_body.replace('\n', '\n            ') + '\n'
-                  '          </div>\n'
-                  '        </article>\n'
-                  '        <article class="proof-card award-card">\n'
-                  '          <div class="award-body">\n'
-                  '            ' + second_body.replace('\n', '\n            ') + '\n'
-                  '          </div>\n'
-                  '        </article>\n'
-                  '      </div>\n'
-              )
-              html = html[:start] + new_block + html[end:]
+          packed = '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'
 
-          # Remove an obsolete mobile rule that targeted the old standalone proof-photo element.
-          html = html.replace('      .proof-photo img { height: auto; min-height: 0; }\n', '')
-
-          html_path.write_text(html, encoding='utf-8')
+          html = zlib.decompress(base64.b64decode(packed)).decode('utf-8')
+          html = html.replace('__PROFILE__', profile).replace('__AWARD__', award).replace('__GRADUATION__', graduation)
+          Path('index.html').write_text(html, encoding='utf-8')
           PY
-      - name: Commit awards layout
+      - name: Commit redesign
         run: |
           if git diff --quiet; then
-            echo "No awards layout changes needed."
+            echo "No redesign changes needed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Improve awards section layout"
+          git commit -m "Redesign portfolio with luxury tech aesthetic"
           git push
 
-# trigger: 2026-05-19-awards-card-layout
+# trigger: 2026-05-30-luxury-redesign
