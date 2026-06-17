@@ -18,11 +18,15 @@ export function TechBadge({ label, className = "" }: Props) {
   return (
     <li
       className={`group/tech inline-flex items-center gap-1.5 rounded-full border border-line font-mono text-faint transition-colors duration-200 hover:border-accent hover:text-ink ${className}`}
-      style={icon ? ({ ["--brand" as string]: `#${icon.hex}` } as CSSProperties) : undefined}
+      style={
+        icon?.hex ? ({ ["--brand" as string]: `#${icon.hex}` } as CSSProperties) : undefined
+      }
     >
-      {icon ? (
+      {icon?.img ? (
+        <img src={icon.img} alt="" className="size-3.5 shrink-0" aria-hidden />
+      ) : icon?.path ? (
         <svg
-          viewBox="0 0 24 24"
+          viewBox={icon.viewBox ?? "0 0 24 24"}
           className="size-3.5 shrink-0 fill-current transition-colors duration-200 group-hover/tech:fill-[var(--brand)]"
           aria-hidden
         >

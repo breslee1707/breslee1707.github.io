@@ -157,6 +157,7 @@ export const experience: Role[] = [
     title: "AI / RAG Engineer",
     org: "RegenX",
     body: "Built a document question-answering system using RAG, Qdrant vector search, Supabase metadata, semantic chunking, reranking, and OpenAI models for internal company documents.",
+    logo: { type: "img", src: "/assets/logos/regenx.jpg" },
   },
   {
     date: "Jan 2024 — Jul 2024",
