@@ -92,8 +92,8 @@ export const projects: Project[] = [
   {
     title: "Document Question Answering System",
     meta: "RAG & LLM applications",
-    body: "A retrieval-augmented assistant with document ingestion, semantic chunking, vector embeddings, Qdrant search, Supabase metadata, reranking, and adaptive prompts over OpenAI models.",
-    tags: ["OpenAI API", "Qdrant", "Supabase", "RAG"],
+    body: "A retrieval-augmented assistant with document ingestion, semantic chunking, vector embeddings, Qdrant search, Supabase metadata, reranking, and adaptive prompts — orchestrated with LangGraph over OpenAI models.",
+    tags: ["OpenAI API", "LangGraph", "Qdrant", "Supabase"],
   },
   {
     title: "AI-Based Robotic Arm Inspection",
@@ -123,12 +123,17 @@ export const labLink = {
 };
 
 /** Experience timeline (most recent first). */
+export type Logo =
+  | { type: "icon"; slug: string; hex?: string }
+  | { type: "img"; src: string };
+
 export type Role = {
   date: string;
   title: string;
   org: string;
   body: string;
   current?: boolean;
+  logo?: Logo;
 };
 
 export const experience: Role[] = [
@@ -138,12 +143,14 @@ export const experience: Role[] = [
     org: "Intel",
     body: "Applied AI engineering, automation, and intelligent systems in a production-minded environment.",
     current: true,
+    logo: { type: "icon", slug: "intel", hex: "0071C5" },
   },
   {
     date: "2025 — present",
     title: "Co-founder",
     org: "Code4life®",
     body: "Building learning and technology initiatives around practical coding, AI literacy, and software craft.",
+    logo: { type: "img", src: "/assets/logos/code4life.jpg" },
   },
   {
     date: "Aug 2024 — Feb 2025",
@@ -156,12 +163,14 @@ export const experience: Role[] = [
     title: "AI Robotics Intern",
     org: "ABB Robotics",
     body: "Developed an AI-based robotic arm inspection workflow with Autodesk Inventor, MATLAB/Simulink, PyTorch, TensorFlow, OpenCV, RobotStudio, and real-time C# socket communication.",
+    logo: { type: "img", src: "/assets/logos/abb.jpg" },
   },
   {
     date: "2024 — 2025",
     title: "Robotics & AI",
     org: "HCMUTE",
     body: "Graduation-level work recognized with the highest project score in the major for semester 2 of 2024–2025.",
+    logo: { type: "img", src: "/assets/logos/hcmute.png" },
   },
 ];
 
@@ -169,7 +178,7 @@ export const experience: Role[] = [
 export const toolkit = [
   {
     group: "AI engineering",
-    items: ["RAG pipelines", "Prompt design", "Embeddings", "Vector DBs", "Reranking", "Eval loops", "OpenAI API"],
+    items: ["RAG pipelines", "LangGraph", "Prompt design", "Embeddings", "Vector DBs", "Reranking", "Eval loops", "OpenAI API"],
   },
   {
     group: "Vision & robotics",

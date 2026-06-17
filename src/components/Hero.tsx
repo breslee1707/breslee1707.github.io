@@ -1,9 +1,51 @@
+import { useEffect, useRef } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { profile, site } from "../data/content";
 
 export function Hero() {
+  const fxRef = useRef<HTMLDivElement>(null);
+
+  // Mouse-follow spotlight: only updates CSS vars (no layout), rAF-throttled.
+  useEffect(() => {
+    const fx = fxRef.current;
+    const host = fx?.parentElement;
+    if (!fx || !host) return;
+    if (window.matchMedia("(hover: none)").matches) return;
+
+    let raf = 0;
+    const onMove = (e: MouseEvent) => {
+      const rect = host.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        fx.style.setProperty("--mx", `${x}px`);
+        fx.style.setProperty("--my", `${y}px`);
+      });
+    };
+    const enter = () => fx.classList.add("is-live");
+    const leave = () => fx.classList.remove("is-live");
+
+    host.addEventListener("mousemove", onMove);
+    host.addEventListener("mouseenter", enter);
+    host.addEventListener("mouseleave", leave);
+    return () => {
+      host.removeEventListener("mousemove", onMove);
+      host.removeEventListener("mouseenter", enter);
+      host.removeEventListener("mouseleave", leave);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <section id="intro" className="relative scroll-mt-24 overflow-hidden">
+      {/* Technical grid + mouse-follow spotlight */}
+      <div ref={fxRef} className="hero-fx" aria-hidden>
+        <div className="hero-grid" />
+        <div className="hero-grid-accent" />
+        <div className="hero-spot" />
+      </div>
+
       {/* Ambient accent light */}
       <div
         className="glow"
@@ -11,7 +53,7 @@ export function Hero() {
         aria-hidden
       />
 
-      <div className="relative mx-auto w-full max-w-[72rem] px-6 pt-12 pb-24 md:px-10 md:pt-16 md:pb-28">
+      <div className="relative z-10 mx-auto w-full max-w-[72rem] px-6 pt-12 pb-24 md:px-10 md:pt-16 md:pb-28">
         {/* Masthead */}
         <div className="lift flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4 label">
           <span>{site.volume}</span>

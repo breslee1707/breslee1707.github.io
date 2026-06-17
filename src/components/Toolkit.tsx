@@ -1,6 +1,7 @@
 import { toolkit } from "../data/content";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
+import { TechBadge } from "./TechBadge";
 
 export function Toolkit() {
   return (
@@ -23,12 +24,7 @@ export function Toolkit() {
               </div>
               <ul className="mt-5 flex flex-wrap gap-2">
                 {g.items.map((item) => (
-                  <li
-                    key={item}
-                    className="rounded-md border border-line px-2.5 py-1 font-mono text-[0.78rem] text-muted"
-                  >
-                    {item}
-                  </li>
+                  <TechBadge key={item} label={item} className="px-2.5 py-1 text-[0.78rem]" />
                 ))}
               </ul>
             </div>

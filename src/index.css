@@ -268,11 +268,76 @@
   animation: cue 2.6s var(--ease-out-quart) infinite;
 }
 
+/* ---- Hero: technical grid + mouse-follow spotlight ---- */
+.hero-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Faint static grid, brightest top-right (under the ambient glow). */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(130% 95% at 72% 0%, #000 0%, transparent 68%);
+  mask-image: radial-gradient(130% 95% at 72% 0%, #000 0%, transparent 68%);
+}
+
+/* Accent-tinted grid that only lights up around the cursor. */
+.hero-grid-accent {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(color-mix(in oklch, var(--color-accent) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, var(--color-accent) 55%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out-quart);
+  -webkit-mask-image: radial-gradient(170px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 65%);
+  mask-image: radial-gradient(170px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 65%);
+}
+
+/* Soft accent glow that follows the cursor. */
+.hero-spot {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    240px circle at var(--mx, -999px) var(--my, -999px),
+    color-mix(in oklch, var(--color-accent) 20%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out-quart);
+}
+
+.hero-fx.is-live .hero-grid-accent,
+.hero-fx.is-live .hero-spot {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .hero-grid-accent,
+  .hero-spot {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .glow,
   .js .float,
   .cue-line::after {
     animation: none !important;
+  }
+  .hero-grid-accent,
+  .hero-spot {
+    transition: none !important;
   }
 }
 

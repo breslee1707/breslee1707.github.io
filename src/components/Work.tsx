@@ -2,6 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import { projects, labLink } from "../data/content";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
+import { TechBadge } from "./TechBadge";
 
 export function Work() {
   return (
@@ -30,12 +31,7 @@ export function Work() {
                 <p className="measure mt-4 text-muted">{p.body}</p>
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {p.tags.map((t) => (
-                    <li
-                      key={t}
-                      className="rounded-full border border-line px-3 py-1 font-mono text-xs text-faint transition-colors duration-300 group-hover:border-line"
-                    >
-                      {t}
-                    </li>
+                    <TechBadge key={t} label={t} className="px-3 py-1 text-xs" />
                   ))}
                 </ul>
               </div>
