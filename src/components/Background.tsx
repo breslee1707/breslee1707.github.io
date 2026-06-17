@@ -37,22 +37,34 @@ export function Background() {
         <div className="mt-8 grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-2">
           {awards.map((a, i) => (
             <Reveal key={a.title} delay={i * 90} as="article" className="h-full">
-              <div className="flex h-full flex-col bg-bg p-7 md:p-9">
-                <p className="label">{a.meta}</p>
-                <h3 className="mt-4 text-2xl tracking-[-0.02em] md:text-[1.7rem]">
-                  {a.title}
-                </h3>
-                <p className="mt-4 text-[0.98rem] text-muted">{a.body}</p>
-                <ul className="mt-6 flex flex-wrap gap-2">
-                  {a.tags.map((t) => (
-                    <li
-                      key={t}
-                      className="rounded-full border border-line px-3 py-1 font-mono text-xs text-faint"
-                    >
-                      {t}
-                    </li>
-                  ))}
-                </ul>
+              <div className="group flex h-full flex-col bg-bg">
+                <div className="overflow-hidden border-b border-line bg-surface">
+                  <img
+                    src={a.image}
+                    alt={a.imageAlt}
+                    width={800}
+                    height={500}
+                    loading="lazy"
+                    className="aspect-[16/10] w-full object-contain"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-7 md:p-9">
+                  <p className="label">{a.meta}</p>
+                  <h3 className="mt-4 text-2xl tracking-[-0.02em] md:text-[1.7rem]">
+                    {a.title}
+                  </h3>
+                  <p className="mt-4 text-[0.98rem] text-muted">{a.body}</p>
+                  <ul className="mt-6 flex flex-wrap gap-2">
+                    {a.tags.map((t) => (
+                      <li
+                        key={t}
+                        className="rounded-full border border-line px-3 py-1 font-mono text-xs text-faint"
+                      >
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </Reveal>
           ))}

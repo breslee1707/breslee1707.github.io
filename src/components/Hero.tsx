@@ -3,8 +3,15 @@ import { profile, site } from "../data/content";
 
 export function Hero() {
   return (
-    <section id="intro" className="relative scroll-mt-24">
-      <div className="mx-auto w-full max-w-[72rem] px-6 pt-12 pb-20 md:px-10 md:pt-16 md:pb-28">
+    <section id="intro" className="relative scroll-mt-24 overflow-hidden">
+      {/* Ambient accent light */}
+      <div
+        className="glow"
+        style={{ top: "-12%", right: "-6%", width: "58%", height: "62%" }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto w-full max-w-[72rem] px-6 pt-12 pb-24 md:px-10 md:pt-16 md:pb-28">
         {/* Masthead */}
         <div className="lift flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4 label">
           <span>{site.volume}</span>
@@ -81,10 +88,10 @@ export function Hero() {
           {/* Portrait column */}
           <div className="md:col-span-5">
             <figure
-              className="lift relative"
+              className="lift float relative"
               style={{ ["--lift-delay" as string]: "180ms" }}
             >
-              <div className="overflow-hidden rounded-lg border border-line bg-surface">
+              <div className="portrait-scrim relative overflow-hidden rounded-lg border border-line bg-surface shadow-[0_24px_60px_-24px_rgba(0,0,0,0.55)]">
                 <img
                   src={profile.portrait}
                   alt={profile.portraitAlt}
@@ -94,14 +101,22 @@ export function Hero() {
                   fetchPriority="high"
                   className="aspect-[4/5] w-full object-cover"
                 />
+                <figcaption className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-4 label">
+                  <span className="text-ink">{profile.name}</span>
+                  <span className="text-faint">
+                    {profile.role} · {profile.org}
+                  </span>
+                </figcaption>
               </div>
-              <figcaption className="mt-3 flex items-center justify-between label">
-                <span>{profile.name}</span>
-                <span className="text-faint">{profile.role} · {profile.org}</span>
-              </figcaption>
             </figure>
           </div>
         </div>
+      </div>
+
+      {/* Scroll cue */}
+      <div className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex">
+        <span className="label">Scroll</span>
+        <span className="cue-line block h-10 w-px" aria-hidden />
       </div>
     </section>
   );

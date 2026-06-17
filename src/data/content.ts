@@ -13,10 +13,19 @@ export const profile = {
     "I build RAG applications, robotic inspection systems, autonomous agents, computer vision, and AIoT — moving each one from prototype to dependable, production-minded execution.",
   // Short, scannable positioning chips used in the hero.
   focus: ["RAG systems", "Robotic vision", "AIoT", "Product engineering"],
-  portrait: "/assets/profile-photo.jpg",
+  portrait: "/assets/portrait.jpg",
   portraitAlt:
     "Le Ngoc Gia Huy seated against a sunlit ochre wall framed by greenery",
   location: "Ho Chi Minh City, Vietnam",
+} as const;
+
+/** Full-bleed atmospheric moment used as a section divider. */
+export const moment = {
+  image: "/assets/graduation.jpg",
+  imageAlt:
+    "Le Ngoc Gia Huy in graduation gown looking up through a sunlit atrium at HCMUTE",
+  caption: "Robotics & AI, HCMUTE",
+  line: "Where the engineering started.",
 } as const;
 
 export type NavItem = { id: string; index: string; label: string };
@@ -52,16 +61,22 @@ export const background = {
 /** Recognition signals. */
 export const awards = [
   {
-    title: "1st Prize",
+    title: "1st Prize — 40,000,000 VND",
     meta: "Advantech AIoT InnoWorks 2022",
     body: "Recognized for an AIoT application concept using Wise-PaaS, sensor data, and applied intelligence to monitor and improve environmental conditions.",
     tags: ["AIoT", "Wise-PaaS", "Competition"],
+    image: "/assets/award-aiot.jpg",
+    imageAlt:
+      "Le Ngoc Gia Huy holding the AIoT InnoWorks 2022 champion trophy and first-prize board",
   },
   {
     title: "Top Graduation Project Score",
     meta: "HCMUTE · Robotics and AI",
     body: "Awarded the highest graduation project score in the Robotics and AI program for semester 2 of 2024–2025.",
     tags: ["Graduation project", "Robotics & AI", "Academic"],
+    image: "/assets/award-graduation.jpg",
+    imageAlt:
+      "Certificate for the highest graduation project score in Robotics and AI, semester 2 2024–2025",
   },
 ] as const;
 

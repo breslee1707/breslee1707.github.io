@@ -3,6 +3,7 @@ import { Nav } from "./components/Nav";
 import { Hero } from "./components/Hero";
 import { Background } from "./components/Background";
 import { Work } from "./components/Work";
+import { MomentBand } from "./components/MomentBand";
 import { Experience } from "./components/Experience";
 import { Toolkit } from "./components/Toolkit";
 import { Contact } from "./components/Contact";
@@ -37,12 +38,16 @@ export default function App() {
         <Hero />
         <Background />
         <Work />
+        <MomentBand />
         <Experience />
         <Toolkit />
         <Contact />
       </main>
 
       <Footer />
+
+      <div className="grain" aria-hidden />
+
     </>
   );
 }
