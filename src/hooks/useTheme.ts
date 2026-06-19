@@ -14,6 +14,11 @@ export function useTheme() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    // Keep the mobile browser UI (address bar) in sync with the toggle.
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      meta.setAttribute("content", theme === "light" ? "#f7f8fa" : "#13161c");
+    }
     try {
       localStorage.setItem("theme", theme);
     } catch {

@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#13161c" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)" />
+    <!-- The site owns its theme via the toggle; theme-color is kept in sync in JS. -->
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#13161c" />
 
     <title>Le Ngoc Gia Huy — AI Engineer</title>
     <meta
@@ -57,6 +58,8 @@
             stored ||
             (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
           document.documentElement.setAttribute("data-theme", theme);
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute("content", theme === "light" ? "#f7f8fa" : "#13161c");
         } catch (e) {}
       })();
     </script>
