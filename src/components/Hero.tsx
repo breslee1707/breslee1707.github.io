@@ -1,94 +1,87 @@
-import { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
-import { profile, site } from "../data/content";
+import { profile, hero } from "../data/content";
+import { useScrollProgress } from "../hooks/useScrollProgress";
+import { Reveal } from "./Reveal";
 
 export function Hero() {
-  const fxRef = useRef<HTMLDivElement>(null);
-
-  // Mouse-follow spotlight: only updates CSS vars (no layout), rAF-throttled.
-  useEffect(() => {
-    const fx = fxRef.current;
-    const host = fx?.parentElement;
-    if (!fx || !host) return;
-    if (window.matchMedia("(hover: none)").matches) return;
-
-    let raf = 0;
-    const onMove = (e: MouseEvent) => {
-      const rect = host.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        fx.style.setProperty("--mx", `${x}px`);
-        fx.style.setProperty("--my", `${y}px`);
-      });
-    };
-    const enter = () => fx.classList.add("is-live");
-    const leave = () => fx.classList.remove("is-live");
-
-    host.addEventListener("mousemove", onMove);
-    host.addEventListener("mouseenter", enter);
-    host.addEventListener("mouseleave", leave);
-    return () => {
-      host.removeEventListener("mousemove", onMove);
-      host.removeEventListener("mouseenter", enter);
-      host.removeEventListener("mouseleave", leave);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+  const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>();
+  const stageVars = { ["--p" as string]: progress } as CSSProperties;
 
   return (
-    <section id="intro" className="relative scroll-mt-24 overflow-hidden">
-      {/* Technical grid + mouse-follow spotlight */}
-      <div ref={fxRef} className="hero-fx" aria-hidden>
-        <div className="hero-grid" />
-        <div className="hero-grid-accent" />
-        <div className="hero-spot" />
+    <section id="intro" className="relative">
+      {/* Cinematic stage: the portrait grows from a framed card to full-bleed
+          as you scroll, the cover photo fades, and the name slides apart. */}
+      <div
+        ref={ref}
+        className="hero-stage"
+        style={reduced ? { height: "100svh" } : undefined}
+      >
+        <div className="hero-pin" style={stageVars}>
+          {/* Cover — graduation atrium, fades as the portrait expands. */}
+          <div className="hero-cover" aria-hidden>
+            <img src={hero.cover} alt="" className="size-full object-cover" />
+            <div className="hero-cover-veil" />
+          </div>
+
+          {/* Expanding portrait. */}
+          <figure className="hero-frame">
+            <img
+              src={profile.portrait}
+              alt={profile.portraitAlt}
+              width={1000}
+              height={1340}
+              loading="eager"
+              fetchPriority="high"
+              className="size-full object-cover"
+            />
+            <div className="hero-frame-veil" aria-hidden />
+            <figcaption className="hero-frame-cap label">
+              <span className="text-white">{profile.name}</span>
+              <span className="text-white/70">
+                {profile.role} · {profile.org}
+              </span>
+            </figcaption>
+          </figure>
+
+          {/* Name, split across the frame. */}
+          <h1 className="hero-title">
+            <span className="hero-title-lead">{hero.titleLead}</span>{" "}
+            <span className="hero-title-rest">{hero.titleRest}</span>
+          </h1>
+
+          {/* Scroll cue (hidden when there's no scroll choreography). */}
+          {reduced ? null : (
+            <div className="hero-cue label" aria-hidden>
+              <span>{hero.scrollHint}</span>
+              <span className="cue-line block h-9 w-px" />
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Ambient accent light */}
-      <div
-        className="glow"
-        style={{ top: "-12%", right: "-6%", width: "58%", height: "62%" }}
-        aria-hidden
-      />
+      {/* Editorial intro — reveals once the portrait has filled the frame. */}
+      <div className="relative bg-bg">
+        <div className="mx-auto w-full max-w-[72rem] px-6 pb-24 pt-16 md:px-10 md:pb-28 md:pt-24">
+          <Reveal>
+            <p className="label text-accent">{profile.kicker}</p>
+          </Reveal>
 
-      <div className="relative z-10 mx-auto w-full max-w-[72rem] px-6 pt-12 pb-24 md:px-10 md:pt-16 md:pb-28">
-        {/* Masthead */}
-        <div className="lift flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4 label">
-          <span>{site.volume}</span>
-          <span className="text-faint">Portfolio · {profile.location}</span>
-        </div>
-
-        <div className="grid gap-12 pt-12 md:grid-cols-12 md:gap-10 md:pt-16">
-          {/* Text column */}
-          <div className="md:col-span-7">
-            <p
-              className="lift label text-accent"
-              style={{ ["--lift-delay" as string]: "60ms" }}
-            >
-              {profile.kicker}
-            </p>
-
-            <h1
-              className="lift mt-6 text-[clamp(2.6rem,7.2vw,5rem)] font-extrabold leading-[0.98] tracking-[-0.035em]"
-              style={{ ["--lift-delay" as string]: "120ms" }}
-            >
+          <Reveal delay={80}>
+            <p className="mt-6 max-w-[18ch] font-display text-[clamp(2.2rem,6.4vw,4.6rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">
               Building intelligent systems with{" "}
               <span className="text-accent">product-grade precision.</span>
-            </h1>
+            </p>
+          </Reveal>
 
-            <p
-              className="lift measure mt-8 text-lg text-muted md:text-xl"
-              style={{ ["--lift-delay" as string]: "200ms" }}
-            >
+          <Reveal delay={160}>
+            <p className="measure mt-8 text-lg text-muted md:text-xl">
               {profile.intro}
             </p>
+          </Reveal>
 
-            <div
-              className="lift mt-10 flex flex-wrap items-center gap-3"
-              style={{ ["--lift-delay" as string]: "280ms" }}
-            >
+          <Reveal delay={240}>
+            <div className="mt-10 flex flex-wrap items-center gap-3">
               <a
                 href="#work"
                 className="group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-mono text-sm font-medium text-[var(--accent-ink)] transition-transform duration-300 hover:-translate-y-0.5"
@@ -112,12 +105,10 @@ export function Hero() {
                 />
               </a>
             </div>
+          </Reveal>
 
-            {/* Focus chips */}
-            <ul
-              className="lift mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6 label"
-              style={{ ["--lift-delay" as string]: "360ms" }}
-            >
+          <Reveal delay={320}>
+            <ul className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6 label">
               {profile.focus.map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <span className="size-1 rounded-full bg-accent" aria-hidden />
@@ -125,40 +116,8 @@ export function Hero() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Portrait column */}
-          <div className="md:col-span-5">
-            <figure
-              className="lift float relative"
-              style={{ ["--lift-delay" as string]: "180ms" }}
-            >
-              <div className="portrait-scrim relative overflow-hidden rounded-lg border border-line bg-surface shadow-[0_24px_60px_-24px_rgba(0,0,0,0.55)]">
-                <img
-                  src={profile.portrait}
-                  alt={profile.portraitAlt}
-                  width={720}
-                  height={900}
-                  loading="eager"
-                  fetchPriority="high"
-                  className="aspect-[4/5] w-full object-cover"
-                />
-                <figcaption className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-4 label">
-                  <span className="text-ink">{profile.name}</span>
-                  <span className="text-faint">
-                    {profile.role} · {profile.org}
-                  </span>
-                </figcaption>
-              </div>
-            </figure>
-          </div>
+          </Reveal>
         </div>
-      </div>
-
-      {/* Scroll cue */}
-      <div className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex">
-        <span className="label">Scroll</span>
-        <span className="cue-line block h-10 w-px" aria-hidden />
       </div>
     </section>
   );

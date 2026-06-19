@@ -19,6 +19,16 @@ export const profile = {
   location: "Ho Chi Minh City, Vietnam",
 } as const;
 
+/** Cinematic scroll-expand hero — cover photo + an expanding portrait frame. */
+export const hero = {
+  /** Full-screen background that fades as the portrait grows. */
+  cover: "/assets/graduation.jpg",
+  /** Name split across the expanding frame (slides apart on scroll). */
+  titleLead: "Le Ngoc",
+  titleRest: "Gia Huy",
+  scrollHint: "Scroll to enter",
+} as const;
+
 /** Full-bleed atmospheric moment used as a section divider. */
 export const moment = {
   image: "/assets/graduation.jpg",

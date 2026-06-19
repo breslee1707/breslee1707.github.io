@@ -198,20 +198,6 @@
   mix-blend-mode: multiply;
 }
 
-/* Portrait frame with a legibility scrim for the caption. */
-.portrait-scrim::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 45%;
-  background: linear-gradient(
-    to top,
-    color-mix(in oklch, var(--color-bg) 70%, transparent),
-    transparent
-  );
-  pointer-events: none;
-}
-
 /* Full-bleed parallax image band. */
 .image-band {
   background-attachment: fixed;
@@ -268,65 +254,134 @@
   animation: cue 2.6s var(--ease-out-quart) infinite;
 }
 
-/* ---- Hero: technical grid + mouse-follow spotlight ---- */
-.hero-fx {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
+/* ============================================================
+   Hero — cinematic scroll-expand stage
+   A sticky frame grows from a small card to near full-bleed as the
+   stage scrolls past, driven by the --p (0→1) custom property set in JS.
+   ============================================================ */
+.hero-stage {
+  position: relative;
+  height: 170svh; /* scroll distance over which the portrait expands */
+}
+
+.hero-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
-/* Faint static grid, brightest top-right (under the ambient glow). */
-.hero-grid {
+/* Cover photo — fades out as the portrait takes over. */
+.hero-cover {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(var(--color-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
-  background-size: 44px 44px;
-  opacity: 0.4;
-  -webkit-mask-image: radial-gradient(130% 95% at 72% 0%, #000 0%, transparent 68%);
-  mask-image: radial-gradient(130% 95% at 72% 0%, #000 0%, transparent 68%);
+  opacity: calc(1 - var(--p, 0) * 0.92);
 }
-
-/* Accent-tinted grid that only lights up around the cursor. */
-.hero-grid-accent {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(color-mix(in oklch, var(--color-accent) 55%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklch, var(--color-accent) 55%, transparent) 1px, transparent 1px);
-  background-size: 44px 44px;
-  opacity: 0;
-  transition: opacity 0.45s var(--ease-out-quart);
-  -webkit-mask-image: radial-gradient(170px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 65%);
-  mask-image: radial-gradient(170px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 65%);
+.hero-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-
-/* Soft accent glow that follows the cursor. */
-.hero-spot {
+.hero-cover-veil {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    240px circle at var(--mx, -999px) var(--my, -999px),
-    color-mix(in oklch, var(--color-accent) 20%, transparent),
-    transparent 70%
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--color-bg) 28%, transparent),
+    color-mix(in oklch, var(--color-bg) 8%, transparent) 42%,
+    color-mix(in oklch, var(--color-bg) 72%, transparent)
   );
-  opacity: 0;
-  transition: opacity 0.45s var(--ease-out-quart);
 }
 
-.hero-fx.is-live .hero-grid-accent,
-.hero-fx.is-live .hero-spot {
-  opacity: 1;
+/* The expanding portrait. Width/height interpolate with --p, capped to
+   the viewport so it never quite goes edge-to-edge (keeps the framed feel). */
+.hero-frame {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  /* Grow linearly from a small card to a near full-bleed frame, reaching the
+     cap exactly at p=1 on any viewport (no dead scroll zone). */
+  --frame-w0: min(300px, 78vw);
+  --frame-h0: min(420px, 56svh);
+  width: calc(var(--frame-w0) + var(--p, 0) * (94vw - var(--frame-w0)));
+  height: calc(var(--frame-h0) + var(--p, 0) * (86svh - var(--frame-h0)));
+  border-radius: clamp(0.85rem, calc(1.25rem - var(--p, 0) * 0.4rem), 1.25rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, #ffffff 16%, transparent);
+  box-shadow: 0 40px 90px -34px rgba(0, 0, 0, 0.62);
+}
+.hero-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Dark wash keeps the split name legible early, lifts as it expands. */
+.hero-frame-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.06) 38%,
+    transparent 60%
+  );
+  opacity: calc(0.9 - var(--p, 0) * 0.5);
+}
+.hero-frame-cap {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  opacity: var(--p, 0); /* appears only once the frame is large */
 }
 
-@media (hover: none) {
-  .hero-grid-accent,
-  .hero-spot {
-    display: none;
-  }
+/* Name overlay — slides apart and fades as the frame opens. */
+.hero-title {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1.4rem);
+  pointer-events: none;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.3rem, 8vw, 6rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.5);
+  opacity: calc(1 - var(--p, 0) * 1.4);
+}
+.hero-title-lead {
+  transform: translateX(calc(var(--p, 0) * -22vw));
+}
+.hero-title-rest {
+  transform: translateX(calc(var(--p, 0) * 22vw));
+}
+
+/* Scroll cue — visible only at the very start. */
+.hero-cue {
+  position: absolute;
+  z-index: 2;
+  bottom: 1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  pointer-events: none;
+  opacity: calc(1 - var(--p, 0) * 6); /* clamped to 0 by the browser */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -334,10 +389,6 @@
   .js .float,
   .cue-line::after {
     animation: none !important;
-  }
-  .hero-grid-accent,
-  .hero-spot {
-    transition: none !important;
   }
 }
 
