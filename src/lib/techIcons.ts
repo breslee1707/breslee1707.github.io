@@ -28,6 +28,10 @@ import {
   Target,
   Network,
   BrainCircuit,
+  Wrench,
+  ListChecks,
+  Users,
+  Plug,
   type LucideIcon,
 } from "lucide-react";
 
@@ -105,6 +109,11 @@ const MAP: Record<string, TechIcon> = {
   rl: concept("RL", Target),
   aiot: concept("AIoT", Network),
   appliedai: concept("Applied AI", BrainCircuit),
+  // Agentic concepts.
+  toolcalling: concept("Tool-calling", Wrench),
+  planning: concept("Planning", ListChecks),
+  multiagent: concept("Multi-agent", Users),
+  mcp: concept("MCP", Plug),
 };
 
 const norm = (s: string) =>

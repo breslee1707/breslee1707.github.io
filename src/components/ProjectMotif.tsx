@@ -35,6 +35,28 @@ const node = (x: number, y: number, i: number) => (
 );
 
 const MOTIFS: Record<MotifName, ReactNode> = {
+  // Agent hub orchestrating tools, with a reasoning loop (agentic systems).
+  agent: (
+    <>
+      {/* spokes from the agent hub to its tools */}
+      <line x1={150} y1={94} x2={206} y2={48} />
+      <line x1={150} y1={94} x2={214} y2={104} />
+      <line x1={150} y1={94} x2={168} y2={150} />
+      <line x1={150} y1={94} x2={96} y2={122} />
+      {/* tool nodes */}
+      <rect x={197} y={39} width={18} height={18} rx={4} />
+      <rect x={205} y={95} width={18} height={18} rx={4} />
+      <rect x={159} y={141} width={18} height={18} rx={4} />
+      <rect x={87} y={113} width={18} height={18} rx={4} />
+      {/* agent hub */}
+      <circle cx={150} cy={94} r={14} fill="var(--color-bg)" />
+      <circle cx={150} cy={94} r={4} fill="currentColor" stroke="none" />
+      {/* reasoning loop above the hub */}
+      <path d="M138 56 A12 12 0 1 1 162 56" />
+      <path d="M162 56 l-6 -2 M162 56 l1 7" />
+    </>
+  ),
+
   // Knowledge graph — nodes + edges (RAG / document QA).
   graph: (
     <>

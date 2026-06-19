@@ -91,7 +91,7 @@ export const awards = [
 ] as const;
 
 /** Selected work. */
-export type ProjectMotif = "graph" | "arm" | "vehicle" | "sensor";
+export type ProjectMotif = "agent" | "graph" | "arm" | "vehicle" | "sensor";
 
 export type Project = {
   title: string;
@@ -100,14 +100,24 @@ export type Project = {
   tags: string[];
   /** Domain line-art rendered faintly behind the row (see ProjectMotif.tsx). */
   motif: ProjectMotif;
+  /** Optional small accent label (e.g. an active focus). */
+  status?: string;
 };
 
 export const projects: Project[] = [
   {
-    title: "Document Question Answering System",
-    meta: "RAG & LLM applications",
-    body: "A retrieval-augmented assistant with document ingestion, semantic chunking, vector embeddings, Qdrant search, Supabase metadata, reranking, and adaptive prompts — orchestrated with LangGraph over OpenAI models.",
-    tags: ["OpenAI API", "LangGraph", "Qdrant", "Supabase"],
+    title: "Agentic AI Systems",
+    meta: "LLM agents & orchestration",
+    body: "Autonomous LLM agents that plan, call tools, and act across multi-step workflows — built with orchestration graphs, memory, guardrails, and evaluation loops so agent behavior stays reliable enough for production, not just demos.",
+    tags: ["LangGraph", "Tool-calling", "Planning", "Multi-agent", "MCP"],
+    motif: "agent",
+    status: "Currently building",
+  },
+  {
+    title: "Agentic Document QA",
+    meta: "Agentic RAG & retrieval",
+    body: "A LangGraph-orchestrated agent that plans retrieval, calls search and reranking tools, and adapts across multi-step queries — over document ingestion, semantic chunking, Qdrant vector search, Supabase metadata, and OpenAI models.",
+    tags: ["LangGraph", "Tool-calling", "Qdrant", "OpenAI API"],
     motif: "graph",
   },
   {

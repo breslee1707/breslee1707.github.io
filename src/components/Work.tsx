@@ -27,6 +27,15 @@ export function Work() {
               </div>
 
               <div className="relative z-10">
+                {p.status ? (
+                  <p className="mb-3 inline-flex items-center gap-2 label text-accent">
+                    <span
+                      className="size-1.5 rounded-full bg-accent animate-pulse motion-reduce:animate-none"
+                      aria-hidden
+                    />
+                    {p.status}
+                  </p>
+                ) : null}
                 <h3 className="text-2xl tracking-[-0.02em] md:text-[1.9rem]">
                   {p.title}
                 </h3>
