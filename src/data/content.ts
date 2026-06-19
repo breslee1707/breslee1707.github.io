@@ -91,11 +91,15 @@ export const awards = [
 ] as const;
 
 /** Selected work. */
+export type ProjectMotif = "graph" | "arm" | "vehicle" | "sensor";
+
 export type Project = {
   title: string;
   meta: string;
   body: string;
   tags: string[];
+  /** Domain line-art rendered faintly behind the row (see ProjectMotif.tsx). */
+  motif: ProjectMotif;
 };
 
 export const projects: Project[] = [
@@ -104,33 +108,30 @@ export const projects: Project[] = [
     meta: "RAG & LLM applications",
     body: "A retrieval-augmented assistant with document ingestion, semantic chunking, vector embeddings, Qdrant search, Supabase metadata, reranking, and adaptive prompts — orchestrated with LangGraph over OpenAI models.",
     tags: ["OpenAI API", "LangGraph", "Qdrant", "Supabase"],
+    motif: "graph",
   },
   {
     title: "AI-Based Robotic Arm Inspection",
     meta: "Computer vision & robotics",
     body: "An inspection workflow combining PyTorch and TensorFlow models, OpenCV, RobotStudio simulation, MATLAB/Simulink kinematics, Inventor assembly, and real-time C# socket communication.",
     tags: ["PyTorch", "OpenCV", "RobotStudio", "C#"],
+    motif: "arm",
   },
   {
     title: "Autonomous 3-Wheeled Vehicle",
     meta: "Reinforcement learning & ROS",
     body: "An autonomous navigation prototype built with LIDAR, Gazebo simulation, ROS, reinforcement learning, and path-planning workflows.",
     tags: ["ROS", "Gazebo", "LIDAR", "RL"],
+    motif: "vehicle",
   },
   {
     title: "Supermarket Air Monitoring",
     meta: "AIoT & applied intelligence",
     body: "An AIoT concept around environmental monitoring, sensor data, and applied intelligence — recognized with first prize at Advantech AIoT InnoWorks 2022.",
     tags: ["AIoT", "Sensors", "Applied AI"],
+    motif: "sensor",
   },
 ];
-
-/** Optional pointer to the in-repo edge-AI project notes. */
-export const labLink = {
-  label: "Edge-AI project notes",
-  href: "/edge-ai-projects/",
-  note: "Nine hands-on edge-AI build logs — TFLite, OpenVINO, ONNX Runtime, and TFLite Micro.",
-};
 
 /** Experience timeline (most recent first). */
 export type Logo =

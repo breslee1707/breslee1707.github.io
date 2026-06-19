@@ -211,6 +211,31 @@
   }
 }
 
+/* ---- Work: faint domain line-art behind each project row ---- */
+.project-motif {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: clamp(180px, 40%, 380px);
+  height: 100%;
+  color: var(--color-line);
+  opacity: 0.7;
+  pointer-events: none;
+  /* Fade toward the text so it never dampens contrast under the copy. */
+  -webkit-mask-image: linear-gradient(to left, #000 30%, transparent 94%);
+  mask-image: linear-gradient(to left, #000 30%, transparent 94%);
+  transition: color 0.45s var(--ease-out-quart),
+    opacity 0.45s var(--ease-out-quart);
+}
+.group:hover .project-motif {
+  color: var(--color-accent);
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-motif {
+    transition: none;
+  }
+}
+
 /* Gentle continuous float for the hero portrait. */
 .js .float {
   animation: float 9s ease-in-out infinite;
