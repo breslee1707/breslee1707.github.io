@@ -302,10 +302,13 @@
   z-index: 1;
   margin: 0;
   /* Grow linearly from a small card to a near full-bleed frame, reaching the
-     cap exactly at p=1 on any viewport (no dead scroll zone). */
+     cap exactly at p=1 on any viewport (no dead scroll zone). The width cap is
+     also bounded to ~the portrait's native pixel width (1792px) so the image
+     never upscales — keeps it crisp even on very wide monitors. */
   --frame-w0: min(300px, 78vw);
   --frame-h0: min(420px, 56svh);
-  width: calc(var(--frame-w0) + var(--p, 0) * (94vw - var(--frame-w0)));
+  --frame-wmax: min(94vw, 1680px);
+  width: calc(var(--frame-w0) + var(--p, 0) * (var(--frame-wmax) - var(--frame-w0)));
   height: calc(var(--frame-h0) + var(--p, 0) * (86svh - var(--frame-h0)));
   border-radius: clamp(0.85rem, calc(1.25rem - var(--p, 0) * 0.4rem), 1.25rem);
   overflow: hidden;

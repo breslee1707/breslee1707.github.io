@@ -29,8 +29,8 @@ export function Hero() {
             <img
               src={profile.portrait}
               alt={profile.portraitAlt}
-              width={1000}
-              height={1340}
+              width={1792}
+              height={2400}
               loading="eager"
               fetchPriority="high"
               className="size-full object-cover"
