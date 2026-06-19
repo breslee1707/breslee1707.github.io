@@ -24,6 +24,12 @@ export function TechBadge({ label, className = "" }: Props) {
     >
       {icon?.img ? (
         <img src={icon.img} alt="" className="size-3.5 shrink-0" aria-hidden />
+      ) : icon?.Comp ? (
+        <icon.Comp
+          size={14}
+          className="shrink-0 text-faint transition-colors duration-200 group-hover/tech:text-accent"
+          aria-hidden
+        />
       ) : icon?.path ? (
         <svg
           viewBox={icon.viewBox ?? "0 0 24 24"}

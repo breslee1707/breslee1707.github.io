@@ -10,6 +10,26 @@ import {
   siLanggraph,
   siIntel,
 } from "simple-icons";
+import {
+  Workflow,
+  MessageSquareText,
+  Boxes,
+  Database,
+  ListOrdered,
+  Repeat,
+  Box,
+  Bot,
+  Waypoints,
+  Cable,
+  Cpu,
+  Cloud,
+  RadioTower,
+  Radar,
+  Target,
+  Network,
+  BrainCircuit,
+  type LucideIcon,
+} from "lucide-react";
 
 export type TechIcon = {
   title: string;
@@ -21,7 +41,12 @@ export type TechIcon = {
   viewBox?: string;
   /** Full-colour image source — rendered as-is (e.g. MATLAB). */
   img?: string;
+  /** Lucide line icon for concepts with no brand logo (→ accent on hover). */
+  Comp?: LucideIcon;
 };
+
+/** Concept labels (no brand logo) get a fitting lucide line icon. */
+const concept = (title: string, Comp: LucideIcon): TechIcon => ({ title, Comp });
 
 // OpenAI is not shipped in simple-icons — use the official logomark.
 const openai: TechIcon = {
@@ -61,6 +86,25 @@ const MAP: Record<string, TechIcon> = {
   csharp,
   matlab,
   matlabsimulink: matlab,
+  // Concepts (no brand logo) → lucide line icons.
+  ragpipelines: concept("RAG pipelines", Workflow),
+  promptdesign: concept("Prompt design", MessageSquareText),
+  embeddings: concept("Embeddings", Boxes),
+  vectordbs: concept("Vector DBs", Database),
+  reranking: concept("Reranking", ListOrdered),
+  evalloops: concept("Eval loops", Repeat),
+  gazebo: concept("Gazebo", Box),
+  robotstudio: concept("RobotStudio", Bot),
+  kinematics: concept("Kinematics", Waypoints),
+  socketio: concept("Socket I/O", Cable),
+  openvino: concept("OpenVINO", Cpu),
+  wisepaas: concept("Wise-PaaS", Cloud),
+  sensors: concept("Sensors", RadioTower),
+  // Remaining Work-tag concepts, for a consistent look across the site.
+  lidar: concept("LIDAR", Radar),
+  rl: concept("RL", Target),
+  aiot: concept("AIoT", Network),
+  appliedai: concept("Applied AI", BrainCircuit),
 };
 
 const norm = (s: string) =>
