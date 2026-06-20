@@ -44,10 +44,15 @@ export function Hero() {
             </figcaption>
           </figure>
 
-          {/* Name, split across the frame. */}
+          {/* Name, split across the frame, with a role line below. */}
           <h1 className="hero-title">
-            <span className="hero-title-lead">{hero.titleLead}</span>{" "}
-            <span className="hero-title-rest">{hero.titleRest}</span>
+            <span className="hero-title-name">
+              <span className="hero-title-lead">{hero.titleLead}</span>{" "}
+              <span className="hero-title-rest">{hero.titleRest}</span>
+            </span>
+            <span className="hero-subtitle">
+              {profile.role} <span aria-hidden>|</span> {profile.org}
+            </span>
           </h1>
 
           {/* Scroll cue (hidden when there's no scroll choreography). */}
