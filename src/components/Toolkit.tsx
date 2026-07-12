@@ -7,7 +7,7 @@ export function Toolkit() {
   return (
     <Section
       id="toolkit"
-      index="05"
+      index="06"
       label="Toolkit"
       title="The stack behind the work."
       intro="Practical depth across the AI lifecycle — from model behavior to edge deployment."
