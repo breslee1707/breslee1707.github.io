@@ -20,7 +20,10 @@ export function Work() {
               <ProjectMotif name={p.motif} className="project-motif" />
 
               <div className="relative z-10 flex items-center gap-4 md:flex-col md:items-start md:gap-3">
-                <span className="font-display text-3xl font-bold tabular-nums text-line transition-colors duration-300 group-hover:text-accent md:text-5xl">
+                <span
+                  aria-hidden
+                  className="font-display text-3xl font-bold tabular-nums text-line transition-colors duration-300 group-hover:text-accent md:text-5xl"
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <p className="label md:mt-1">{p.meta}</p>

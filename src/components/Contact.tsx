@@ -7,7 +7,7 @@ export function Contact() {
   return (
     <Section
       id="contact"
-      index="06"
+      index="07"
       label="Contact"
       title="Let's build something technically serious."
       intro={contact.lede}

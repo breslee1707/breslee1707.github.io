@@ -7,7 +7,10 @@ export function Footer() {
       <div className="mx-auto flex w-full max-w-[72rem] flex-col gap-6 px-6 py-12 md:flex-row md:items-center md:justify-between md:px-10">
         <div>
           <p className="font-display text-lg font-bold tracking-tight">
-            {profile.name}
+            {profile.name}{" "}
+            <span lang="vi" className="font-normal text-faint">
+              · {profile.nameVi}
+            </span>
           </p>
           <p className="mt-1 label">
             {profile.role} · {profile.org} &nbsp;·&nbsp; Co-founder, Code4life®

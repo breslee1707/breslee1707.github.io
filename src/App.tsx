@@ -3,10 +3,12 @@ import { Nav } from "./components/Nav";
 import { Hero } from "./components/Hero";
 import { Background } from "./components/Background";
 import { Work } from "./components/Work";
+import { AgentLab } from "./components/AgentLab";
 import { MomentBand } from "./components/MomentBand";
 import { Experience } from "./components/Experience";
 import { Toolkit } from "./components/Toolkit";
 import { Contact } from "./components/Contact";
+import { Faq } from "./components/Faq";
 import { Footer } from "./components/Footer";
 
 export default function App() {
@@ -38,10 +40,12 @@ export default function App() {
         <Hero />
         <Background />
         <Work />
+        <AgentLab />
         <MomentBand />
         <Experience />
         <Toolkit />
         <Contact />
+        <Faq />
       </main>
 
       <Footer />

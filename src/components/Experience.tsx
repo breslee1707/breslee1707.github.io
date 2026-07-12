@@ -7,7 +7,7 @@ export function Experience() {
   return (
     <Section
       id="experience"
-      index="04"
+      index="05"
       label="Experience"
       title="From robotics research to applied AI engineering."
     >

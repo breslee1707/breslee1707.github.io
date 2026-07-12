@@ -5,24 +5,26 @@
 
 export const profile = {
   name: "Le Ngoc Gia Huy",
+  /** Vietnamese form of the name — rendered with lang="vi" where shown. */
+  nameVi: "Lê Ngọc Gia Huy",
   role: "AI Engineer",
   org: "Intel",
   tagline: "Building intelligent systems with product-grade precision.",
   kicker: "AI Engineer at Intel · since Nov 2025",
   intro:
-    "I build RAG applications, robotic inspection systems, autonomous agents, computer vision, and AIoT — moving each one from prototype to dependable, production-minded execution.",
+    "I build agentic AI systems — LLM agents that plan, call tools, and act across multi-step workflows — plus RAG applications, robotic inspection, computer vision, and AIoT, moving each one from prototype to dependable, production-minded execution.",
   // Short, scannable positioning chips used in the hero.
-  focus: ["RAG systems", "Robotic vision", "AIoT", "Product engineering"],
-  portrait: "/assets/portrait.jpg",
+  focus: ["Agentic AI", "RAG systems", "Robotic vision", "AIoT"],
+  portrait: "/assets/portrait.webp",
   portraitAlt:
-    "Le Ngoc Gia Huy seated against a sunlit ochre wall framed by greenery",
+    "Lê Ngọc Gia Huy (Le Ngoc Gia Huy) seated against a sunlit ochre wall framed by greenery",
   location: "Ho Chi Minh City, Vietnam",
 } as const;
 
 /** Cinematic scroll-expand hero — cover photo + an expanding portrait frame. */
 export const hero = {
   /** Full-screen background that fades as the portrait grows. */
-  cover: "/assets/graduation.jpg",
+  cover: "/assets/graduation.webp",
   /** Name split across the expanding frame (slides apart on scroll). */
   titleLead: "Le Ngoc",
   titleRest: "Gia Huy",
@@ -31,7 +33,7 @@ export const hero = {
 
 /** Full-bleed atmospheric moment used as a section divider. */
 export const moment = {
-  image: "/assets/graduation.jpg",
+  image: "/assets/graduation.webp",
   imageAlt:
     "Le Ngoc Gia Huy in graduation gown looking up through a sunlit atrium at HCMUTE",
   caption: "Robotics & AI, HCMUTE",
@@ -44,9 +46,10 @@ export const nav: NavItem[] = [
   { id: "intro", index: "01", label: "Intro" },
   { id: "background", index: "02", label: "Background" },
   { id: "work", index: "03", label: "Work" },
-  { id: "experience", index: "04", label: "Experience" },
-  { id: "toolkit", index: "05", label: "Toolkit" },
-  { id: "contact", index: "06", label: "Contact" },
+  { id: "agent-lab", index: "04", label: "Agent Lab" },
+  { id: "experience", index: "05", label: "Experience" },
+  { id: "toolkit", index: "06", label: "Toolkit" },
+  { id: "contact", index: "07", label: "Contact" },
 ];
 
 /** Background / about — narrative + the discipline cards. */
@@ -75,7 +78,7 @@ export const awards = [
     meta: "Advantech AIoT InnoWorks 2022",
     body: "Recognized for an AIoT application concept using Wise-PaaS, sensor data, and applied intelligence to monitor and improve environmental conditions.",
     tags: ["AIoT", "Wise-PaaS", "Competition"],
-    image: "/assets/award-aiot.jpg",
+    image: "/assets/award-aiot.webp",
     imageAlt:
       "Le Ngoc Gia Huy holding the AIoT InnoWorks 2022 champion trophy and first-prize board",
   },
@@ -84,7 +87,7 @@ export const awards = [
     meta: "HCMUTE · Robotics and AI",
     body: "Awarded the highest graduation project score in the Robotics and AI program for semester 2 of 2024–2025.",
     tags: ["Graduation project", "Robotics & AI", "Academic"],
-    image: "/assets/award-graduation.jpg",
+    image: "/assets/award-graduation.webp",
     imageAlt:
       "Certificate for the highest graduation project score in Robotics and AI, semester 2 2024–2025",
   },
@@ -224,6 +227,30 @@ export const contact = {
     { label: "TikTok", href: "https://www.tiktok.com/@huyg.ai", handle: "@huyg.ai" },
   ],
 } as const;
+
+/**
+ * FAQ — mirrored 1:1 by the FAQPage JSON-LD in index.html.
+ * Written so search and answer engines can quote each answer standalone;
+ * keep both places in sync when editing.
+ */
+export const faq = [
+  {
+    q: "Who is Lê Ngọc Gia Huy?",
+    a: "Lê Ngọc Gia Huy (English form: Le Ngoc Gia Huy) is an AI Engineer at Intel and co-founder of Code4life®, based in Ho Chi Minh City, Vietnam. He specializes in agentic AI systems, retrieval-augmented generation, computer vision, robotics, and AIoT.",
+  },
+  {
+    q: "What does Le Ngoc Gia Huy specialize in?",
+    a: "His core focus is agentic AI — LLM agents that plan, call tools, and act across multi-step workflows, built with LangGraph orchestration, Model Context Protocol (MCP), guardrails, and evaluation loops. That sits on top of RAG engineering (Qdrant vector search, semantic chunking, reranking) and a robotics background spanning PyTorch, OpenCV, ROS, and robotic simulation.",
+  },
+  {
+    q: "What recognition has Lê Ngọc Gia Huy received?",
+    a: "He won 1st Prize at Advantech AIoT InnoWorks 2022 (40,000,000 VND) and earned the highest graduation project score in the Robotics & AI program at HCMUTE for semester 2 of 2024–2025.",
+  },
+  {
+    q: "How can I contact Lê Ngọc Gia Huy?",
+    a: "Through LinkedIn (in/lengocgiahuy1810), GitHub (@breslee1707), or TikTok (@huyg.ai) — all linked in the contact section of this portfolio.",
+  },
+] as const;
 
 export const site = {
   volume: "Vol. 01 / '26",

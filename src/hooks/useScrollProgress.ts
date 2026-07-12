@@ -11,11 +11,14 @@ import { useEffect, useRef, useState } from "react";
 export function useScrollProgress<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [progress, setProgress] = useState(0);
-  const [reduced] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  // Detected after mount so the prerendered and hydrated markup match.
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setReduced(true);
+    }
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
