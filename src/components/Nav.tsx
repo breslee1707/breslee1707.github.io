@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { nav, profile, site } from "../data/content";
 import { useScrollSpy } from "../hooks/useScrollSpy";
@@ -9,9 +9,40 @@ const ids = nav.map((n) => n.id);
 export function Nav() {
   const active = useScrollSpy(ids);
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Reading-progress line: transform-only, rAF-throttled, no re-renders.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      el.style.setProperty(
+        "--scroll-progress",
+        String(max > 0 ? Math.min(window.scrollY / max, 1) : 0),
+      );
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md">
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md"
+    >
       <nav
         aria-label="Primary"
         className="mx-auto flex h-16 w-full max-w-[72rem] items-center justify-between gap-4 px-6 md:px-10"
@@ -63,6 +94,8 @@ export function Nav() {
           </button>
         </div>
       </nav>
+
+      <div className="nav-progress" aria-hidden />
 
       {/* Mobile menu */}
       {open ? (

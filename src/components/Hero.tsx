@@ -2,6 +2,8 @@ import type { CSSProperties } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { profile, hero } from "../data/content";
 import { useScrollProgress } from "../hooks/useScrollProgress";
+import { Magnetic } from "./Magnetic";
+import { NetworkField } from "./NetworkField";
 import { Reveal } from "./Reveal";
 
 export function Hero() {
@@ -29,8 +31,8 @@ export function Hero() {
             <img
               src={profile.portrait}
               alt={profile.portraitAlt}
-              width={1792}
-              height={2400}
+              width={1200}
+              height={1607}
               loading="eager"
               fetchPriority="high"
               className="size-full object-cover"
@@ -67,7 +69,8 @@ export function Hero() {
 
       {/* Editorial intro — reveals once the portrait has filled the frame. */}
       <div className="relative bg-bg">
-        <div className="mx-auto w-full max-w-[72rem] px-6 pb-24 pt-16 md:px-10 md:pb-28 md:pt-24">
+        <NetworkField className="opacity-70" />
+        <div className="relative mx-auto w-full max-w-[72rem] px-6 pb-24 pt-16 md:px-10 md:pb-28 md:pt-24">
           <Reveal>
             <p className="label text-accent">{profile.kicker}</p>
           </Reveal>
@@ -87,28 +90,32 @@ export function Hero() {
 
           <Reveal delay={240}>
             <div className="mt-10 flex flex-wrap items-center gap-3">
-              <a
-                href="#work"
-                className="group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-mono text-sm font-medium text-[var(--accent-ink)] transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                View selected work
-                <ArrowDownRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-y-0.5"
-                  aria-hidden
-                />
-              </a>
-              <a
-                href="#contact"
-                className="group inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-mono text-sm text-muted transition-colors duration-300 hover:border-accent hover:text-ink"
-              >
-                Start a conversation
-                <ArrowUpRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  aria-hidden
-                />
-              </a>
+              <Magnetic>
+                <a
+                  href="#agent-lab"
+                  className="group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-mono text-sm font-medium text-[var(--accent-ink)] transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Run the Agent Lab
+                  <ArrowDownRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-y-0.5"
+                    aria-hidden
+                  />
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  href="#work"
+                  className="group inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-mono text-sm text-muted transition-colors duration-300 hover:border-accent hover:text-ink"
+                >
+                  View selected work
+                  <ArrowUpRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    aria-hidden
+                  />
+                </a>
+              </Magnetic>
             </div>
           </Reveal>
 
