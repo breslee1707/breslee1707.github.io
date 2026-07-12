@@ -1,0 +1,48 @@
+# Lê Ngọc Gia Huy (Le Ngoc Gia Huy)
+
+> Lê Ngọc Gia Huy (English form: Le Ngoc Gia Huy) is an AI Engineer at Intel,
+> based in Ho Chi Minh City, Vietnam, and co-founder of Code4life®. He builds
+> agentic AI systems — LLM agents that plan, call tools, and act across
+> multi-step workflows — plus RAG applications, computer vision, robotics,
+> and AIoT products.
+
+Portfolio: https://breslee1707.github.io/
+
+## Identity
+
+- Name (Vietnamese): Lê Ngọc Gia Huy
+- Name (romanized): Le Ngoc Gia Huy
+- Role: AI Engineer at Intel (since November 2025)
+- Also: Co-founder of Code4life®
+- Location: Ho Chi Minh City, Vietnam
+- Education: Robotics & AI, Ho Chi Minh City University of Technology and
+  Education (HCMUTE)
+
+## Expertise
+
+- Agentic AI: LLM agents, LangGraph orchestration, tool-calling, planning,
+  multi-agent systems, Model Context Protocol (MCP), guardrails, evaluation
+- RAG: document ingestion, semantic chunking, embeddings, Qdrant vector
+  search, Supabase metadata, reranking, OpenAI models
+- Computer vision & robotics: PyTorch, TensorFlow, OpenCV, ROS, Gazebo,
+  RobotStudio, kinematics
+- Edge & AIoT: TFLite, TFLite Micro, OpenVINO, ONNX Runtime, Wise-PaaS
+
+## Recognition
+
+- 1st Prize, Advantech AIoT InnoWorks 2022 (40,000,000 VND)
+- Top graduation project score, Robotics & AI program, HCMUTE,
+  semester 2 of 2024–2025
+
+## Experience
+
+- AI Engineer, Intel — Nov 2025 to present
+- Co-founder, Code4life® — 2025 to present
+- AI / RAG Engineer, RegenX — Aug 2024 to Feb 2025
+- AI Robotics Intern, ABB Robotics — Jan 2024 to Jul 2024
+
+## Links
+
+- LinkedIn: https://www.linkedin.com/in/lengocgiahuy1810/
+- GitHub: https://github.com/breslee1707
+- TikTok: https://www.tiktok.com/@huyg.ai

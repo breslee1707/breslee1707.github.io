@@ -183,6 +183,120 @@
   }
 }
 
+/* Magnetic hover wrapper — springs back when the pointer leaves. */
+.magnetic {
+  transition: transform 0.45s var(--ease-out-expo);
+  will-change: transform;
+}
+
+/* Work motifs draw themselves on hover (dash sweep; 300 covers the longest
+   stroke in the 240×180 viewBox). The pre-dashed vehicle path is excluded. */
+@media (prefers-reduced-motion: no-preference) {
+  .group:hover .project-motif :is(path, line, rect, circle):not([stroke-dasharray]) {
+    animation: motif-draw 0.9s var(--ease-out-quart) both;
+  }
+}
+@keyframes motif-draw {
+  from {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Thin reading-progress line under the nav. */
+.nav-progress {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 1.5px;
+  width: 100%;
+  background: var(--color-accent);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--scroll-progress, 0));
+}
+
+/* ---- Agent Lab: node graph + trace console ---- */
+.agent-edge {
+  stroke: var(--color-line);
+  stroke-width: 1.5;
+}
+.agent-edge-active {
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+  animation: edge-flow 0.6s linear infinite;
+}
+@keyframes edge-flow {
+  to {
+    stroke-dashoffset: -9;
+  }
+}
+.agent-node {
+  fill: var(--color-bg);
+  stroke: var(--color-line);
+  stroke-width: 1.5;
+}
+.agent-node-done {
+  fill: var(--color-bg);
+  stroke: var(--color-faint);
+  stroke-width: 1.5;
+}
+.agent-node-active {
+  fill: color-mix(in oklch, var(--color-accent) 14%, var(--color-bg));
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  animation: node-pulse 1.1s var(--ease-out-quart) infinite alternate;
+}
+@keyframes node-pulse {
+  from {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  to {
+    filter: drop-shadow(0 0 7px color-mix(in oklch, var(--color-accent) 55%, transparent));
+  }
+}
+.agent-node-label {
+  fill: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+}
+.agent-node-label-active {
+  fill: var(--color-ink);
+}
+.agent-console {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-edge-active {
+    animation: none;
+  }
+  .agent-node-active {
+    animation: none;
+  }
+}
+
+/* FAQ disclosure icon rotates into an × when open. */
+.faq-item[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* Theme toggle renders both icons; CSS picks one so prerendered markup
+   is identical regardless of the visitor's stored theme. */
+.theme-icon-moon,
+[data-theme="light"] .theme-icon-sun {
+  display: none;
+}
+[data-theme="light"] .theme-icon-moon {
+  display: block;
+}
+
 /* Fixed film-grain wash for tactile depth. */
 .grain {
   position: fixed;
