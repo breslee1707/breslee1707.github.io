@@ -9,5 +9,15 @@ export default defineConfig({
   build: {
     target: "es2020",
     cssMinify: "lightningcss",
+    // three.js is one lazily loaded vendor chunk shared by the hero and the
+    // Work stage; it never blocks first paint.
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (/node_modules\/(three|@react-three)\//.test(id)) return "three";
+        },
+      },
+    },
   },
 });

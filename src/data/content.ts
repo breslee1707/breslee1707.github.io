@@ -16,19 +16,30 @@ export const profile = {
   // Short, scannable positioning chips used in the hero.
   focus: ["Agentic AI", "RAG systems", "Robotic vision", "AIoT"],
   portrait: "/assets/portrait.webp",
+  /** Full-resolution original (1792×2400), swapped in for the opened frame. */
+  portraitFull: "/assets/portrait.jpg",
   portraitAlt:
     "Lê Ngọc Gia Huy (Le Ngoc Gia Huy) seated against a sunlit ochre wall framed by greenery",
   location: "Ho Chi Minh City, Vietnam",
 } as const;
 
-/** Cinematic scroll-expand hero — cover photo + an expanding portrait frame. */
+/**
+ * Hero "Scan 01" — the portrait is scanned into a point cloud by a robot arm,
+ * then resolves into the photo and opens up as you scroll.
+ */
 export const hero = {
-  /** Full-screen background that fades as the portrait grows. */
-  cover: "/assets/graduation.webp",
-  /** Name split across the expanding frame (slides apart on scroll). */
-  titleLead: "Le Ngoc",
+  /** Name in its Vietnamese form, split above and below the frame. */
+  titleLead: "Lê Ngọc",
   titleRest: "Gia Huy",
   scrollHint: "Scroll to enter",
+  /** Per-pixel depth for the point cloud (scripts/portrait-depth.mjs). */
+  depth: "/assets/portrait-depth.webp",
+  /** Instrument read-outs around the stage. */
+  scan: {
+    id: "Scan 01 — Portrait",
+    place: "Ho Chi Minh City",
+    coords: "10.7769° N · 106.7009° E",
+  },
 } as const;
 
 /** Full-bleed atmospheric moment used as a section divider. */
@@ -76,9 +87,11 @@ export const awards = [
   {
     title: "1st Prize — 40,000,000 VND",
     meta: "Advantech AIoT InnoWorks 2022",
-    body: "Recognized for an AIoT application concept using Wise-PaaS, sensor data, and applied intelligence to monitor and improve environmental conditions.",
-    tags: ["AIoT", "Wise-PaaS", "Competition"],
+    body: "Recognized for a smartwatch-based AIoT system that monitors heart rate and detects falls to give an early warning of stroke.",
+    tags: ["AIoT", "Wearables", "Competition"],
     image: "/assets/award-aiot.webp",
+    /** How the photo sits in its plate: a cropped photograph or a document. */
+    fit: "photo",
     imageAlt:
       "Le Ngoc Gia Huy holding the AIoT InnoWorks 2022 champion trophy and first-prize board",
   },
@@ -88,21 +101,24 @@ export const awards = [
     body: "Awarded the highest graduation project score in the Robotics and AI program for semester 2 of 2024–2025.",
     tags: ["Graduation project", "Robotics & AI", "Academic"],
     image: "/assets/award-graduation.webp",
+    fit: "document",
     imageAlt:
       "Certificate for the highest graduation project score in Robotics and AI, semester 2 2024–2025",
   },
 ] as const;
 
 /** Selected work. */
-export type ProjectMotif = "agent" | "graph" | "arm" | "vehicle" | "sensor";
+export type ProjectMotif = "agent" | "graph" | "arm" | "vehicle" | "wearable";
 
 export type Project = {
   title: string;
   meta: string;
   body: string;
   tags: string[];
-  /** Domain line-art rendered faintly behind the row (see ProjectMotif.tsx). */
+  /** 2D line-art used when the 3D stage is unavailable (see ProjectMotif.tsx). */
   motif: ProjectMotif;
+  /** Caption (and optional interaction hint) for the 3D exhibit. */
+  exhibit: { caption: string; hint?: string };
   /** Optional small accent label (e.g. an active focus). */
   status?: string;
 };
@@ -114,6 +130,7 @@ export const projects: Project[] = [
     body: "Autonomous LLM agents that plan, call tools, and act across multi-step workflows — built with orchestration graphs, memory, guardrails, and evaluation loops so agent behavior stays reliable enough for production, not just demos.",
     tags: ["LangGraph", "Tool-calling", "Planning", "Multi-agent", "MCP"],
     motif: "agent",
+    exhibit: { caption: "Agent loop — planner dispatching tools" },
     status: "Currently building",
   },
   {
@@ -122,6 +139,7 @@ export const projects: Project[] = [
     body: "A LangGraph-orchestrated agent that plans retrieval, calls search and reranking tools, and adapts across multi-step queries — over document ingestion, semantic chunking, Qdrant vector search, Supabase metadata, and OpenAI models.",
     tags: ["LangGraph", "Tool-calling", "Qdrant", "OpenAI API"],
     motif: "graph",
+    exhibit: { caption: "Retrieval — top-k 8, rerank, keep 3" },
   },
   {
     title: "AI-Based Robotic Arm Inspection",
@@ -129,6 +147,7 @@ export const projects: Project[] = [
     body: "An inspection workflow combining PyTorch and TensorFlow models, OpenCV, RobotStudio simulation, MATLAB/Simulink kinematics, Inventor assembly, and real-time C# socket communication.",
     tags: ["PyTorch", "OpenCV", "RobotStudio", "C#"],
     motif: "arm",
+    exhibit: { caption: "Six-axis arm — IK solved live", hint: "Move your cursor over the stage" },
   },
   {
     title: "Autonomous 3-Wheeled Vehicle",
@@ -136,13 +155,15 @@ export const projects: Project[] = [
     body: "An autonomous navigation prototype built with LIDAR, Gazebo simulation, ROS, reinforcement learning, and path-planning workflows.",
     tags: ["ROS", "Gazebo", "LIDAR", "RL"],
     motif: "vehicle",
+    exhibit: { caption: "LIDAR mapping — 120 rays per revolution" },
   },
   {
-    title: "Supermarket Air Monitoring",
-    meta: "AIoT & applied intelligence",
-    body: "An AIoT concept around environmental monitoring, sensor data, and applied intelligence — recognized with first prize at Advantech AIoT InnoWorks 2022.",
-    tags: ["AIoT", "Sensors", "Applied AI"],
-    motif: "sensor",
+    title: "Smartwatch Stroke Early-Warning",
+    meta: "AIoT & wearable health",
+    body: "An AIoT system built around a smartwatch: it tracks heart rate, detects falls, and raises an early warning when the signals point to a possible stroke — first prize at Advantech AIoT InnoWorks 2022.",
+    tags: ["AIoT", "Wearables", "Heart rate", "Fall detection"],
+    motif: "wearable",
+    exhibit: { caption: "Wearable — heart rate + fall detection" },
   },
 ];
 
@@ -244,7 +265,7 @@ export const faq = [
   },
   {
     q: "What recognition has Lê Ngọc Gia Huy received?",
-    a: "He won 1st Prize at Advantech AIoT InnoWorks 2022 (40,000,000 VND) and earned the highest graduation project score in the Robotics & AI program at HCMUTE for semester 2 of 2024–2025.",
+    a: "He won 1st Prize at Advantech AIoT InnoWorks 2022 (40,000,000 VND) for a smartwatch-based system that tracks heart rate and detects falls to warn of stroke early, and earned the highest graduation project score in the Robotics & AI program at HCMUTE for semester 2 of 2024–2025.",
   },
   {
     q: "How can I contact Lê Ngọc Gia Huy?",

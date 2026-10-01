@@ -1,5 +1,6 @@
 /* ---- Fonts (self-hosted via @fontsource) ---- */
-@import "@fontsource-variable/bricolage-grotesque/index.css";
+/* Archivo with its width axis: wide for nameplate-style display, normal for headings. */
+@import "@fontsource-variable/archivo/wdth.css";
 @import "@fontsource-variable/jetbrains-mono/index.css";
 @import "@fontsource/spectral/400.css";
 @import "@fontsource/spectral/400-italic.css";
@@ -9,11 +10,12 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Design tokens — "Precision-instrument editorial"
-   Committed strategy: deep ink + one warm signal (amber).
+   Design tokens — "Ochre & Ink"
+   A warm ink ground and one ochre signal, both lifted from the portrait's
+   sunlit wall. The light theme is the same system printed on warm paper.
    ============================================================ */
 @theme {
-  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Spectral", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
 
@@ -29,35 +31,38 @@
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 /* Dark is the default (set pre-paint in index.html). */
 :root,
 [data-theme="dark"] {
-  --bg: oklch(0.17 0.015 255);
-  --surface: oklch(0.205 0.017 255);
-  --raise: oklch(0.245 0.018 255);
-  --ink: oklch(0.96 0.005 250);
-  --muted: oklch(0.74 0.012 250);
-  --faint: oklch(0.6 0.012 250);
-  --line: oklch(0.31 0.012 255);
-  --accent: oklch(0.82 0.14 72);
-  --accent-ink: oklch(0.2 0.04 72); /* text on accent fills */
-  --shadow: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 30px oklch(0 0 0 / 0.35);
+  --bg: oklch(0.165 0.008 70);
+  --surface: oklch(0.2 0.009 70);
+  --raise: oklch(0.24 0.01 70);
+  --ink: oklch(0.95 0.012 85);
+  --muted: oklch(0.77 0.014 80);
+  --faint: oklch(0.62 0.013 78);
+  --line: oklch(0.31 0.01 72);
+  --accent: oklch(0.8 0.14 75);
+  --accent-ink: oklch(0.2 0.04 70); /* text on accent fills */
+  --key: oklch(0.11 0.006 70); /* underside of keycap buttons */
+  --shadow: 0 1px 2px oklch(0 0 0 / 0.4), 0 10px 34px oklch(0 0 0 / 0.38);
   color-scheme: dark;
 }
 
 [data-theme="light"] {
-  --bg: oklch(0.985 0.003 250);
-  --surface: oklch(0.965 0.004 250);
-  --raise: oklch(1 0 0);
-  --ink: oklch(0.21 0.012 255);
-  --muted: oklch(0.44 0.012 255);
-  --faint: oklch(0.55 0.01 255);
-  --line: oklch(0.88 0.006 250);
-  --accent: oklch(0.56 0.15 56);
-  --accent-ink: oklch(0.99 0.01 80);
-  --shadow: 0 1px 2px oklch(0.5 0.02 255 / 0.08), 0 12px 34px oklch(0.5 0.02 255 / 0.1);
+  --bg: oklch(0.966 0.011 85);
+  --surface: oklch(0.942 0.013 85);
+  --raise: oklch(0.988 0.006 85);
+  --ink: oklch(0.21 0.014 65);
+  --muted: oklch(0.43 0.014 65);
+  --faint: oklch(0.52 0.012 65);
+  --line: oklch(0.86 0.013 80);
+  --accent: oklch(0.52 0.12 68);
+  --accent-ink: oklch(0.985 0.01 85);
+  --key: oklch(0.8 0.016 80);
+  --shadow: 0 1px 2px oklch(0.45 0.03 70 / 0.1), 0 14px 36px oklch(0.45 0.03 70 / 0.12);
   color-scheme: light;
 }
 
@@ -71,8 +76,16 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 5.5rem;
     -webkit-text-size-adjust: 100%;
+  }
+  /* Lenis drives smooth scrolling itself when active. */
+  html.lenis {
+    scroll-behavior: auto;
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
   }
 
   body {
@@ -92,8 +105,9 @@
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
+    font-stretch: 100%;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
     text-wrap: balance;
     margin: 0;
   }
@@ -119,29 +133,14 @@
     outline-offset: 3px;
     border-radius: 3px;
   }
-
-  /* Tighter heading tracking only at display sizes. */
-  .font-display {
-    font-feature-settings: "ss01" 1;
-  }
 }
 
 /* ============================================================
    Utilities
    ============================================================ */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  .measure {
-    max-width: 68ch;
-  }
-  /* Hairline that reads in both themes. */
-  .rule {
-    height: 1px;
-    background: var(--color-line);
-  }
-  /* Mono metadata label. */
+/* Mono metadata label — a component, so colour utilities (`label
+   text-accent`) can still override it. */
+@layer components {
   .label {
     font-family: var(--font-mono);
     font-size: 0.72rem;
@@ -152,59 +151,139 @@
   }
 }
 
+@layer utilities {
+  .measure {
+    max-width: 68ch;
+  }
+  /* Archivo width axis. */
+  .font-wide {
+    font-stretch: 125%;
+  }
+  .font-semiwide {
+    font-stretch: 112%;
+  }
+}
+
 /* ============================================================
-   Atmosphere — ambient glow, film grain, image treatments
+   Components
    ============================================================ */
 
-/* Soft accent light that anchors the hero without a hard shape. */
-.glow {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(70px);
-  opacity: 0.5;
-  pointer-events: none;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in oklch, var(--color-accent) 70%, transparent),
-    transparent
-  );
-  animation: glow-drift 14s var(--ease-out-quart) infinite alternate;
+/* Keycap buttons — a physical travel on press, like an instrument panel. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.8rem 1.1rem 0.74rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+  box-shadow: 0 3px 0 0 var(--key),
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent);
+  transition: transform 0.16s var(--ease-out-quart),
+    box-shadow 0.16s var(--ease-out-quart), border-color 0.25s,
+    background-color 0.25s, color 0.25s;
+  cursor: pointer;
+  user-select: none;
 }
-[data-theme="light"] .glow {
-  opacity: 0.28;
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklch, var(--accent) 55%, var(--line));
+  box-shadow: 0 4px 0 0 var(--key),
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent);
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 0 var(--key),
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent);
+}
+.btn-primary {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+  border-color: color-mix(in oklch, var(--accent) 72%, black);
+  --key: color-mix(in oklch, var(--accent) 48%, black);
+  box-shadow: 0 3px 0 0 var(--key),
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent);
+}
+.btn-primary:hover {
+  border-color: color-mix(in oklch, var(--accent) 72%, black);
+  box-shadow: 0 4px 0 0 var(--key),
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent);
+}
+.btn-primary:active {
+  box-shadow: 0 0 0 0 var(--key),
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent);
 }
 
-@keyframes glow-drift {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(-4%, 5%, 0) scale(1.12);
-  }
+/* Registration / crop marks around a framed image or stage. */
+.crop-marks {
+  --c: var(--color-faint);
+  --o: -10px;
+  --l: 12px;
+  position: absolute;
+  inset: var(--o);
+  pointer-events: none;
+  background:
+    linear-gradient(var(--c), var(--c)) left top / var(--l) 1px,
+    linear-gradient(var(--c), var(--c)) left top / 1px var(--l),
+    linear-gradient(var(--c), var(--c)) right top / var(--l) 1px,
+    linear-gradient(var(--c), var(--c)) right top / 1px var(--l),
+    linear-gradient(var(--c), var(--c)) left bottom / var(--l) 1px,
+    linear-gradient(var(--c), var(--c)) left bottom / 1px var(--l),
+    linear-gradient(var(--c), var(--c)) right bottom / var(--l) 1px,
+    linear-gradient(var(--c), var(--c)) right bottom / 1px var(--l);
+  background-repeat: no-repeat;
+}
+
+/* Section header ruler — a hairline with millimetre ticks. */
+.ruler {
+  flex: 1;
+  height: 5px;
+  align-self: center;
+  background:
+    linear-gradient(var(--color-line), var(--color-line)) left bottom / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--color-line) 0 1px, transparent 1px 10px) left bottom / 100% 5px no-repeat;
+  transform-origin: left center;
+}
+.js .reveal .ruler {
+  transform: scaleX(0);
+  transition: transform 1.4s var(--ease-out-expo) 0.15s;
+}
+.js .reveal.is-in .ruler {
+  transform: none;
+}
+
+/* Word-by-word rise for display headings (see SplitText.tsx). The padding
+   keeps Vietnamese stacked diacritics clear of the clipping mask. */
+.split-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-block: 0.16em 0.1em;
+  margin-block: -0.16em -0.1em;
+}
+.split-i {
+  display: inline-block;
+}
+.js .reveal .split-i {
+  transform: translate3d(0, 108%, 0);
+  transition: transform 1s var(--ease-out-expo);
+  transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 42ms);
+}
+.js .reveal.is-in .split-i {
+  transform: none;
 }
 
 /* Magnetic hover wrapper — springs back when the pointer leaves. */
 .magnetic {
   transition: transform 0.45s var(--ease-out-expo);
   will-change: transform;
-}
-
-/* Work motifs draw themselves on hover (dash sweep; 300 covers the longest
-   stroke in the 240×180 viewBox). The pre-dashed vehicle path is excluded. */
-@media (prefers-reduced-motion: no-preference) {
-  .group:hover .project-motif :is(path, line, rect, circle):not([stroke-dasharray]) {
-    animation: motif-draw 0.9s var(--ease-out-quart) both;
-  }
-}
-@keyframes motif-draw {
-  from {
-    stroke-dasharray: 300;
-    stroke-dashoffset: 300;
-  }
-  to {
-    stroke-dasharray: 300;
-    stroke-dashoffset: 0;
-  }
 }
 
 /* Thin reading-progress line under the nav. */
@@ -219,74 +298,6 @@
   transform: scaleX(var(--scroll-progress, 0));
 }
 
-/* ---- Agent Lab: node graph + trace console ---- */
-.agent-edge {
-  stroke: var(--color-line);
-  stroke-width: 1.5;
-}
-.agent-edge-active {
-  stroke: var(--color-accent);
-  stroke-width: 1.5;
-  stroke-dasharray: 4 5;
-  animation: edge-flow 0.6s linear infinite;
-}
-@keyframes edge-flow {
-  to {
-    stroke-dashoffset: -9;
-  }
-}
-.agent-node {
-  fill: var(--color-bg);
-  stroke: var(--color-line);
-  stroke-width: 1.5;
-}
-.agent-node-done {
-  fill: var(--color-bg);
-  stroke: var(--color-faint);
-  stroke-width: 1.5;
-}
-.agent-node-active {
-  fill: color-mix(in oklch, var(--color-accent) 14%, var(--color-bg));
-  stroke: var(--color-accent);
-  stroke-width: 1.5;
-  animation: node-pulse 1.1s var(--ease-out-quart) infinite alternate;
-}
-@keyframes node-pulse {
-  from {
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  to {
-    filter: drop-shadow(0 0 7px color-mix(in oklch, var(--color-accent) 55%, transparent));
-  }
-}
-.agent-node-label {
-  fill: var(--color-muted);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-}
-.agent-node-label-active {
-  fill: var(--color-ink);
-}
-.agent-console {
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
-}
-@media (prefers-reduced-motion: reduce) {
-  .agent-edge-active {
-    animation: none;
-  }
-  .agent-node-active {
-    animation: none;
-  }
-}
-
-/* FAQ disclosure icon rotates into an × when open. */
-.faq-item[open] .faq-icon {
-  transform: rotate(45deg);
-}
-
 /* Theme toggle renders both icons; CSS picks one so prerendered markup
    is identical regardless of the visitor's stored theme. */
 .theme-icon-moon,
@@ -297,71 +308,24 @@
   display: block;
 }
 
+/* FAQ disclosure icon rotates into an × when open. */
+.faq-item[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
 /* Fixed film-grain wash for tactile depth. */
 .grain {
   position: fixed;
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.04;
+  opacity: 0.045;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 [data-theme="light"] .grain {
-  opacity: 0.05;
+  opacity: 0.06;
   mix-blend-mode: multiply;
-}
-
-/* Full-bleed parallax image band. */
-.image-band {
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-@media (prefers-reduced-motion: reduce), (hover: none) {
-  .image-band {
-    background-attachment: scroll;
-  }
-}
-
-/* ---- Work: faint domain line-art behind each project row ---- */
-.project-motif {
-  position: absolute;
-  inset: 0 0 0 auto;
-  width: clamp(180px, 40%, 380px);
-  height: 100%;
-  color: var(--color-line);
-  opacity: 0.7;
-  pointer-events: none;
-  /* Fade toward the text so it never dampens contrast under the copy. */
-  -webkit-mask-image: linear-gradient(to left, #000 30%, transparent 94%);
-  mask-image: linear-gradient(to left, #000 30%, transparent 94%);
-  transition: color 0.45s var(--ease-out-quart),
-    opacity 0.45s var(--ease-out-quart);
-}
-.group:hover .project-motif {
-  color: var(--color-accent);
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .project-motif {
-    transition: none;
-  }
-}
-
-/* Gentle continuous float for the hero portrait. */
-.js .float {
-  animation: float 9s ease-in-out infinite;
-}
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
 }
 
 /* Scroll cue line. */
@@ -394,82 +358,146 @@
 }
 
 /* ============================================================
-   Hero — cinematic scroll-expand stage
-   A sticky frame grows from a small card to near full-bleed as the
-   stage scrolls past, driven by the --p (0→1) custom property set in JS.
+   Hero — "Scan 01"
+   A sticky stage. JS writes --p (0→1 across the stage) plus three derived
+   phases: --p-scan (laser finishes, arm parks), --p-resolve (point cloud
+   hands over to the real photo) and --p-expand (the frame opens up).
+   Without JS the stage is a static composition with the photo visible.
    ============================================================ */
+@property --intro-photo {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
 .hero-stage {
   position: relative;
-  height: 170svh; /* scroll distance over which the portrait expands */
+  height: 230svh;
+  /* Start under the sticky nav so the pinned composition never jumps. */
+  margin-top: -4rem;
+  /* 1 → 0 once the scene is live: the photo dissolves into the scan. */
+  --intro-photo: 1;
+  transition: --intro-photo 0.9s var(--ease-out-quart);
+}
+.hero-stage[data-live] {
+  --intro-photo: 0;
 }
 
 .hero-pin {
+  /* Frame size at rest, and as it opens toward near full-bleed. */
+  /* Scales with the viewport's height (portrait aspect 0.7467). */
+  --frame-h0: min(600px, 52svh, calc(66vw / 0.7467));
+  --frame-w0: calc(var(--frame-h0) * 0.7467);
+  --frame-wmax: min(94vw, 1680px);
+  --frame-w: calc(var(--frame-w0) + var(--p-expand, 0) * (var(--frame-wmax) - var(--frame-w0)));
+  --frame-h: calc(var(--frame-h0) + var(--p-expand, 0) * (84svh - var(--frame-h0)));
+
+  --name-size: clamp(3rem, min(10.4vw, 16svh), 11.5rem);
+  /* How far the name lines tuck under the frame (fraction of line box). */
+  --tuck: 0.24;
+
   position: sticky;
   top: 0;
   height: 100svh;
   overflow: hidden;
   display: grid;
   place-items: center;
+  isolation: isolate;
+  background: var(--color-bg);
 }
 
-/* Cover photo — fades out as the portrait takes over. */
-.hero-cover {
+/* Warm wall-light behind the frame, fading as the photo takes over. */
+.hero-backdrop {
   position: absolute;
   inset: 0;
-  opacity: calc(1 - var(--p, 0) * 0.92);
-}
-.hero-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.hero-cover-veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in oklch, var(--color-bg) 28%, transparent),
-    color-mix(in oklch, var(--color-bg) 8%, transparent) 42%,
-    color-mix(in oklch, var(--color-bg) 72%, transparent)
-  );
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 46% at 50% 50%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 72%),
+    radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 60%);
+  opacity: calc(1 - var(--p-expand, 0));
 }
 
-/* The expanding portrait. Width/height interpolate with --p, capped to
-   the viewport so it never quite goes edge-to-edge (keeps the framed feel). */
-.hero-frame {
-  position: relative;
-  z-index: 1;
+/* Two oversized name lines: the first overlaps the frame in front (like a
+   masthead over a cover photo), the second tucks behind its lower edge. */
+.hero-title {
+  position: absolute;
+  inset: 0;
   margin: 0;
-  /* Grow linearly from a small card to a near full-bleed frame, reaching the
-     cap exactly at p=1 on any viewport (no dead scroll zone). The width cap is
-     also bounded to ~the portrait's native pixel width (1792px) so the image
-     never upscales — keeps it crisp even on very wide monitors. */
-  --frame-w0: min(300px, 78vw);
-  --frame-h0: min(420px, 56svh);
-  --frame-wmax: min(94vw, 1680px);
-  width: calc(var(--frame-w0) + var(--p, 0) * (var(--frame-wmax) - var(--frame-w0)));
-  height: calc(var(--frame-h0) + var(--p, 0) * (86svh - var(--frame-h0)));
-  border-radius: clamp(0.85rem, calc(1.25rem - var(--p, 0) * 0.4rem), 1.25rem);
+  pointer-events: none;
+  font-weight: 800;
+}
+.hero-line {
+  position: absolute;
+  left: 50%;
+  font-size: var(--name-size);
+  font-stretch: 125%;
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-ink);
+  opacity: calc(1 - max(0, var(--p-expand, 0) - 0.3) * 2.4);
+}
+.hero-line-1 {
+  z-index: 4;
+  top: calc(50% - var(--frame-h) / 2);
+  transform: translate(calc(-50% - var(--p-expand, 0) * 34vw), calc((var(--tuck) - 1) * 100%));
+}
+.hero-line-2 {
+  z-index: 1;
+  top: calc(50% + var(--frame-h) / 2);
+  transform: translate(calc(-50% + var(--p-expand, 0) * 34vw), calc(var(--tuck) * -100%));
+}
+.hero-role {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: calc(50% + var(--frame-h) / 2 + var(--name-size) * 0.82 * (1 - var(--tuck)) + 1.4rem);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--color-muted);
+  opacity: calc(1 - var(--p-expand, 0) * 2.2);
+}
+.hero-role b {
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+/* The frame — photo (truth, LCP, alt text) under the point cloud. */
+.hero-frame-wrap {
+  position: relative;
+  z-index: 2;
+  width: var(--frame-w);
+  height: var(--frame-h);
+}
+.hero-frame {
+  position: absolute;
+  inset: 0;
+  margin: 0;
   overflow: hidden;
-  border: 1px solid color-mix(in oklch, #ffffff 16%, transparent);
-  box-shadow: 0 40px 90px -34px rgba(0, 0, 0, 0.62);
+  border-radius: clamp(0.4rem, calc(0.4rem + var(--p-expand, 0) * 0.6rem), 1rem);
+  background: var(--color-surface);
+  box-shadow: 0 50px 110px -48px oklch(0 0 0 / 0.65);
 }
 .hero-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-/* Dark wash keeps the split name legible early, lifts as it expands. */
+.hero-stage[data-live] .hero-frame img {
+  opacity: max(var(--p-resolve, 0), var(--intro-photo));
+}
+.hero-frame-wrap .crop-marks {
+  opacity: calc(1 - var(--p-expand, 0) * 3);
+}
+/* Bottom-to-top wash so the caption reads once the frame is large. */
 .hero-frame-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.06) 38%,
-    transparent 60%
-  );
-  opacity: calc(0.9 - var(--p, 0) * 0.5);
+  background: linear-gradient(to top, oklch(0 0 0 / 0.5), transparent 32%);
+  opacity: var(--p-expand, 0);
 }
 .hero-frame-cap {
   position: absolute;
@@ -479,82 +507,744 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 1rem 1.15rem;
-  opacity: var(--p, 0); /* appears only once the frame is large */
+  color: oklch(1 0 0 / 0.86);
+  opacity: calc(var(--p-expand, 0) * 1.4 - 0.4);
 }
 
-/* Name overlay — slides apart and fades as the frame opens. */
-.hero-title {
-  position: absolute;
-  z-index: 2;
+/* WebGL layer (point cloud + robot arm). Pointer is tracked on the stage. */
+.hero-canvas {
+  position: absolute !important;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* Lift the name a touch above the portrait's head. */
-  transform: translateY(-16%);
+  z-index: 3;
   pointer-events: none;
-  margin: 0;
-  color: #fff;
-  opacity: calc(1 - var(--p, 0) * 1.4);
+  opacity: calc((1 - var(--p-resolve, 0)) * (1 - var(--intro-photo)));
 }
-.hero-title-name {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.5rem, 2vw, 1.4rem);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(2.3rem, 8vw, 6rem);
-  letter-spacing: -0.03em;
-  line-height: 1;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-/* Role line beneath the name. */
-.hero-subtitle {
-  margin-top: clamp(0.7rem, 1.8vw, 1.25rem);
-  font-family: var(--font-mono, var(--font-display));
-  font-weight: 500;
-  font-size: clamp(0.72rem, 1.9vw, 1.05rem);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.86);
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
-}
-.hero-subtitle span {
-  margin: 0 0.5em;
-  color: rgba(255, 255, 255, 0.55);
-}
-.hero-title-lead {
-  transform: translateX(calc(var(--p, 0) * -22vw));
-}
-.hero-title-rest {
-  transform: translateX(calc(var(--p, 0) * 22vw));
+.hero-canvas canvas {
+  display: block;
 }
 
-/* Scroll cue — visible only at the very start. */
+/* Instrument read-outs in the four corners. */
+.hero-hud {
+  position: absolute;
+  inset: 5.25rem clamp(1rem, 3vw, 2.25rem) 1.6rem;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr auto;
+  pointer-events: none;
+  opacity: calc(1 - var(--p-expand, 0) * 2.5);
+}
+.hero-hud > * {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.7;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  font-variant-numeric: tabular-nums;
+}
+.hero-hud .hud-tr {
+  text-align: right;
+}
+.hero-hud .hud-bl {
+  grid-row: 3;
+  align-self: end;
+}
+.hero-hud .hud-br {
+  grid-row: 3;
+  align-self: end;
+  text-align: right;
+}
+.hero-hud b {
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.hero-hud .hud-accent {
+  color: var(--color-accent);
+}
+.hero-pause {
+  pointer-events: auto;
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  color: var(--color-muted);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  transition: color 0.2s, border-color 0.2s;
+}
+.hero-pause:hover {
+  color: var(--color-ink);
+  border-color: var(--color-accent);
+}
+
 .hero-cue {
   position: absolute;
-  z-index: 2;
-  bottom: 1.6rem;
+  z-index: 4;
+  bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  color: #fff;
   pointer-events: none;
-  opacity: calc(1 - var(--p, 0) * 6); /* clamped to 0 by the browser */
+  opacity: calc(1 - var(--p, 0) * 8);
 }
 
+/* Never show the photo larger than it was shot: on dense screens the opened
+   frame stays within the original's 1792 device pixels, so the face stays
+   crisp instead of being upscaled. */
+@media (min-resolution: 1.5dppx) {
+  .hero-pin {
+    --frame-wmax: min(94vw, 1180px);
+  }
+}
+@media (min-resolution: 2dppx) {
+  .hero-pin {
+    --frame-wmax: min(94vw, 896px);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-pin {
+    --frame-h0: min(calc(66vw / 0.7467), 48svh);
+    --name-size: clamp(2.4rem, 13.6vw, 4rem);
+    --tuck: 0.1;
+  }
+  .hero-hud {
+    inset: 5rem 1rem 1.25rem;
+  }
+  .hero-hud .hud-tr,
+  .hero-hud .hud-joints,
+  .hero-cue {
+    display: none;
+  }
+  .hero-role {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* ---- Agent Lab: node graph + trace console ---- */
+.agent-edge {
+  stroke: var(--color-line);
+  stroke-width: 1.5;
+}
+.agent-edge-active {
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+  animation: edge-flow 0.6s linear infinite;
+}
+@keyframes edge-flow {
+  to {
+    stroke-dashoffset: -9;
+  }
+}
+.agent-pulse {
+  fill: var(--color-accent);
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--color-accent) 70%, transparent));
+}
+.agent-node {
+  fill: var(--color-bg);
+  stroke: var(--color-line);
+  stroke-width: 1.5;
+}
+.agent-node-done {
+  fill: var(--color-bg);
+  stroke: var(--color-faint);
+  stroke-width: 1.5;
+}
+.agent-node-active {
+  fill: color-mix(in oklch, var(--color-accent) 14%, var(--color-bg));
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  animation: node-pulse 1.1s var(--ease-out-quart) infinite alternate;
+}
+@keyframes node-pulse {
+  from {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  to {
+    filter: drop-shadow(0 0 7px color-mix(in srgb, var(--color-accent) 55%, transparent));
+  }
+}
+.agent-node-label {
+  fill: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+}
+.agent-node-label-active {
+  fill: var(--color-ink);
+}
+.agent-console {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
 @media (prefers-reduced-motion: reduce) {
-  .glow,
-  .js .float,
-  .cue-line::after {
+  .agent-edge-active {
+    animation: none;
+  }
+  .agent-node-active {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Work — "Exhibits". Copy scrolls in one column while a sticky stage
+   draws the project being read; on small screens the stage is a band
+   pinned under the nav.
+   ============================================================ */
+.exhibits {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.exhibit-stage-wrap {
+  position: sticky;
+  top: 4rem;
+  z-index: 2;
+  order: -1;
+  height: 42svh;
+  margin-inline: -1.5rem;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-line);
+}
+.exhibit-stage {
+  position: relative;
+  height: 100%;
+}
+.exhibit-canvas {
+  position: absolute;
+  inset: 0;
+}
+.exhibit-step {
+  display: flex;
+  align-items: center;
+  min-height: 64svh;
+  padding-block: 3.5rem;
+}
+.exhibit-copy {
+  transition: opacity 0.6s var(--ease-out-quart);
+}
+.js .exhibit-step:not([data-active]) .exhibit-copy {
+  opacity: 0.28;
+}
+.exhibit-num {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  line-height: 0.78;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-line);
+  transition: color 0.5s var(--ease-out-quart);
+}
+.exhibit-step[data-active] .exhibit-num {
+  color: var(--color-accent);
+}
+
+/* Stage read-outs. */
+.exhibit-hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.6;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  font-variant-numeric: tabular-nums;
+}
+.exhibit-hud-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+}
+.exhibit-hud [data-hud] {
+  /* Live values read as data: lower case, so units stay correct (µg/m³). */
+  color: var(--color-ink);
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+.exhibit-hint {
+  color: var(--color-accent);
+}
+.exhibit-stage .crop-marks {
+  --o: -1px;
+  --l: 14px;
+  --c: var(--color-faint);
+}
+/* 2D fallback (no WebGL / reduced motion). */
+.exhibit-motif {
+  position: absolute;
+  inset: 16% 12%;
+  width: 76%;
+  height: 68%;
+  color: var(--color-accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .exhibit-motif :is(path, line, rect, circle):not([stroke-dasharray]) {
+    animation: motif-draw 1.1s var(--ease-out-quart) both;
+  }
+}
+
+@media (min-width: 1024px) {
+  .exhibits {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+  }
+  .exhibit-stage-wrap {
+    order: 0;
+    top: 5.5rem;
+    height: calc(100svh - 7.5rem);
+    margin-inline: 0;
+    background: none;
+    border: 0;
+  }
+  .exhibit-stage {
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--surface) 45%, transparent);
+  }
+  .exhibit-step {
+    min-height: 74svh;
+  }
+  /* Let the last exhibit centre while the stage is still pinned. */
+  .exhibit-steps {
+    padding-bottom: 14svh;
+  }
+}
+
+/* ============================================================
+   Toolkit — "The Die". Package, die and functional blocks sit on
+   separate Z layers: an exploded isometric view while the section
+   scrolls in (--p from useScrollProgress, mode "pass"), assembling
+   flat and legible by the time it reaches the reading position.
+   ============================================================ */
+.die-scene {
+  --tx: 0;
+  --ty: 0;
+  perspective: 2200px;
+  perspective-origin: 50% 10%;
+  padding: 2.5rem 0 1rem;
+}
+.die {
+  /* 1 = fully exploded, 0 = assembled. Without JS --p is unset → 0. */
+  --e: clamp(0, calc((0.5 - var(--p, 1)) / 0.3), 1);
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--e) * 54deg - (1 - var(--e)) * var(--ty) * 2.5deg))
+    rotateY(calc((1 - var(--e)) * var(--tx) * 3.5deg)) rotateZ(calc(var(--e) * -28deg));
+}
+.die-package {
+  position: absolute;
+  inset: -2.4rem -2.4rem -3.2rem;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  transform: translateZ(calc(var(--e) * -110px));
+}
+/* Bond pads along the package edges. */
+.die-pads {
+  position: absolute;
+  --pad: color-mix(in oklch, var(--accent) 38%, var(--line));
+}
+.die-pads-x {
+  inset: 0.55rem 3.2rem;
+  background:
+    repeating-linear-gradient(90deg, var(--pad) 0 9px, transparent 9px 19px) top / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, var(--pad) 0 9px, transparent 9px 19px) bottom / 100% 5px no-repeat;
+}
+.die-pads-y {
+  inset: 3.2rem 0.55rem;
+  background:
+    repeating-linear-gradient(180deg, var(--pad) 0 9px, transparent 9px 19px) left / 5px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--pad) 0 9px, transparent 9px 19px) right / 5px 100% no-repeat;
+}
+.die-mark {
+  position: absolute;
+  left: 3.2rem;
+  bottom: 1.15rem;
+  font-size: 0.62rem;
+}
+/* The die itself: a faint silicon grid under the blocks. */
+.die-core {
+  position: absolute;
+  inset: -0.6rem;
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, var(--line));
+  border-radius: 6px;
+  background:
+    linear-gradient(var(--color-line) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px) 0 0 / 22px 22px;
+  opacity: 0.55;
+  transform: translateZ(calc(var(--e) * -45px));
+}
+.die-blocks {
+  position: relative;
+  display: grid;
+  gap: 0.75rem;
+  transform-style: preserve-3d;
+}
+.die-block {
+  position: relative;
+  padding: 1.6rem 1.75rem 1.8rem;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  background: var(--color-bg);
+  transform: translateZ(calc(var(--e) * (70px + var(--i) * 36px)));
+  translate: 0 0 0;
+  transition: translate 0.5s var(--ease-out-expo), border-color 0.3s, box-shadow 0.4s;
+}
+.die-block:hover {
+  translate: 0 0 22px;
+  border-color: color-mix(in oklch, var(--accent) 60%, var(--line));
+  box-shadow: 0 34px 60px -36px oklch(0 0 0 / 0.55);
+}
+.die-block:hover .die-cell {
+  border-color: color-mix(in oklch, var(--accent) 35%, var(--line));
+}
+@media (min-width: 640px) {
+  .die-blocks {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .die,
+  .die-package,
+  .die-core,
+  .die-block {
+    transform: none;
+  }
+}
+
+/* Domain line-art drawn on in the 2D fallback. */
+@keyframes motif-draw {
+  from {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ============================================================
+   Background — discipline numerals and the recognition "plates".
+   ============================================================ */
+.discipline-num {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 2.6rem;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklch, var(--accent) 70%, var(--line));
+}
+.plate-stage {
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  --my: 40%;
+  position: relative;
+  perspective: 1100px;
+}
+.plate-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--color-surface);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.6s var(--ease-out-expo);
+  box-shadow: var(--shadow);
+}
+.plate-stage:hover .plate-photo {
+  transition-duration: 0.15s;
+}
+.plate-photo img {
+  width: 100%;
+  height: 100%;
+}
+.plate-fit-photo img {
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+/* A certificate sits on the plate like a document laid on a table. */
+.plate-fit-document {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 90% at 30% 20%, color-mix(in oklch, var(--accent) 7%, var(--surface)), var(--surface));
+}
+.plate-fit-document img {
+  width: 84%;
+  height: auto;
+  border-radius: 2px;
+  transform: rotate(-2.4deg);
+  box-shadow: 0 22px 40px -18px oklch(0 0 0 / 0.55), 0 2px 4px oklch(0 0 0 / 0.25);
+}
+.plate-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(42% 34% at var(--mx) var(--my), oklch(1 0 0 / 0.16), transparent 70%);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.plate-stage:hover .plate-sheen {
+  opacity: 1;
+}
+.plate-stage .crop-marks {
+  --o: -12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .plate-photo {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Experience — the rail.
+   ============================================================ */
+.rail {
+  position: relative;
+  padding-left: 2.25rem;
+}
+.rail::before,
+.rail::after {
+  content: "";
+  position: absolute;
+  left: 0.42rem;
+  top: 2.4rem;
+  bottom: 2.4rem;
+  width: 1px;
+}
+.rail::before {
+  background: var(--color-line);
+}
+.rail::after {
+  background: var(--color-accent);
+  transform-origin: top;
+  transform: scaleY(var(--fill, 1));
+}
+.rail-item {
+  border-top: 1px solid var(--color-line);
+}
+.rail-row {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+  padding-block: 2.1rem;
+}
+@media (min-width: 768px) {
+  .rail-row {
+    grid-template-columns: 12rem 1fr;
+    gap: 2.5rem;
+  }
+  .rail-row .rail-node {
+    top: 2.92rem;
+  }
+}
+.rail-node {
+  position: absolute;
+  left: calc(-2.25rem + 0.42rem - 4px);
+  top: 2.42rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  transition: background-color 0.5s, border-color 0.5s;
+}
+.js .rail-row:not([data-lit]) .rail-node {
+  background: var(--color-bg);
+  border-color: var(--color-line);
+}
+.rail-row[data-current][data-lit] .rail-node {
+  animation: rail-pulse 2.4s var(--ease-out-quart) infinite;
+}
+.rail-now {
+  color: var(--color-accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.6rem;
+}
+@keyframes rail-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rail-row .rail-node {
     animation: none !important;
   }
+}
+
+/* ============================================================
+   Contact & footer.
+   ============================================================ */
+.local-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 0.7em;
+  vertical-align: 0.1em;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  animation: rail-pulse 2.6s var(--ease-out-quart) infinite;
+}
+.contact-row {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 1.7rem 0.25rem;
+  border-bottom: 1px solid var(--color-line);
+  isolation: isolate;
+  transition: color 0.3s;
+}
+/* A wash wipes in from the left on hover. */
+.contact-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 85%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+.contact-row:hover::before,
+.contact-row:focus-visible::before {
+  transform: none;
+}
+.contact-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4.4vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  transition: transform 0.6s var(--ease-out-expo), color 0.3s;
+}
+.contact-row:hover .contact-name {
+  transform: translateX(0.6rem);
+  color: var(--color-accent);
+}
+.contact-arrow {
+  align-self: center;
+  color: var(--color-faint);
+  transition: transform 0.5s var(--ease-out-expo), color 0.3s;
+}
+.contact-row:hover .contact-arrow {
+  transform: rotate(45deg);
+  color: var(--color-accent);
+}
+.footer-name {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 8.6vw, 7.5rem);
+  /* Vietnamese needs real leading: the dot under Ọ must clearly belong to
+     the first line, not read as a mark over the U below it. */
+  line-height: 1.22;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+@media (prefers-reduced-motion: reduce) {
+  .local-dot {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Moment — "Aperture". A pinned full-bleed photo that opens from a
+   thin slit like a shutter (--open), then the caption lands (--cap).
+   Fully open by default, so no-JS and reduced motion see it whole.
+   ============================================================ */
+.aperture {
+  position: relative;
+}
+.aperture-pin {
+  position: relative;
+  height: 78svh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  background: var(--color-bg);
+}
+/* The pinned shutter only exists when JS drives it (and motion is fine). */
+.js .aperture:not([data-static]) {
+  height: 210svh;
+}
+.js .aperture:not([data-static]) .aperture-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.aperture-frame {
+  --o: var(--open, 1);
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  clip-path: inset(calc((1 - var(--o)) * 47%) calc((1 - var(--o)) * 9%));
+}
+.aperture-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 40%;
+  transform: scale(calc(1.16 - var(--o) * 0.16));
+}
+.aperture-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, oklch(0.12 0.01 70 / 0.82), oklch(0.12 0.01 70 / 0.12) 55%, transparent);
+  opacity: var(--cap, 1);
+}
+/* Accent rails on the opening edges, like a line scanner's slit. */
+.aperture-edge {
+  position: absolute;
+  left: calc((1 - var(--open, 1)) * 9%);
+  right: calc((1 - var(--open, 1)) * 9%);
+  height: 1px;
+  background: var(--color-accent);
+  opacity: calc((1 - var(--open, 1)) * 1.6);
+  pointer-events: none;
+}
+.aperture-edge-top {
+  top: calc((1 - var(--open, 1)) * 47%);
+}
+.aperture-edge-bottom {
+  bottom: calc((1 - var(--open, 1)) * 47%);
+}
+.aperture-caption {
+  position: relative;
+  padding-bottom: clamp(3rem, 9svh, 6rem);
+  opacity: var(--cap, 1);
+  transform: translateY(calc((1 - var(--cap, 1)) * 24px));
 }
 
 /* ============================================================
@@ -580,27 +1270,16 @@
   transform: none;
 }
 
-/* Hero load choreography. */
-.js .lift {
-  opacity: 0;
-  transform: translateY(22px);
-  animation: lift-in 0.9s var(--ease-out-expo) forwards;
-  animation-delay: var(--lift-delay, 0ms);
-}
-
-@keyframes lift-in {
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+  .cue-line::after {
+    animation: none !important;
+  }
   .js .reveal,
-  .js .lift {
+  .js .reveal .split-i,
+  .js .reveal .ruler {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;

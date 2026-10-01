@@ -32,6 +32,9 @@ import {
   ListChecks,
   Users,
   Plug,
+  Watch,
+  HeartPulse,
+  PersonStanding,
   type LucideIcon,
 } from "lucide-react";
 
@@ -114,6 +117,10 @@ const MAP: Record<string, TechIcon> = {
   planning: concept("Planning", ListChecks),
   multiagent: concept("Multi-agent", Users),
   mcp: concept("MCP", Plug),
+  // Wearable health.
+  wearables: concept("Wearables", Watch),
+  heartrate: concept("Heart rate", HeartPulse),
+  falldetection: concept("Fall detection", PersonStanding),
 };
 
 const norm = (s: string) =>

@@ -52,13 +52,13 @@ export function Nav() {
           className="font-display text-[0.95rem] font-bold tracking-tight"
         >
           {profile.name}
-          <span className="ml-2 hidden align-middle text-faint md:inline label">
+          <span className="ml-2 hidden align-middle text-faint xl:inline label">
             {site.volume}
           </span>
         </a>
 
         {/* Desktop nav */}
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-0.5 min-[1180px]:flex">
           {nav.map((item) => {
             const isActive = active === item.id;
             return (
@@ -66,14 +66,14 @@ export function Nav() {
                 <a
                   href={`#${item.id}`}
                   aria-current={isActive ? "true" : undefined}
-                  className={`relative px-3 py-2 font-mono text-[0.78rem] tracking-wide transition-colors duration-200 ${
+                  className={`relative whitespace-nowrap px-2.5 py-2 font-mono text-[0.78rem] tracking-wide transition-colors duration-200 ${
                     isActive ? "text-ink" : "text-faint hover:text-muted"
                   }`}
                 >
                   <span className="text-accent">{item.index}</span>{" "}
                   {item.label}
                   {isActive ? (
-                    <span className="absolute inset-x-3 -bottom-px h-px bg-accent" />
+                    <span className="absolute inset-x-2.5 -bottom-px h-px bg-accent" />
                   ) : null}
                 </a>
               </li>
@@ -88,7 +88,7 @@ export function Nav() {
             onClick={() => setOpen((o) => !o)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            className="grid size-10 place-items-center rounded-full border border-line text-muted md:hidden"
+            className="grid size-10 place-items-center rounded-full border border-line text-muted min-[1180px]:hidden"
           >
             {open ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
           </button>
@@ -99,7 +99,7 @@ export function Nav() {
 
       {/* Mobile menu */}
       {open ? (
-        <ul className="border-t border-line bg-bg px-6 pb-4 md:hidden">
+        <ul className="border-t border-line bg-bg px-6 pb-4 min-[1180px]:hidden">
           {nav.map((item) => (
             <li key={item.id}>
               <a

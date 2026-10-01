@@ -1,9 +1,37 @@
+import { useEffect } from "react";
 import { experience } from "../data/content";
+import { segment, useScrollProgress } from "../hooks/useScrollProgress";
+import { CompanyLogo } from "./CompanyLogo";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
-import { CompanyLogo } from "./CompanyLogo";
 
+/**
+ * Experience as a rail: an ochre line fills as the list scrolls past, and
+ * each role's node lights once the reader reaches it. The current role pulses.
+ */
 export function Experience() {
+  const { ref } = useScrollProgress<HTMLOListElement>({
+    mode: "pass",
+    onProgress: (p, el) => el.style.setProperty("--fill", segment(p, 0.16, 0.66).toFixed(4)),
+  });
+
+  // A node lights when its role has scrolled above 55% of the viewport.
+  useEffect(() => {
+    const items = ref.current?.querySelectorAll<HTMLElement>("[data-role]");
+    if (!items?.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const reached = e.boundingClientRect.top < (e.rootBounds?.bottom ?? 0);
+          (e.target as HTMLElement).toggleAttribute("data-lit", reached);
+        }
+      },
+      { rootMargin: "0px 0px -45% 0px" },
+    );
+    items.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [ref]);
+
   return (
     <Section
       id="experience"
@@ -11,18 +39,19 @@ export function Experience() {
       label="Experience"
       title="From robotics research to applied AI engineering."
     >
-      <ol className="relative">
+      <ol ref={ref} className="rail">
         {experience.map((role, i) => (
-          <Reveal key={`${role.org}-${role.title}`} as="li" delay={i * 60}>
-            <div className="grid gap-3 border-t border-line py-8 md:grid-cols-[12rem_1fr] md:gap-10 md:py-9">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`size-1.5 rounded-full ${
-                    role.current ? "bg-accent" : "bg-faint"
-                  }`}
-                  aria-hidden
-                />
-                <span className="label">{role.date}</span>
+          <Reveal
+            key={`${role.org}-${role.title}`}
+            as="li"
+            delay={i * 60}
+            className="rail-item"
+          >
+            <div data-role data-current={role.current ? "" : undefined} className="rail-row">
+              <span className="rail-node" aria-hidden />
+              <div className="flex items-center gap-3 self-start md:pt-2">
+                <span className="label tabular-nums">{role.date}</span>
+                {role.current ? <span className="rail-now label">Now</span> : null}
               </div>
               <div className="flex items-start gap-4">
                 <CompanyLogo org={role.org} logo={role.logo} />
@@ -30,11 +59,6 @@ export function Experience() {
                   <h3 className="flex flex-wrap items-baseline gap-x-3 text-xl tracking-[-0.02em] md:text-2xl">
                     {role.title}
                     <span className="text-accent">{role.org}</span>
-                    {role.current ? (
-                      <span className="rounded-full border border-accent/50 px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-accent">
-                        Current
-                      </span>
-                    ) : null}
                   </h3>
                   <p className="measure mt-3 text-muted">{role.body}</p>
                 </div>
