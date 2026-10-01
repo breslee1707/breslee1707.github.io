@@ -90,6 +90,8 @@ export const awards = [
     body: "Recognized for a smartwatch-based AIoT system that monitors heart rate and detects falls to give an early warning of stroke.",
     tags: ["AIoT", "Wearables", "Competition"],
     image: "/assets/award-aiot.webp",
+    /** How the photo sits in its plate: a cropped photograph or a document. */
+    fit: "photo",
     imageAlt:
       "Le Ngoc Gia Huy holding the AIoT InnoWorks 2022 champion trophy and first-prize board",
   },
@@ -99,6 +101,7 @@ export const awards = [
     body: "Awarded the highest graduation project score in the Robotics and AI program for semester 2 of 2024–2025.",
     tags: ["Graduation project", "Robotics & AI", "Academic"],
     image: "/assets/award-graduation.webp",
+    fit: "document",
     imageAlt:
       "Certificate for the highest graduation project score in Robotics and AI, semester 2 2024–2025",
   },

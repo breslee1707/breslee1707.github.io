@@ -244,7 +244,8 @@ function Scene({ frameRef, hudRef, progress, onReady }: Props) {
       );
 
     // 4) The arm stands off to the right; it parks and sinks as you scroll.
-    const armOn = W >= 760;
+    // The arm needs a landscape stage with room beside the frame.
+    const armOn = W >= 980 && W / H > 1.1;
     arm.group.visible = armOn;
     if (armOn) {
       const S = clamp(H * 0.37, 250, 420);

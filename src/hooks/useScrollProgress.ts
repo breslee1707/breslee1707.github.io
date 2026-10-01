@@ -46,7 +46,9 @@ export function useScrollProgress<T extends HTMLElement>({
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || reduced) return;
+    // Checked directly (not via `reduced`, which lands a render later) so a
+    // first measurement never leaves a mid-animation value behind.
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let raf = 0;
     const measure = () => {
@@ -77,7 +79,7 @@ export function useScrollProgress<T extends HTMLElement>({
       window.removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [reduced, mode, cssVar]);
+  }, [mode, cssVar]);
 
   return { ref, progress, reduced };
 }

@@ -138,11 +138,9 @@
 /* ============================================================
    Utilities
    ============================================================ */
-@layer utilities {
-  .measure {
-    max-width: 68ch;
-  }
-  /* Mono metadata label. */
+/* Mono metadata label — a component, so colour utilities (`label
+   text-accent`) can still override it. */
+@layer components {
   .label {
     font-family: var(--font-mono);
     font-size: 0.72rem;
@@ -150,6 +148,12 @@
     text-transform: uppercase;
     color: var(--color-faint);
     font-weight: 500;
+  }
+}
+
+@layer utilities {
+  .measure {
+    max-width: 68ch;
   }
   /* Archivo width axis. */
   .font-wide {
@@ -181,7 +185,7 @@
   border: 1px solid var(--color-line);
   border-radius: 5px;
   box-shadow: 0 3px 0 0 var(--key),
-    inset 0 1px 0 color-mix(in oklch, var(--ink) 7%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent);
   transition: transform 0.16s var(--ease-out-quart),
     box-shadow 0.16s var(--ease-out-quart), border-color 0.25s,
     background-color 0.25s, color 0.25s;
@@ -192,12 +196,12 @@
   transform: translateY(-1px);
   border-color: color-mix(in oklch, var(--accent) 55%, var(--line));
   box-shadow: 0 4px 0 0 var(--key),
-    inset 0 1px 0 color-mix(in oklch, var(--ink) 7%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent);
 }
 .btn:active {
   transform: translateY(3px);
   box-shadow: 0 0 0 0 var(--key),
-    inset 0 1px 0 color-mix(in oklch, var(--ink) 7%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent);
 }
 .btn-primary {
   color: var(--color-accent-ink);
@@ -205,16 +209,16 @@
   border-color: color-mix(in oklch, var(--accent) 72%, black);
   --key: color-mix(in oklch, var(--accent) 48%, black);
   box-shadow: 0 3px 0 0 var(--key),
-    inset 0 1px 0 color-mix(in oklch, white 38%, transparent);
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent);
 }
 .btn-primary:hover {
   border-color: color-mix(in oklch, var(--accent) 72%, black);
   box-shadow: 0 4px 0 0 var(--key),
-    inset 0 1px 0 color-mix(in oklch, white 38%, transparent);
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent);
 }
 .btn-primary:active {
   box-shadow: 0 0 0 0 var(--key),
-    inset 0 1px 0 color-mix(in oklch, white 38%, transparent);
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent);
 }
 
 /* Registration / crop marks around a framed image or stage. */
@@ -381,8 +385,9 @@
 
 .hero-pin {
   /* Frame size at rest, and as it opens toward near full-bleed. */
-  --frame-w0: min(360px, 66vw);
-  --frame-h0: min(482px, 52svh, calc(66vw / 0.7467));
+  /* Scales with the viewport's height (portrait aspect 0.7467). */
+  --frame-h0: min(600px, 52svh, calc(66vw / 0.7467));
+  --frame-w0: calc(var(--frame-h0) * 0.7467);
   --frame-wmax: min(94vw, 1680px);
   --frame-w: calc(var(--frame-w0) + var(--p-expand, 0) * (var(--frame-wmax) - var(--frame-w0)));
   --frame-h: calc(var(--frame-h0) + var(--p-expand, 0) * (84svh - var(--frame-h0)));
@@ -408,8 +413,8 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(42% 46% at 50% 50%, color-mix(in oklch, var(--accent) 11%, transparent), transparent 72%),
-    radial-gradient(120% 90% at 50% 120%, color-mix(in oklch, var(--accent) 5%, transparent), transparent 60%);
+    radial-gradient(42% 46% at 50% 50%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 72%),
+    radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 60%);
   opacity: calc(1 - var(--p-expand, 0));
 }
 
@@ -567,7 +572,7 @@
   border: 1px solid var(--color-line);
   border-radius: 4px;
   color: var(--color-muted);
-  background: color-mix(in oklch, var(--bg) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
   transition: color 0.2s, border-color 0.2s;
 }
 .hero-pause:hover {
@@ -605,7 +610,6 @@
 
 @media (max-width: 640px) {
   .hero-pin {
-    --frame-w0: 66vw;
     --frame-h0: min(calc(66vw / 0.7467), 48svh);
     --name-size: clamp(2.4rem, 13.6vw, 4rem);
     --tuck: 0.1;
@@ -640,6 +644,10 @@
     stroke-dashoffset: -9;
   }
 }
+.agent-pulse {
+  fill: var(--color-accent);
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--color-accent) 70%, transparent));
+}
 .agent-node {
   fill: var(--color-bg);
   stroke: var(--color-line);
@@ -661,7 +669,7 @@
     filter: drop-shadow(0 0 0 transparent);
   }
   to {
-    filter: drop-shadow(0 0 7px color-mix(in oklch, var(--color-accent) 55%, transparent));
+    filter: drop-shadow(0 0 7px color-mix(in srgb, var(--color-accent) 55%, transparent));
   }
 }
 .agent-node-label {
@@ -808,7 +816,7 @@
   .exhibit-stage {
     border: 1px solid var(--color-line);
     border-radius: 6px;
-    background: color-mix(in oklch, var(--surface) 45%, transparent);
+    background: color-mix(in srgb, var(--surface) 45%, transparent);
   }
   .exhibit-step {
     min-height: 74svh;
@@ -816,6 +824,108 @@
   /* Let the last exhibit centre while the stage is still pinned. */
   .exhibit-steps {
     padding-bottom: 14svh;
+  }
+}
+
+/* ============================================================
+   Toolkit — "The Die". Package, die and functional blocks sit on
+   separate Z layers: an exploded isometric view while the section
+   scrolls in (--p from useScrollProgress, mode "pass"), assembling
+   flat and legible by the time it reaches the reading position.
+   ============================================================ */
+.die-scene {
+  --tx: 0;
+  --ty: 0;
+  perspective: 2200px;
+  perspective-origin: 50% 10%;
+  padding: 2.5rem 0 1rem;
+}
+.die {
+  /* 1 = fully exploded, 0 = assembled. Without JS --p is unset → 0. */
+  --e: clamp(0, calc((0.5 - var(--p, 1)) / 0.3), 1);
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--e) * 54deg - (1 - var(--e)) * var(--ty) * 2.5deg))
+    rotateY(calc((1 - var(--e)) * var(--tx) * 3.5deg)) rotateZ(calc(var(--e) * -28deg));
+}
+.die-package {
+  position: absolute;
+  inset: -2.4rem -2.4rem -3.2rem;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  transform: translateZ(calc(var(--e) * -110px));
+}
+/* Bond pads along the package edges. */
+.die-pads {
+  position: absolute;
+  --pad: color-mix(in oklch, var(--accent) 38%, var(--line));
+}
+.die-pads-x {
+  inset: 0.55rem 3.2rem;
+  background:
+    repeating-linear-gradient(90deg, var(--pad) 0 9px, transparent 9px 19px) top / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, var(--pad) 0 9px, transparent 9px 19px) bottom / 100% 5px no-repeat;
+}
+.die-pads-y {
+  inset: 3.2rem 0.55rem;
+  background:
+    repeating-linear-gradient(180deg, var(--pad) 0 9px, transparent 9px 19px) left / 5px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--pad) 0 9px, transparent 9px 19px) right / 5px 100% no-repeat;
+}
+.die-mark {
+  position: absolute;
+  left: 3.2rem;
+  bottom: 1.15rem;
+  font-size: 0.62rem;
+}
+/* The die itself: a faint silicon grid under the blocks. */
+.die-core {
+  position: absolute;
+  inset: -0.6rem;
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, var(--line));
+  border-radius: 6px;
+  background:
+    linear-gradient(var(--color-line) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px) 0 0 / 22px 22px;
+  opacity: 0.55;
+  transform: translateZ(calc(var(--e) * -45px));
+}
+.die-blocks {
+  position: relative;
+  display: grid;
+  gap: 0.75rem;
+  transform-style: preserve-3d;
+}
+.die-block {
+  position: relative;
+  padding: 1.6rem 1.75rem 1.8rem;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  background: var(--color-bg);
+  transform: translateZ(calc(var(--e) * (70px + var(--i) * 36px)));
+  translate: 0 0 0;
+  transition: translate 0.5s var(--ease-out-expo), border-color 0.3s, box-shadow 0.4s;
+}
+.die-block:hover {
+  translate: 0 0 22px;
+  border-color: color-mix(in oklch, var(--accent) 60%, var(--line));
+  box-shadow: 0 34px 60px -36px oklch(0 0 0 / 0.55);
+}
+.die-block:hover .die-cell {
+  border-color: color-mix(in oklch, var(--accent) 35%, var(--line));
+}
+@media (min-width: 640px) {
+  .die-blocks {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .die,
+  .die-package,
+  .die-core,
+  .die-block {
+    transform: none;
   }
 }
 
@@ -831,17 +941,310 @@
   }
 }
 
-/* Full-bleed parallax image band. */
-.image-band {
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+/* ============================================================
+   Background — discipline numerals and the recognition "plates".
+   ============================================================ */
+.discipline-num {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 2.6rem;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklch, var(--accent) 70%, var(--line));
 }
-@media (prefers-reduced-motion: reduce), (hover: none) {
-  .image-band {
-    background-attachment: scroll;
+.plate-stage {
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  --my: 40%;
+  position: relative;
+  perspective: 1100px;
+}
+.plate-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--color-surface);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.6s var(--ease-out-expo);
+  box-shadow: var(--shadow);
+}
+.plate-stage:hover .plate-photo {
+  transition-duration: 0.15s;
+}
+.plate-photo img {
+  width: 100%;
+  height: 100%;
+}
+.plate-fit-photo img {
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+/* A certificate sits on the plate like a document laid on a table. */
+.plate-fit-document {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 90% at 30% 20%, color-mix(in oklch, var(--accent) 7%, var(--surface)), var(--surface));
+}
+.plate-fit-document img {
+  width: 84%;
+  height: auto;
+  border-radius: 2px;
+  transform: rotate(-2.4deg);
+  box-shadow: 0 22px 40px -18px oklch(0 0 0 / 0.55), 0 2px 4px oklch(0 0 0 / 0.25);
+}
+.plate-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(42% 34% at var(--mx) var(--my), oklch(1 0 0 / 0.16), transparent 70%);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.plate-stage:hover .plate-sheen {
+  opacity: 1;
+}
+.plate-stage .crop-marks {
+  --o: -12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .plate-photo {
+    transform: none;
   }
+}
+
+/* ============================================================
+   Experience — the rail.
+   ============================================================ */
+.rail {
+  position: relative;
+  padding-left: 2.25rem;
+}
+.rail::before,
+.rail::after {
+  content: "";
+  position: absolute;
+  left: 0.42rem;
+  top: 2.4rem;
+  bottom: 2.4rem;
+  width: 1px;
+}
+.rail::before {
+  background: var(--color-line);
+}
+.rail::after {
+  background: var(--color-accent);
+  transform-origin: top;
+  transform: scaleY(var(--fill, 1));
+}
+.rail-item {
+  border-top: 1px solid var(--color-line);
+}
+.rail-row {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+  padding-block: 2.1rem;
+}
+@media (min-width: 768px) {
+  .rail-row {
+    grid-template-columns: 12rem 1fr;
+    gap: 2.5rem;
+  }
+  .rail-row .rail-node {
+    top: 2.92rem;
+  }
+}
+.rail-node {
+  position: absolute;
+  left: calc(-2.25rem + 0.42rem - 4px);
+  top: 2.42rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  transition: background-color 0.5s, border-color 0.5s;
+}
+.js .rail-row:not([data-lit]) .rail-node {
+  background: var(--color-bg);
+  border-color: var(--color-line);
+}
+.rail-row[data-current][data-lit] .rail-node {
+  animation: rail-pulse 2.4s var(--ease-out-quart) infinite;
+}
+.rail-now {
+  color: var(--color-accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.6rem;
+}
+@keyframes rail-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rail-row .rail-node {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   Contact & footer.
+   ============================================================ */
+.local-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 0.7em;
+  vertical-align: 0.1em;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  animation: rail-pulse 2.6s var(--ease-out-quart) infinite;
+}
+.contact-row {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 1.7rem 0.25rem;
+  border-bottom: 1px solid var(--color-line);
+  isolation: isolate;
+  transition: color 0.3s;
+}
+/* A wash wipes in from the left on hover. */
+.contact-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 85%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+.contact-row:hover::before,
+.contact-row:focus-visible::before {
+  transform: none;
+}
+.contact-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4.4vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  transition: transform 0.6s var(--ease-out-expo), color 0.3s;
+}
+.contact-row:hover .contact-name {
+  transform: translateX(0.6rem);
+  color: var(--color-accent);
+}
+.contact-arrow {
+  align-self: center;
+  color: var(--color-faint);
+  transition: transform 0.5s var(--ease-out-expo), color 0.3s;
+}
+.contact-row:hover .contact-arrow {
+  transform: rotate(45deg);
+  color: var(--color-accent);
+}
+.footer-name {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 8.6vw, 7.5rem);
+  /* Vietnamese needs real leading: the dot under Ọ must clearly belong to
+     the first line, not read as a mark over the U below it. */
+  line-height: 1.22;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+@media (prefers-reduced-motion: reduce) {
+  .local-dot {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Moment — "Aperture". A pinned full-bleed photo that opens from a
+   thin slit like a shutter (--open), then the caption lands (--cap).
+   Fully open by default, so no-JS and reduced motion see it whole.
+   ============================================================ */
+.aperture {
+  position: relative;
+}
+.aperture-pin {
+  position: relative;
+  height: 78svh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  background: var(--color-bg);
+}
+/* The pinned shutter only exists when JS drives it (and motion is fine). */
+.js .aperture:not([data-static]) {
+  height: 210svh;
+}
+.js .aperture:not([data-static]) .aperture-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.aperture-frame {
+  --o: var(--open, 1);
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  clip-path: inset(calc((1 - var(--o)) * 47%) calc((1 - var(--o)) * 9%));
+}
+.aperture-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 40%;
+  transform: scale(calc(1.16 - var(--o) * 0.16));
+}
+.aperture-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, oklch(0.12 0.01 70 / 0.82), oklch(0.12 0.01 70 / 0.12) 55%, transparent);
+  opacity: var(--cap, 1);
+}
+/* Accent rails on the opening edges, like a line scanner's slit. */
+.aperture-edge {
+  position: absolute;
+  left: calc((1 - var(--open, 1)) * 9%);
+  right: calc((1 - var(--open, 1)) * 9%);
+  height: 1px;
+  background: var(--color-accent);
+  opacity: calc((1 - var(--open, 1)) * 1.6);
+  pointer-events: none;
+}
+.aperture-edge-top {
+  top: calc((1 - var(--open, 1)) * 47%);
+}
+.aperture-edge-bottom {
+  bottom: calc((1 - var(--open, 1)) * 47%);
+}
+.aperture-caption {
+  position: relative;
+  padding-bottom: clamp(3rem, 9svh, 6rem);
+  opacity: var(--cap, 1);
+  transform: translateY(calc((1 - var(--cap, 1)) * 24px));
 }
 
 /* ============================================================

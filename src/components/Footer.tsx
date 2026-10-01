@@ -1,45 +1,73 @@
 import { ArrowUp } from "lucide-react";
-import { contact, profile, site } from "../data/content";
+import { contact, hero, nav, profile, site } from "../data/content";
 
+/** Sign-off with a printed-book colophon. */
 export function Footer() {
   return (
     <footer className="border-t border-line">
-      <div className="mx-auto flex w-full max-w-[72rem] flex-col gap-6 px-6 py-12 md:flex-row md:items-center md:justify-between md:px-10">
-        <div>
-          <p className="font-display text-lg font-bold tracking-tight">
-            {profile.name}{" "}
-            <span lang="vi" className="font-normal text-faint">
-              · {profile.nameVi}
-            </span>
-          </p>
-          <p className="mt-1 label">
-            {profile.role} · {profile.org} &nbsp;·&nbsp; Co-founder, Code4life®
-          </p>
-        </div>
+      <div className="mx-auto w-full max-w-[72rem] px-6 pb-10 pt-20 md:px-10 md:pt-28">
+        {/* Bookends the hero: the same two-line nameplate. */}
+        <p className="footer-name" lang="vi" aria-label={profile.nameVi}>
+          <span aria-hidden>
+            {hero.titleLead}
+            <br />
+            {hero.titleRest}
+          </span>
+        </p>
+        <p className="mt-5 label">
+          {profile.role} · {profile.org} &nbsp;·&nbsp; Co-founder, Code4life®
+        </p>
 
-        <div className="flex items-center gap-5 label">
-          {contact.links.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-accent"
-            >
-              {l.label}
-            </a>
-          ))}
+        <div className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-[1.4fr_1fr_1fr]">
+          <div>
+            <p className="label text-accent">Colophon</p>
+            <p className="mt-4 max-w-[40ch] text-[0.95rem] text-muted">
+              Set in Archivo, Spectral and JetBrains Mono. The scan, the arm and
+              the exhibits are drawn live with three.js on your GPU; the
+              portrait&rsquo;s depth map was made with MediaPipe segmentation.
+              Made in Ho Chi Minh City.
+            </p>
+          </div>
+          <div>
+            <p className="label text-accent">Elsewhere</p>
+            <ul className="mt-4 space-y-2">
+              {contact.links.map((l) => (
+                <li key={l.label}>
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-sm text-muted transition-colors hover:text-accent"
+                  >
+                    {l.label} <span className="text-faint">{l.handle}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="label text-accent">On this page</p>
+            <ul className="mt-4 space-y-2">
+              {nav.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    className="font-mono text-sm text-muted transition-colors hover:text-accent"
+                  >
+                    <span className="text-faint">{item.index}</span> {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
       <div className="mx-auto flex w-full max-w-[72rem] items-center justify-between border-t border-line px-6 py-5 md:px-10 label">
-        <span className="text-faint">
+        <span>
           © {new Date().getFullYear()} {site.copyright} · {site.volume}
         </span>
-        <a
-          href="#intro"
-          className="flex items-center gap-2 transition-colors hover:text-accent"
-        >
+        <a href="#intro" className="flex items-center gap-2 transition-colors hover:text-accent">
           Back to top
           <ArrowUp size={14} aria-hidden />
         </a>

@@ -38,6 +38,17 @@ const KIND_META: Record<StepKind, { badge: string; cls: string }> = {
   answer: { badge: "answer", cls: "text-accent" },
 };
 
+/** Seconds into the run at which each step starts (1× speed). */
+function stepStarts(steps: TraceStep[]) {
+  let t = 0.4;
+  return steps.map((step) => {
+    t += GAP[step.kind] / 1000;
+    const at = t;
+    t += (Math.ceil(step.text.length / CHUNK[step.kind]) * TICK) / 1000;
+    return at;
+  });
+}
+
 type Playback = {
   /** -1 = not started; steps.length = finished. */
   stepIdx: number;
@@ -56,6 +67,7 @@ export function AgentLab() {
 
   const task = demoTasks.find((t) => t.id === taskId) ?? demoTasks[0];
   const steps = task.steps;
+  const starts = stepStarts(steps);
   const finished = pb.stepIdx >= steps.length;
   const current: TraceStep | undefined = steps[pb.stepIdx];
 
@@ -129,6 +141,11 @@ export function AgentLab() {
   }, []);
 
   const started = pb.stepIdx >= 0 || pb.running;
+  const streamed = steps.reduce(
+    (n, s, i) => n + (i < pb.stepIdx ? s.text.length : i === pb.stepIdx ? pb.chars : 0),
+    0,
+  );
+  const tokens = Math.ceil(streamed / 4);
   const activeNode: AgentNode | null =
     pb.running && current ? current.node : finished ? "answer" : null;
   const doneNodes = new Set<AgentNode>(
@@ -184,20 +201,12 @@ export function AgentLab() {
             </ul>
 
             <div className="flex flex-wrap items-center gap-3 px-6 py-5">
-              <button
-                type="button"
-                onClick={run}
-                className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-mono text-sm font-medium text-[var(--accent-ink)] transition-transform duration-300 hover:-translate-y-0.5"
-              >
+              <button type="button" onClick={run} className="btn btn-primary">
                 {started ? <RotateCcw size={15} aria-hidden /> : <Play size={15} aria-hidden />}
                 {started ? "Replay" : "Run agent"}
               </button>
               {pb.running ? (
-                <button
-                  type="button"
-                  onClick={skip}
-                  className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 font-mono text-sm text-muted transition-colors hover:border-accent hover:text-ink"
-                >
+                <button type="button" onClick={skip} className="btn">
                   <FastForward size={15} aria-hidden />
                   Skip
                 </button>
@@ -206,11 +215,7 @@ export function AgentLab() {
                 type="button"
                 onClick={() => setFast((f) => !f)}
                 aria-pressed={fast}
-                className={`ml-auto rounded-full border px-4 py-2.5 font-mono text-sm transition-colors ${
-                  fast
-                    ? "border-accent text-accent"
-                    : "border-line text-faint hover:text-muted"
-                }`}
+                className={`btn ml-auto tabular-nums ${fast ? "text-accent" : "text-faint"}`}
               >
                 {fast ? "3×" : "1×"}
               </button>
@@ -229,12 +234,18 @@ export function AgentLab() {
           <div className="flex h-full flex-col overflow-hidden rounded-lg border border-line bg-surface">
             {/* Graph */}
             <div className="border-b border-line px-4 pb-3 pt-4 md:px-6">
-              <AgentGraph active={activeNode} done={doneNodes} running={pb.running} />
+              <AgentGraph
+                active={activeNode}
+                done={doneNodes}
+                running={pb.running}
+                still={reducedRef.current}
+              />
             </div>
 
             {/* Console */}
             <div
               ref={consoleRef}
+              data-lenis-prevent
               role="log"
               aria-label="Agent trace"
               aria-busy={pb.running}
@@ -262,6 +273,7 @@ export function AgentLab() {
                     step={step}
                     text={text}
                     streaming={streaming}
+                    at={starts[i]}
                   />
                 );
               })}
@@ -293,7 +305,9 @@ export function AgentLab() {
                     ? "done"
                     : "idle"}
               </span>
-              <span className="text-faint">agent.trace</span>
+              <span className="tabular-nums text-faint">
+                {started ? `${tokens.toLocaleString("en-US")} tokens` : "agent.trace"}
+              </span>
             </div>
           </div>
         </Reveal>
@@ -306,10 +320,13 @@ function TraceLine({
   step,
   text,
   streaming,
+  at,
 }: {
   step: TraceStep;
   text: string;
   streaming: boolean;
+  /** Seconds into the run (scripted). */
+  at: number;
 }) {
   const meta = KIND_META[step.kind];
   return (
@@ -317,8 +334,9 @@ function TraceLine({
       className={`mt-4 ${step.kind === "answer" ? "border-t border-line pt-4" : ""}`}
     >
       <p className="flex items-baseline gap-2">
+        <span className="w-[3.75rem] shrink-0 tabular-nums text-faint">+{at.toFixed(2)}s</span>
         <span
-          className={`shrink-0 rounded border border-line px-1.5 py-0.5 text-[0.62rem] uppercase tracking-[0.14em] ${meta.cls}`}
+          className={`shrink-0 rounded-[3px] border border-line px-1.5 py-0.5 text-[0.62rem] uppercase tracking-[0.14em] ${meta.cls}`}
         >
           {meta.badge}
         </span>
@@ -361,10 +379,13 @@ function AgentGraph({
   active,
   done,
   running,
+  still,
 }: {
   active: AgentNode | null;
   done: Set<AgentNode>;
   running: boolean;
+  /** Reduced motion: no travelling pulses. */
+  still: boolean;
 }) {
   // Layout on a 560×72 canvas, nodes evenly spaced.
   const xs = [52, 166, 280, 394, 508];
@@ -388,26 +409,20 @@ function AgentGraph({
         const traversed =
           (done.has(a) && (done.has(b) || active === b)) || active === a;
         const cls = traversed ? "agent-edge-active" : "agent-edge";
-        if (loop) {
-          return (
-            <path
-              key={`${a}-${b}`}
-              d={`M ${x1 - 8} ${y + 12} C ${x1 - 60} ${y + 38}, ${x2 + 60} ${y + 38}, ${x2 + 8} ${y + 12}`}
-              fill="none"
-              strokeDasharray="3 6"
-              className={cls}
-            />
-          );
-        }
+        const d = loop
+          ? `M ${x1 - 8} ${y + 12} C ${x1 - 60} ${y + 38}, ${x2 + 60} ${y + 38}, ${x2 + 8} ${y + 12}`
+          : `M ${x1 + 34} ${y} L ${x2 - 34} ${y}`;
+        // A signal travels along the edge the agent is using right now.
+        const live = running && !still && active === a;
         return (
-          <line
-            key={`${a}-${b}`}
-            x1={x1 + 34}
-            y1={y}
-            x2={x2 - 34}
-            y2={y}
-            className={cls}
-          />
+          <g key={`${a}-${b}`}>
+            <path d={d} fill="none" strokeDasharray={loop ? "3 6" : undefined} className={cls} />
+            {live ? (
+              <circle r={3} className="agent-pulse">
+                <animateMotion dur={loop ? "1.1s" : "0.8s"} repeatCount="indefinite" path={d} />
+              </circle>
+            ) : null}
+          </g>
         );
       })}
 
