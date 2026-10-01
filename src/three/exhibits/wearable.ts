@@ -103,7 +103,6 @@ export class WearableExhibit implements Exhibit {
   private acc = 1;
   private beatPhase = 0;
   private alert = 0;
-  private status = "";
 
   constructor() {
     const { inks } = this;
@@ -308,16 +307,6 @@ export class WearableExhibit implements Exhibit {
     accPos.needsUpdate = true;
     this.accTrace.material = this.alert > 0.5 ? this.inks.accent : this.inks.ink;
     this.threshold.material = this.alert > 0.5 ? this.inks.accent : this.inks.faint;
-
-    const bpm = Math.round(this.hr);
-    this.status =
-      this.alert > 0.5
-        ? `fall detected · hr ${bpm} bpm · stroke alert raised · simulated`
-        : `hr ${bpm} bpm · |a| ${this.acc.toFixed(2)} g · monitoring · simulated`;
-  }
-
-  readout() {
-    return this.status;
   }
 
   dispose() {

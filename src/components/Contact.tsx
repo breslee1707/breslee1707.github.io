@@ -1,6 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
 import { contact } from "../data/content";
-import { LocalTime } from "./LocalTime";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
@@ -13,11 +12,7 @@ export function Contact() {
       title="Let's build something technically serious."
       intro={contact.lede}
     >
-      <Reveal>
-        <LocalTime className="label" />
-      </Reveal>
-
-      <ul className="mt-10 border-t border-line">
+      <ul className="border-t border-line">
         {contact.links.map((link, i) => (
           <Reveal key={link.label} as="li" delay={i * 70}>
             <a

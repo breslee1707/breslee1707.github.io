@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type RefObject } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useInView } from "../hooks/useInView";
@@ -13,8 +13,6 @@ import { WearableExhibit } from "./exhibits/wearable";
 type Props = {
   /** Index of the project being read (matches `projects` order). */
   active: number;
-  /** HUD container; the live read-out goes into its [data-hud="exhibit"]. */
-  hudRef: RefObject<HTMLDivElement | null>;
 };
 
 const FOV = 30;
@@ -42,7 +40,7 @@ export default function ExhibitStage(props: Props) {
   );
 }
 
-function Stage({ active, hudRef }: Props) {
+function Stage({ active }: Props) {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   const gl = useThree((s) => s.gl);
   const size = useThree((s) => s.size);
@@ -67,7 +65,6 @@ function Stage({ active, hudRef }: Props) {
     dist: exhibits[0].frame.distance,
     elev: exhibits[0].frame.elevation ?? 0.4,
     azim: exhibits[0].frame.azimuth ?? 0.7,
-    hud: 0,
   });
 
   useEffect(() => () => exhibits.forEach((e) => e.dispose()), [exhibits]);
@@ -148,14 +145,6 @@ function Stage({ active, hudRef }: Props) {
       Math.cos(az) * Math.cos(el) * d,
     );
     camera.lookAt(0, s.target, 0);
-
-    s.hud += dt;
-    if (s.hud > 0.15) {
-      s.hud = 0;
-      const node = hudRef.current?.querySelector('[data-hud="exhibit"]');
-      const text = exhibits[active].readout();
-      if (node && node.textContent !== text) node.textContent = text;
-    }
   });
 
   return (

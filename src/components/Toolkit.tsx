@@ -39,7 +39,6 @@ export function Toolkit() {
           <div className="die-package" aria-hidden>
             <span className="die-pads die-pads-x" />
             <span className="die-pads die-pads-y" />
-            <span className="die-mark label">GH-26 · Rev A · Ho Chi Minh City</span>
           </div>
           <div className="die-core" aria-hidden />
           <ul className="die-blocks">

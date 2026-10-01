@@ -33,7 +33,6 @@ export class AgentExhibit implements Exhibit {
   private readonly pulse: THREE.Points;
   private readonly loopDot: THREE.Points;
   private t = 0;
-  private status = "";
 
   constructor() {
     const { inks } = this;
@@ -160,21 +159,15 @@ export class AgentExhibit implements Exhibit {
       this.pulse.visible = true;
       if (local > 0.3 && local < 0.7) this.toolEdges[idx].material = this.inks.accent;
       this.loopDot.visible = false;
-      this.status = `call ${String(round * 2 + call + 1).padStart(2, "0")} · ${TOOLS[idx]}()`;
     } else {
       const s = clamp01((k - CALL * 2) / 1.1);
       const a = 0.35 + ease.inOut(s) * (Math.PI * 2 - 0.9);
       loopPos.setXYZ(0, Math.cos(a) * 0.36, HUB.y + 0.82, Math.sin(a) * 0.36);
       this.loopDot.visible = true;
       this.pulse.visible = false;
-      this.status = "critic · reflect on the trace";
     }
     pulsePos.needsUpdate = true;
     loopPos.needsUpdate = true;
-  }
-
-  readout() {
-    return this.status;
   }
 
   dispose() {

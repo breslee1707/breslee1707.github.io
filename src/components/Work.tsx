@@ -18,7 +18,6 @@ export function Work() {
   const can3D = useCan3D();
   const [active, setActive] = useState(0);
   const stepsRef = useRef<HTMLOListElement>(null);
-  const hudRef = useRef<HTMLDivElement>(null);
 
   // The step crossing the viewport's middle line is the one being read.
   useEffect(() => {
@@ -90,7 +89,7 @@ export function Work() {
           <div className="exhibit-stage">
             {can3D ? (
               <Suspense fallback={null}>
-                <ExhibitStage active={active} hudRef={hudRef} />
+                <ExhibitStage active={active} />
               </Suspense>
             ) : (
               <ProjectMotif
@@ -100,22 +99,6 @@ export function Work() {
                 className="exhibit-motif"
               />
             )}
-            <div ref={hudRef} className="exhibit-hud">
-              <div className="exhibit-hud-row">
-                <span>
-                  <span className="text-accent">Exhibit {pad(active + 1)}</span> / {pad(projects.length)}
-                </span>
-                <span className="exhibit-hud-caption">{current.exhibit.caption}</span>
-              </div>
-              <div className="exhibit-hud-row">
-                <span data-hud="exhibit" aria-hidden>
-                  {current.meta}
-                </span>
-                {can3D && current.exhibit.hint ? (
-                  <span className="exhibit-hint">{current.exhibit.hint}</span>
-                ) : null}
-              </div>
-            </div>
             <span className="crop-marks" aria-hidden />
           </div>
         </div>

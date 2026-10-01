@@ -142,7 +142,6 @@ export class PortraitCloud {
   private readonly bytes: Uint8Array;
   private readonly scanTex: THREE.DataTexture;
   private readonly photoTex: THREE.Texture;
-  private scannedRows = 0;
 
   /**
    * @param photo   RGBA pixels of the portrait resampled to cols×rows
@@ -256,22 +255,14 @@ export class PortraitCloud {
 
   /** Settles armed rows over ~0.6 s; `complete` (0–1) forces the rest in. */
   update(dt: number, complete: number) {
-    let done = 0;
     for (let r = 0; r < this.rows; r++) {
       let l = this.level[r];
       if (this.armed[r]) l = Math.min(1, l + dt * 1.7);
       l = Math.max(l, complete);
       this.level[r] = l;
       this.bytes[r] = Math.round(l * 255);
-      if (l > 0.98) done++;
     }
-    this.scannedRows = done;
     this.scanTex.needsUpdate = true;
-  }
-
-  /** Fraction of rows fully scanned. */
-  get scanned() {
-    return this.scannedRows / this.rows;
   }
 
   dispose() {

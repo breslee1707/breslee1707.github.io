@@ -1,7 +1,7 @@
 import { ArrowUp } from "lucide-react";
 import { contact, hero, nav, profile, site } from "../data/content";
 
-/** Sign-off with a printed-book colophon. */
+/** Sign-off: the hero nameplate again, links and a way back up. */
 export function Footer() {
   return (
     <footer className="border-t border-line">
@@ -15,19 +15,10 @@ export function Footer() {
           </span>
         </p>
         <p className="mt-5 label">
-          {profile.role} · {profile.org} &nbsp;·&nbsp; Co-founder, Code4life®
+          {profile.role} · {profile.org} &nbsp;·&nbsp; Co&#8209;founder, Code4life®
         </p>
 
-        <div className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-[1.4fr_1fr_1fr]">
-          <div>
-            <p className="label text-accent">Colophon</p>
-            <p className="mt-4 max-w-[40ch] text-[0.95rem] text-muted">
-              Set in Archivo, Spectral and JetBrains Mono. The scan, the arm and
-              the exhibits are drawn live with three.js on your GPU; the
-              portrait&rsquo;s depth map was made with MediaPipe segmentation.
-              Made in Ho Chi Minh City.
-            </p>
-          </div>
+        <div className="mt-16 grid gap-10 border-t border-line pt-10 sm:grid-cols-2">
           <div>
             <p className="label text-accent">Elsewhere</p>
             <ul className="mt-4 space-y-2">
@@ -65,7 +56,7 @@ export function Footer() {
 
       <div className="mx-auto flex w-full max-w-[72rem] items-center justify-between border-t border-line px-6 py-5 md:px-10 label">
         <span>
-          © {new Date().getFullYear()} {site.copyright} · {site.volume}
+          © {new Date().getFullYear()} {site.copyright}
         </span>
         <a href="#intro" className="flex items-center gap-2 transition-colors hover:text-accent">
           Back to top

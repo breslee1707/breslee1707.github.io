@@ -34,12 +34,6 @@ export const hero = {
   scrollHint: "Scroll to enter",
   /** Per-pixel depth for the point cloud (scripts/portrait-depth.mjs). */
   depth: "/assets/portrait-depth.webp",
-  /** Instrument read-outs around the stage. */
-  scan: {
-    id: "Scan 01 — Portrait",
-    place: "Ho Chi Minh City",
-    coords: "10.7769° N · 106.7009° E",
-  },
 } as const;
 
 /** Full-bleed atmospheric moment used as a section divider. */
@@ -117,8 +111,6 @@ export type Project = {
   tags: string[];
   /** 2D line-art used when the 3D stage is unavailable (see ProjectMotif.tsx). */
   motif: ProjectMotif;
-  /** Caption (and optional interaction hint) for the 3D exhibit. */
-  exhibit: { caption: string; hint?: string };
   /** Optional small accent label (e.g. an active focus). */
   status?: string;
 };
@@ -130,7 +122,6 @@ export const projects: Project[] = [
     body: "Autonomous LLM agents that plan, call tools, and act across multi-step workflows — built with orchestration graphs, memory, guardrails, and evaluation loops so agent behavior stays reliable enough for production, not just demos.",
     tags: ["LangGraph", "Tool-calling", "Planning", "Multi-agent", "MCP"],
     motif: "agent",
-    exhibit: { caption: "Agent loop — planner dispatching tools" },
     status: "Currently building",
   },
   {
@@ -139,7 +130,6 @@ export const projects: Project[] = [
     body: "A LangGraph-orchestrated agent that plans retrieval, calls search and reranking tools, and adapts across multi-step queries — over document ingestion, semantic chunking, Qdrant vector search, Supabase metadata, and OpenAI models.",
     tags: ["LangGraph", "Tool-calling", "Qdrant", "OpenAI API"],
     motif: "graph",
-    exhibit: { caption: "Retrieval — top-k 8, rerank, keep 3" },
   },
   {
     title: "AI-Based Robotic Arm Inspection",
@@ -147,7 +137,6 @@ export const projects: Project[] = [
     body: "An inspection workflow combining PyTorch and TensorFlow models, OpenCV, RobotStudio simulation, MATLAB/Simulink kinematics, Inventor assembly, and real-time C# socket communication.",
     tags: ["PyTorch", "OpenCV", "RobotStudio", "C#"],
     motif: "arm",
-    exhibit: { caption: "Six-axis arm — IK solved live", hint: "Move your cursor over the stage" },
   },
   {
     title: "Autonomous 3-Wheeled Vehicle",
@@ -155,7 +144,6 @@ export const projects: Project[] = [
     body: "An autonomous navigation prototype built with LIDAR, Gazebo simulation, ROS, reinforcement learning, and path-planning workflows.",
     tags: ["ROS", "Gazebo", "LIDAR", "RL"],
     motif: "vehicle",
-    exhibit: { caption: "LIDAR mapping — 120 rays per revolution" },
   },
   {
     title: "Smartwatch Stroke Early-Warning",
@@ -163,7 +151,6 @@ export const projects: Project[] = [
     body: "An AIoT system built around a smartwatch: it tracks heart rate, detects falls, and raises an early warning when the signals point to a possible stroke — first prize at Advantech AIoT InnoWorks 2022.",
     tags: ["AIoT", "Wearables", "Heart rate", "Fall detection"],
     motif: "wearable",
-    exhibit: { caption: "Wearable — heart rate + fall detection" },
   },
 ];
 
@@ -274,6 +261,5 @@ export const faq = [
 ] as const;
 
 export const site = {
-  volume: "Vol. 01 / '26",
   copyright: "Le Ngoc Gia Huy",
 } as const;
