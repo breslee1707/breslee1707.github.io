@@ -21,14 +21,23 @@ export const profile = {
   location: "Ho Chi Minh City, Vietnam",
 } as const;
 
-/** Cinematic scroll-expand hero — cover photo + an expanding portrait frame. */
+/**
+ * Hero "Scan 01" — the portrait is scanned into a point cloud by a robot arm,
+ * then resolves into the photo and opens up as you scroll.
+ */
 export const hero = {
-  /** Full-screen background that fades as the portrait grows. */
-  cover: "/assets/graduation.webp",
-  /** Name split across the expanding frame (slides apart on scroll). */
-  titleLead: "Le Ngoc",
+  /** Name in its Vietnamese form, split above and below the frame. */
+  titleLead: "Lê Ngọc",
   titleRest: "Gia Huy",
   scrollHint: "Scroll to enter",
+  /** Per-pixel depth for the point cloud (scripts/portrait-depth.mjs). */
+  depth: "/assets/portrait-depth.webp",
+  /** Instrument read-outs around the stage. */
+  scan: {
+    id: "Scan 01 — Portrait",
+    place: "Ho Chi Minh City",
+    coords: "10.7769° N · 106.7009° E",
+  },
 } as const;
 
 /** Full-bleed atmospheric moment used as a section divider. */

@@ -1,63 +1,127 @@
-import type { CSSProperties } from "react";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { lazy, Suspense, useCallback, useRef, useState } from "react";
+import { ArrowDownRight, ArrowUpRight, Pause, Play } from "lucide-react";
 import { profile, hero } from "../data/content";
-import { useScrollProgress } from "../hooks/useScrollProgress";
+import { segment, useScrollProgress } from "../hooks/useScrollProgress";
+import { useCan3D } from "../hooks/useCan3D";
 import { Magnetic } from "./Magnetic";
-import { NetworkField } from "./NetworkField";
 import { Reveal } from "./Reveal";
+import { SplitText } from "./SplitText";
+
+// WebGL only ever loads on the client, after hydration (see useCan3D).
+const HeroScan = lazy(() => import("../three/HeroScan"));
 
 export function Hero() {
-  const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>();
-  const stageVars = { ["--p" as string]: progress } as CSSProperties;
+  const can3D = useCan3D();
+  const [live, setLive] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+
+  // One scroll value, three overlapping phases (see .hero-stage in index.css).
+  const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>({
+    onProgress: (p, el) => {
+      el.style.setProperty("--p-scan", segment(p, 0, 0.26).toFixed(4));
+      el.style.setProperty("--p-resolve", segment(p, 0.16, 0.36).toFixed(4));
+      el.style.setProperty("--p-expand", segment(p, 0.3, 1).toFixed(4));
+    },
+  });
+
+  const onReady = useCallback(() => setLive(true), []);
 
   return (
     <section id="intro" className="relative">
-      {/* Cinematic stage: the portrait grows from a framed card to full-bleed
-          as you scroll, the cover photo fades, and the name slides apart. */}
+      {/* Scan stage: a robot arm laser-scans the portrait into a point cloud;
+          scrolling resolves it into the photograph, which then opens up. */}
       <div
         ref={ref}
         className="hero-stage"
+        data-live={live ? "" : undefined}
         style={reduced ? { height: "100svh" } : undefined}
       >
-        <div className="hero-pin" style={stageVars}>
-          {/* Cover — graduation atrium, fades as the portrait expands. */}
-          <div className="hero-cover" aria-hidden>
-            <img src={hero.cover} alt="" className="size-full object-cover" />
-            <div className="hero-cover-veil" />
-          </div>
+        <div className="hero-pin">
+          <div className="hero-backdrop" aria-hidden />
 
-          {/* Expanding portrait. */}
-          <figure className="hero-frame">
-            <img
-              src={profile.portrait}
-              alt={profile.portraitAlt}
-              width={1200}
-              height={1607}
-              loading="eager"
-              fetchPriority="high"
-              className="size-full object-cover"
-            />
-            <div className="hero-frame-veil" aria-hidden />
-            <figcaption className="hero-frame-cap label">
-              <span className="text-white">{profile.name}</span>
-              <span className="text-white/70">
-                {profile.role} · {profile.org}
-              </span>
-            </figcaption>
-          </figure>
-
-          {/* Name, split across the frame, with a role line below. */}
           <h1 className="hero-title">
-            <span className="hero-title-name">
-              <span className="hero-title-lead">{hero.titleLead}</span>{" "}
-              <span className="hero-title-rest">{hero.titleRest}</span>
-            </span>
-            <span className="hero-subtitle">
-              {profile.role} <span aria-hidden>|</span> {profile.org}
+            <span className="hero-line hero-line-1" lang="vi">
+              {hero.titleLead}
+            </span>{" "}
+            <span className="hero-line hero-line-2" lang="vi">
+              {hero.titleRest}
+            </span>{" "}
+            <span className="hero-role label">
+              <b>{profile.name}</b> — {profile.role} · {profile.org}
             </span>
           </h1>
 
-          {/* Scroll cue (hidden when there's no scroll choreography). */}
+          <div ref={frameRef} className="hero-frame-wrap">
+            <figure className="hero-frame">
+              <img
+                src={profile.portrait}
+                alt={profile.portraitAlt}
+                width={1200}
+                height={1607}
+                loading="eager"
+                fetchPriority="high"
+              />
+              <div className="hero-frame-veil" aria-hidden />
+              <figcaption className="hero-frame-cap label">
+                <span>{profile.name}</span>
+                <span className="opacity-75">
+                  {profile.role} · {profile.org}
+                </span>
+              </figcaption>
+            </figure>
+            <span className="crop-marks" aria-hidden />
+          </div>
+
+          {can3D ? (
+            <Suspense fallback={null}>
+              <HeroScan
+                frameRef={frameRef}
+                hudRef={hudRef}
+                progress={progress}
+                paused={paused}
+                onReady={onReady}
+              />
+            </Suspense>
+          ) : null}
+
+          {/* Instrument read-outs; the scene writes live values into [data-hud]. */}
+          <div ref={hudRef} className="hero-hud">
+            <div className="hud-tl" aria-hidden>
+              <span className="hud-accent">■</span> {hero.scan.id}
+              <br />
+              <span data-hud="pts">1792 × 2400 px</span>
+            </div>
+            <div className="hud-tr" aria-hidden>
+              {hero.scan.place}
+              <br />
+              {hero.scan.coords}
+            </div>
+            {live ? (
+              <div className="hud-bl">
+                <span aria-hidden>
+                  <span data-hud="laser">Laser —</span> ·{" "}
+                  <span data-hud="scanned">Scanned 0%</span>
+                </span>
+                <br />
+                <span data-hud="joints" className="hud-joints" aria-hidden>
+                  IK 6-DOF
+                </span>
+                <br />
+                <button
+                  type="button"
+                  className="hero-pause"
+                  onClick={() => setPaused((v) => !v)}
+                  aria-pressed={paused}
+                >
+                  {paused ? <Play size={11} aria-hidden /> : <Pause size={11} aria-hidden />}
+                  {paused ? "Resume motion" : "Pause motion"}
+                </button>
+              </div>
+            ) : null}
+          </div>
+
           {reduced ? null : (
             <div className="hero-cue label" aria-hidden>
               <span>{hero.scrollHint}</span>
@@ -68,49 +132,44 @@ export function Hero() {
       </div>
 
       {/* Editorial intro — reveals once the portrait has filled the frame. */}
-      <div className="relative bg-bg">
-        <NetworkField className="opacity-70" />
-        <div className="relative mx-auto w-full max-w-[72rem] px-6 pb-24 pt-16 md:px-10 md:pb-28 md:pt-24">
+      <div className="relative border-t border-line bg-bg">
+        <div className="relative mx-auto w-full max-w-[72rem] px-6 pb-24 pt-20 md:px-10 md:pb-32 md:pt-28">
           <Reveal>
             <p className="label text-accent">{profile.kicker}</p>
           </Reveal>
 
           <Reveal delay={80}>
-            <p className="mt-6 max-w-[18ch] font-display text-[clamp(2.2rem,6.4vw,4.6rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">
-              Building intelligent systems with{" "}
-              <span className="text-accent">product-grade precision.</span>
+            <p className="mt-7 max-w-[17ch] font-display text-[clamp(2.4rem,6.6vw,5.2rem)] font-extrabold leading-[0.95] tracking-[-0.04em]">
+              <SplitText text="Building intelligent systems with" />{" "}
+              <span className="text-accent">
+                <SplitText text="product-grade precision." start={4} />
+              </span>
             </p>
           </Reveal>
 
           <Reveal delay={160}>
-            <p className="measure mt-8 text-lg text-muted md:text-xl">
+            <p className="measure mt-9 text-lg text-muted md:text-xl">
               {profile.intro}
             </p>
           </Reveal>
 
           <Reveal delay={240}>
-            <div className="mt-10 flex flex-wrap items-center gap-3">
+            <div className="mt-11 flex flex-wrap items-center gap-4">
               <Magnetic>
-                <a
-                  href="#agent-lab"
-                  className="group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-mono text-sm font-medium text-[var(--accent-ink)] transition-transform duration-300 hover:-translate-y-0.5"
-                >
+                <a href="#agent-lab" className="btn btn-primary group">
                   Run the Agent Lab
                   <ArrowDownRight
-                    size={16}
+                    size={15}
                     className="transition-transform duration-300 group-hover:translate-y-0.5"
                     aria-hidden
                   />
                 </a>
               </Magnetic>
               <Magnetic>
-                <a
-                  href="#work"
-                  className="group inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-mono text-sm text-muted transition-colors duration-300 hover:border-accent hover:text-ink"
-                >
+                <a href="#work" className="btn group">
                   View selected work
                   <ArrowUpRight
-                    size={16}
+                    size={15}
                     className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                     aria-hidden
                   />
@@ -120,10 +179,12 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={320}>
-            <ul className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6 label">
-              {profile.focus.map((f) => (
-                <li key={f} className="flex items-center gap-2">
-                  <span className="size-1 rounded-full bg-accent" aria-hidden />
+            <ul className="mt-14 flex flex-wrap gap-x-7 gap-y-3 border-t border-line pt-6 label">
+              {profile.focus.map((f, i) => (
+                <li key={f} className="flex items-center gap-2.5">
+                  <span className="tabular-nums text-accent" aria-hidden>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                   {f}
                 </li>
               ))}

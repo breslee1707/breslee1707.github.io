@@ -17,7 +17,7 @@ export function TechBadge({ label, className = "" }: Props) {
 
   return (
     <li
-      className={`group/tech inline-flex items-center gap-1.5 rounded-full border border-line font-mono text-faint transition-colors duration-200 hover:border-accent hover:text-ink ${className}`}
+      className={`group/tech inline-flex items-center gap-1.5 rounded-[3px] border border-line font-mono text-faint transition-colors duration-200 hover:border-accent hover:text-ink ${className}`}
       style={
         icon?.hex ? ({ ["--brand" as string]: `#${icon.hex}` } as CSSProperties) : undefined
       }
