@@ -112,7 +112,7 @@ function Scene({ frameRef, hudRef, progress, onReady }: Props) {
       loadPixels(hero.depth, cols, rows),
     ])
       .then(([photo, depth]) => {
-        if (alive) setCloud(new PortraitCloud(photo, depth, cols, rows));
+        if (alive) setCloud(new PortraitCloud(photo.data, depth.data, photo.image, cols, rows));
       })
       .catch(() => {
         /* the photo simply stays in place */
@@ -174,10 +174,10 @@ function Scene({ frameRef, hudRef, progress, onReady }: Props) {
     const cx = fr.left + fr.width / 2 - cr.left - W / 2;
     const cy = -(fr.top + fr.height / 2 - cr.top - H / 2);
     const u = cloud.uniforms;
-    const amp = fr.width * 0.42;
+    const amp = fr.width * 0.34;
     u.uSize.value.set(fr.width, fr.height);
     u.uDepthAmp.value = amp;
-    u.uPointSize.value = (fr.width / cloud.cols) * 1.5;
+    u.uPointSize.value = fr.width / cloud.cols;
     u.uPixelRatio.value = gl.getPixelRatio();
     u.uCamDist.value = camera.position.z;
     u.uTime.value = s.t;
@@ -228,8 +228,8 @@ function Scene({ frameRef, hudRef, progress, onReady }: Props) {
     const ny = pointerActive ? (s.pointer.y / window.innerHeight) * 2 - 1 : 0;
     const keep = 1 - pResolve;
     const ease = 1 - Math.exp(-dt * 3);
-    s.rotY += (nx * 0.3 * keep - s.rotY) * ease;
-    s.rotX += (ny * 0.12 * keep - s.rotX) * ease;
+    s.rotY += (nx * 0.22 * keep - s.rotY) * ease;
+    s.rotX += (ny * 0.09 * keep - s.rotX) * ease;
     cloud.points.rotation.set(s.rotX, s.rotY, 0);
     u.uTilt.value.set(Math.abs(Math.sin(s.rotY)), Math.abs(Math.sin(s.rotX)));
     cloud.points.updateMatrixWorld();

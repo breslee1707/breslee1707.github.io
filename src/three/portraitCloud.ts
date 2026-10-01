@@ -1,13 +1,14 @@
 import * as THREE from "three";
 
 /**
- * The portrait as a point cloud: one point per grid cell, coloured from the
- * photo and pushed off the frame plane by the segmented depth map.
+ * The portrait as a point cloud: one point per grid cell, pushed off the
+ * frame plane by the segmented depth map.
  *
- * Rows stay as raw, drifting sensor noise until the laser sweeps across them;
- * then they settle into place (tracked per row in a 1-px-tall texture, so a
- * sweep costs a few bytes of upload, not a geometry rebuild). `uResolve`
- * flattens the cloud back onto the plane so it can hand over to the photo.
+ * Rows stay as raw, drifting sensor noise until the laser sweeps across them
+ * (tracked per row in a 1-px-tall texture, so a sweep costs a few bytes of
+ * upload). Once scanned, each point becomes a square tile that carries its own
+ * patch of the full-resolution photo — so at rest the face is as sharp as the
+ * photograph, and tilting reveals the depth without smearing it.
  */
 const vertex = /* glsl */ `
 uniform vec2 uSize;
@@ -23,9 +24,13 @@ uniform vec3 uAccent;
 uniform vec2 uTilt; // |sin| of the cloud's yaw and pitch
 attribute vec3 aColor;
 attribute vec3 aSeed;
-attribute vec2 aGrad; // depth slope to the next column / row
-varying vec3 vColor;
+attribute vec2 aGrad; // depth slope to the neighbouring column / row
+varying vec2 vUv;
+varying vec3 vRaw;
+varying float vSettle;
+varying float vGlow;
 varying float vAlpha;
+varying float vScale;
 
 void main() {
   vec2 uv = position.xy;
@@ -61,70 +66,122 @@ void main() {
 
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mv;
-  // Tilting a depth-displaced grid stretches it across steep relief (the
-  // silhouette); grow those points to bridge the gap instead of striping.
+
+  // Tilting stretches the grid across steep relief; grow tiles to bridge it.
   float stretch = max(aGrad.x * uTilt.x, aGrad.y * uTilt.y) * uDepthAmp * flatten * s;
-  float size = uPointSize * mix(0.6, 1.0, s) * (1.0 + glow * 0.7) + stretch * 1.15;
-  gl_PointSize = size * uPixelRatio * (uCamDist / -mv.z);
+  float k = mix(0.62, 1.1, s) * (1.0 + glow * 0.5) + stretch / uPointSize;
+  gl_PointSize = uPointSize * k * uPixelRatio * (uCamDist / -mv.z);
 
   float lum = dot(aColor, vec3(0.299, 0.587, 0.114));
-  vec3 raw = mix(vec3(lum), uAccent, 0.3) * 0.8;
-  vColor = mix(mix(raw, aColor, s), uAccent, glow * 0.85);
+  vUv = uv;
+  vRaw = mix(vec3(lum), uAccent, 0.3) * 0.8;
+  vSettle = s;
+  vGlow = glow * 0.85;
   vAlpha = mix(0.16, 1.0, s) + glow * 0.5;
+  vScale = k;
 }
 `;
 
-// Opaque, depth-tested points so nearer relief (face, hands) correctly hides
-// the wall behind it whatever the draw order; partial alpha becomes a
-// stochastic screen-door, which reads as sensor noise anyway.
+// Opaque, depth-tested fragments so nearer relief hides what's behind it
+// whatever the draw order; partial alpha becomes a stochastic screen-door,
+// which reads as sensor noise anyway.
 const fragment = /* glsl */ `
-varying vec3 vColor;
+uniform sampler2D uPhoto;
+uniform vec2 uCell;
+uniform vec3 uAccent;
+varying vec2 vUv;
+varying vec3 vRaw;
+varying float vSettle;
+varying float vGlow;
 varying float vAlpha;
+varying float vScale;
 
 void main() {
-  vec2 c = gl_PointCoord - 0.5;
-  if (dot(c, c) > 0.25) discard;
-  float a = min(vAlpha, 1.0);
+  vec2 pc = gl_PointCoord - 0.5;
+  bool tile = vSettle > 0.5;
+  if (!tile && dot(pc, pc) > 0.25) discard;
   float h = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
-  if (h > a) discard;
-  gl_FragColor = vec4(vColor, 1.0);
+  if (h > min(vAlpha, 1.0)) discard;
+  vec2 uv = vUv + pc * uCell * vScale;
+  vec3 photo = texture2D(uPhoto, vec2(uv.x, 1.0 - uv.y)).rgb;
+  vec3 base = tile ? photo : vRaw;
+  gl_FragColor = vec4(mix(base, uAccent, vGlow), 1.0);
 }
 `;
+
+/** Separable box blur over a cols×rows grid (softens depth silhouettes). */
+function blurGrid(src: Float32Array, cols: number, rows: number, radius: number) {
+  const tmp = new Float32Array(src.length);
+  const out = new Float32Array(src.length);
+  const pass = (from: Float32Array, to: Float32Array, horizontal: boolean) => {
+    const len = horizontal ? cols : rows;
+    const lines = horizontal ? rows : cols;
+    for (let l = 0; l < lines; l++) {
+      for (let i = 0; i < len; i++) {
+        let sum = 0;
+        for (let k = -radius; k <= radius; k++) {
+          const j = Math.min(len - 1, Math.max(0, i + k));
+          sum += from[horizontal ? l * cols + j : j * cols + l];
+        }
+        to[horizontal ? l * cols + i : i * cols + l] = sum / (radius * 2 + 1);
+      }
+    }
+  };
+  pass(src, tmp, true);
+  pass(tmp, out, false);
+  return out;
+}
 
 export class PortraitCloud {
   readonly points: THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial>;
   readonly cols: number;
   readonly rows: number;
-  private readonly depth: Uint8ClampedArray;
+  private readonly depth: Float32Array;
   private readonly level: Float32Array;
   private readonly armed: Uint8Array;
   private readonly bytes: Uint8Array;
   private readonly scanTex: THREE.DataTexture;
+  private readonly photoTex: THREE.Texture;
   private scannedRows = 0;
 
-  constructor(photo: Uint8ClampedArray, depth: Uint8ClampedArray, cols: number, rows: number) {
+  /**
+   * @param photo   RGBA pixels of the portrait resampled to cols×rows
+   * @param depthPx RGBA pixels of the depth map at the same size
+   * @param image   the portrait itself, sampled at full resolution by the tiles
+   */
+  constructor(
+    photo: Uint8ClampedArray,
+    depthPx: Uint8ClampedArray,
+    image: HTMLImageElement,
+    cols: number,
+    rows: number,
+  ) {
     this.cols = cols;
     this.rows = rows;
-    this.depth = depth;
     const n = cols * rows;
+
+    // Soft relief: a gentle bas-relief parallaxes cleanly, whereas hard
+    // silhouettes would tear open (and ghost) as the cloud tilts.
+    const raw = new Float32Array(n);
+    for (let i = 0; i < n; i++) raw[i] = depthPx[i * 4] / 255;
+    this.depth = blurGrid(raw, cols, rows, Math.max(2, Math.round(cols / 60)));
+
     const position = new Float32Array(n * 3);
     const color = new Float32Array(n * 3);
     const seed = new Float32Array(n * 3);
     const grad = new Float32Array(n * 2);
     const z = (c: number, r: number) =>
-      depth[(Math.min(rows - 1, Math.max(0, r)) * cols + Math.min(cols - 1, Math.max(0, c))) * 4] / 255;
+      this.depth[Math.min(rows - 1, Math.max(0, r)) * cols + Math.min(cols - 1, Math.max(0, c))];
 
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         const i = r * cols + c;
-        const px = i * 4;
-        // A little jitter breaks the screen-door regularity of the grid.
-        position[i * 3] = (c + 0.5 + (Math.random() - 0.5) * 0.4) / cols;
-        position[i * 3 + 1] = (r + 0.5 + (Math.random() - 0.5) * 0.4) / rows;
-        position[i * 3 + 2] = depth[px] / 255;
-        color[i * 3] = photo[px] / 255;
-        color[i * 3 + 1] = photo[px + 1] / 255;
-        color[i * 3 + 2] = photo[px + 2] / 255;
+        position[i * 3] = (c + 0.5) / cols;
+        position[i * 3 + 1] = (r + 0.5) / rows;
+        position[i * 3 + 2] = this.depth[i];
+        color[i * 3] = photo[i * 4] / 255;
+        color[i * 3 + 1] = photo[i * 4 + 1] / 255;
+        color[i * 3 + 2] = photo[i * 4 + 2] / 255;
         grad[i * 2] = Math.max(Math.abs(z(c + 1, r) - z(c, r)), Math.abs(z(c - 1, r) - z(c, r)));
         grad[i * 2 + 1] = Math.max(Math.abs(z(c, r + 1) - z(c, r)), Math.abs(z(c, r - 1) - z(c, r)));
         // Gaussian-ish scatter for the unscanned noise volume.
@@ -148,6 +205,12 @@ export class PortraitCloud {
     this.scanTex.magFilter = THREE.LinearFilter;
     this.scanTex.needsUpdate = true;
 
+    // Raw sRGB in, raw sRGB out — the shader writes colours untouched.
+    this.photoTex = new THREE.Texture(image);
+    this.photoTex.colorSpace = THREE.NoColorSpace;
+    this.photoTex.anisotropy = 4;
+    this.photoTex.needsUpdate = true;
+
     const material = new THREE.ShaderMaterial({
       vertexShader: vertex,
       fragmentShader: fragment,
@@ -163,6 +226,8 @@ export class PortraitCloud {
         uScan: { value: this.scanTex },
         uAccent: { value: new THREE.Vector3(0.95, 0.69, 0.28) },
         uTilt: { value: new THREE.Vector2() },
+        uPhoto: { value: this.photoTex },
+        uCell: { value: new THREE.Vector2(1 / cols, 1 / rows) },
       },
     });
 
@@ -179,7 +244,7 @@ export class PortraitCloud {
   depthAt(u: number, v: number) {
     const c = Math.min(this.cols - 1, Math.max(0, Math.floor(u * this.cols)));
     const r = Math.min(this.rows - 1, Math.max(0, Math.floor(v * this.rows)));
-    return this.depth[(r * this.cols + c) * 4] / 255;
+    return this.depth[r * this.cols + c];
   }
 
   /** Arms every row the light plane crossed between two laser positions. */
@@ -213,5 +278,6 @@ export class PortraitCloud {
     this.points.geometry.dispose();
     this.points.material.dispose();
     this.scanTex.dispose();
+    this.photoTex.dispose();
   }
 }

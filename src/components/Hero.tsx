@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Pause, Play } from "lucide-react";
 import { profile, hero } from "../data/content";
 import { segment, useScrollProgress } from "../hooks/useScrollProgress";
@@ -28,6 +28,31 @@ export function Hero() {
 
   const onReady = useCallback(() => setLive(true), []);
 
+  // The page ships the light 1200px portrait (fast LCP). Once it has loaded,
+  // swap in the full-resolution original wherever the opened-up frame would
+  // otherwise show it upscaled — dense screens, wide viewports.
+  const [photo, setPhoto] = useState<string>(profile.portrait);
+  useEffect(() => {
+    const frameW = Math.min(window.innerWidth * 0.94, 1680);
+    const shown = Math.max(frameW, window.innerHeight * 0.84 * 0.7467);
+    if (shown * window.devicePixelRatio <= 1250) return;
+    let cancelled = false;
+    const swap = () => {
+      const img = new Image();
+      img.src = profile.portraitFull;
+      img
+        .decode()
+        .then(() => !cancelled && setPhoto(profile.portraitFull))
+        .catch(() => {});
+    };
+    if (document.readyState === "complete") swap();
+    else window.addEventListener("load", swap, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", swap);
+    };
+  }, []);
+
   return (
     <section id="intro" className="relative">
       {/* Scan stage: a robot arm laser-scans the portrait into a point cloud;
@@ -56,7 +81,7 @@ export function Hero() {
           <div ref={frameRef} className="hero-frame-wrap">
             <figure className="hero-frame">
               <img
-                src={profile.portrait}
+                src={photo}
                 alt={profile.portraitAlt}
                 width={1200}
                 height={1607}

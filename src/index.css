@@ -589,6 +589,20 @@
   opacity: calc(1 - var(--p, 0) * 8);
 }
 
+/* Never show the photo larger than it was shot: on dense screens the opened
+   frame stays within the original's 1792 device pixels, so the face stays
+   crisp instead of being upscaled. */
+@media (min-resolution: 1.5dppx) {
+  .hero-pin {
+    --frame-wmax: min(94vw, 1180px);
+  }
+}
+@media (min-resolution: 2dppx) {
+  .hero-pin {
+    --frame-wmax: min(94vw, 896px);
+  }
+}
+
 @media (max-width: 640px) {
   .hero-pin {
     --frame-w0: 66vw;
@@ -673,29 +687,139 @@
   }
 }
 
-/* ---- Work: faint domain line-art (fallback stage + mobile) ---- */
-.project-motif {
-  position: absolute;
-  inset: 0 0 0 auto;
-  width: clamp(180px, 40%, 380px);
-  height: 100%;
-  color: var(--color-line);
-  opacity: 0.7;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to left, #000 30%, transparent 94%);
-  mask-image: linear-gradient(to left, #000 30%, transparent 94%);
-  transition: color 0.45s var(--ease-out-quart),
-    opacity 0.45s var(--ease-out-quart);
+/* ============================================================
+   Work — "Exhibits". Copy scrolls in one column while a sticky stage
+   draws the project being read; on small screens the stage is a band
+   pinned under the nav.
+   ============================================================ */
+.exhibits {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
-.group:hover .project-motif {
+.exhibit-stage-wrap {
+  position: sticky;
+  top: 4rem;
+  z-index: 2;
+  order: -1;
+  height: 42svh;
+  margin-inline: -1.5rem;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-line);
+}
+.exhibit-stage {
+  position: relative;
+  height: 100%;
+}
+.exhibit-canvas {
+  position: absolute;
+  inset: 0;
+}
+.exhibit-step {
+  display: flex;
+  align-items: center;
+  min-height: 64svh;
+  padding-block: 3.5rem;
+}
+.exhibit-copy {
+  transition: opacity 0.6s var(--ease-out-quart);
+}
+.js .exhibit-step:not([data-active]) .exhibit-copy {
+  opacity: 0.28;
+}
+.exhibit-num {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  line-height: 0.78;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-line);
+  transition: color 0.5s var(--ease-out-quart);
+}
+.exhibit-step[data-active] .exhibit-num {
   color: var(--color-accent);
-  opacity: 1;
+}
+
+/* Stage read-outs. */
+.exhibit-hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.6;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  font-variant-numeric: tabular-nums;
+}
+.exhibit-hud-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+}
+.exhibit-hud [data-hud] {
+  /* Live values read as data: lower case, so units stay correct (µg/m³). */
+  color: var(--color-ink);
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+.exhibit-hint {
+  color: var(--color-accent);
+}
+.exhibit-stage .crop-marks {
+  --o: -1px;
+  --l: 14px;
+  --c: var(--color-faint);
+}
+/* 2D fallback (no WebGL / reduced motion). */
+.exhibit-motif {
+  position: absolute;
+  inset: 16% 12%;
+  width: 76%;
+  height: 68%;
+  color: var(--color-accent);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .group:hover .project-motif :is(path, line, rect, circle):not([stroke-dasharray]) {
-    animation: motif-draw 0.9s var(--ease-out-quart) both;
+  .exhibit-motif :is(path, line, rect, circle):not([stroke-dasharray]) {
+    animation: motif-draw 1.1s var(--ease-out-quart) both;
   }
 }
+
+@media (min-width: 1024px) {
+  .exhibits {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+  }
+  .exhibit-stage-wrap {
+    order: 0;
+    top: 5.5rem;
+    height: calc(100svh - 7.5rem);
+    margin-inline: 0;
+    background: none;
+    border: 0;
+  }
+  .exhibit-stage {
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    background: color-mix(in oklch, var(--surface) 45%, transparent);
+  }
+  .exhibit-step {
+    min-height: 74svh;
+  }
+  /* Let the last exhibit centre while the stage is still pinned. */
+  .exhibit-steps {
+    padding-bottom: 14svh;
+  }
+}
+
+/* Domain line-art drawn on in the 2D fallback. */
 @keyframes motif-draw {
   from {
     stroke-dasharray: 300;

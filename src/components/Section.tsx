@@ -10,8 +10,8 @@ type Props = {
   title: ReactNode;
   intro?: ReactNode;
   children: ReactNode;
-  /** Extra classes on the inner container (e.g. a wider max-width). */
-  className?: string;
+  /** A wider measure for sections with a stage beside the copy. */
+  wide?: boolean;
 };
 
 const total = String(nav.length).padStart(2, "0");
@@ -20,10 +20,12 @@ const total = String(nav.length).padStart(2, "0");
  * A numbered editorial section. The 01–07 markers are a deliberate,
  * site-wide sequence (mirrored in the nav), set on a ruled header line.
  */
-export function Section({ id, index, label, title, intro, children, className = "" }: Props) {
+export function Section({ id, index, label, title, intro, children, wide = false }: Props) {
   return (
     <section id={id} className="scroll-mt-24 border-t border-line">
-      <div className={`mx-auto w-full max-w-[72rem] px-6 py-20 md:px-10 md:py-32 ${className}`}>
+      <div
+        className={`mx-auto w-full px-6 py-20 md:px-10 md:py-32 ${wide ? "max-w-[84rem]" : "max-w-[72rem]"}`}
+      >
         <Reveal>
           <div className="flex items-center gap-4">
             <span className="label tabular-nums text-accent">{index}</span>

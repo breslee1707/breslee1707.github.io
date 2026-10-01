@@ -3,8 +3,10 @@ import type { ProjectMotif as MotifName } from "../data/content";
 
 type Props = {
   name: MotifName;
-  /** Positioning/opacity/mask are owned by the caller via `.project-motif`. */
+  /** Positioning/opacity/mask are owned by the caller. */
   className?: string;
+  /** SVG preserveAspectRatio — right-aligned by default. */
+  align?: string;
 };
 
 /**
@@ -12,7 +14,7 @@ type Props = {
  * so the parent can fade it (line → accent on hover); nodes fill with the page
  * background so edges read as passing behind them. Purely decorative.
  */
-export function ProjectMotif({ name, className = "" }: Props) {
+export function ProjectMotif({ name, className = "", align = "xMaxYMid meet" }: Props) {
   return (
     <svg
       className={className}
@@ -22,7 +24,7 @@ export function ProjectMotif({ name, className = "" }: Props) {
       strokeWidth={3}
       strokeLinecap="round"
       strokeLinejoin="round"
-      preserveAspectRatio="xMaxYMid meet"
+      preserveAspectRatio={align}
       aria-hidden
     >
       {MOTIFS[name]}
@@ -114,26 +116,20 @@ const MOTIFS: Record<MotifName, ReactNode> = {
     </>
   ),
 
-  // Sensor radiating signal waves with scattered particles (AIoT air monitor).
-  sensor: (
+  // Smartwatch reading a heartbeat, with an alert broadcasting from it.
+  wearable: (
     <>
-      <path d="M70 110 A30 30 0 0 1 100 140" />
-      <path d="M70 90 A50 50 0 0 1 120 140" />
-      <path d="M70 70 A70 70 0 0 1 140 140" />
-      <path d="M70 50 A90 90 0 0 1 160 140" />
-      <circle cx={70} cy={140} r={6} fill="var(--color-bg)" />
-      {(
-        [
-          [150, 60],
-          [175, 40],
-          [196, 80],
-          [165, 96],
-          [206, 54],
-          [186, 112],
-        ] as const
-      ).map(([x, y], i) => (
-        <circle key={`p${i}`} cx={x} cy={y} r={3} fill="currentColor" stroke="none" />
-      ))}
+      {/* straps */}
+      <path d="M126 58 L131 18 H161 L166 58" />
+      <path d="M126 126 L131 166 H161 L166 126" />
+      {/* case, crown and the heartbeat on the face */}
+      <rect x={112} y={56} width={68} height={72} rx={16} fill="var(--color-bg)" />
+      <rect x={180} y={80} width={6} height={16} rx={2} />
+      <path d="M120 94 H134 L139 80 L146 108 L152 86 L156 94 H172" />
+      {/* alert going out */}
+      <path d="M200 74 A26 26 0 0 1 200 110" />
+      <path d="M212 64 A40 40 0 0 1 212 120" />
+      <path d="M92 74 A26 26 0 0 0 92 110" />
     </>
   ),
 };

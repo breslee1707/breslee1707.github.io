@@ -30,7 +30,8 @@ Portfolio: https://breslee1707.github.io/
 
 ## Recognition
 
-- 1st Prize, Advantech AIoT InnoWorks 2022 (40,000,000 VND)
+- 1st Prize, Advantech AIoT InnoWorks 2022 (40,000,000 VND) — a smartwatch-based
+  stroke early-warning system using heart-rate monitoring and fall detection
 - Top graduation project score, Robotics & AI program, HCMUTE,
   semester 2 of 2024–2025
 
