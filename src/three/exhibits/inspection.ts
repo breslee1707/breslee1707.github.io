@@ -170,13 +170,6 @@ export class InspectionExhibit implements Exhibit {
     this.defect.visible = this.seen > 0.15 || Math.sin(this.t * 6) > 0.6;
   }
 
-  readout() {
-    if (this.seen > 0.5) return "defect · scratch 0.62 → quarantine";
-    const j = this.arm.readout();
-    const f = (d: number) => `${d < 0 ? "−" : "+"}${Math.abs(d).toFixed(1)}°`;
-    return `ik · J1 ${f(j[0])}  J2 ${f(j[1])}  J3 ${f(j[2])}`;
-  }
-
   dispose() {
     this.arm.dispose();
     disposeGeometries(this.group);

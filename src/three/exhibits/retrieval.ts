@@ -50,7 +50,6 @@ export class RetrievalExhibit implements Exhibit {
   private readonly drawn: THREE.LineSegments[] = [];
   private readonly linkMat: THREE.LineBasicMaterial;
   private t = 0;
-  private status = "";
 
   constructor() {
     const { inks } = this;
@@ -175,19 +174,6 @@ export class RetrievalExhibit implements Exhibit {
     });
     keepAttr.needsUpdate = true;
     this.keepLinks.visible = rPhase > 0.2 && out < 1;
-
-    this.status =
-      k < 1.0
-        ? "embed query · 1,536-d"
-        : k < 2.2
-          ? `vector_search · top_k ${TOP_K} · cosine`
-          : k < 3.6
-            ? `rerank · keep ${KEEP} of ${TOP_K}`
-            : "answer · grounded in 3 chunks";
-  }
-
-  readout() {
-    return this.status;
   }
 
   dispose() {

@@ -14,8 +14,6 @@ import { RobotArm } from "./robotArm";
 type Props = {
   /** The DOM frame the cloud is laid over (kept in sync every frame). */
   frameRef: RefObject<HTMLDivElement | null>;
-  /** Container of the [data-hud] read-outs. */
-  hudRef: RefObject<HTMLDivElement | null>;
   /** Hero scroll progress 0→1, written by useScrollProgress. */
   progress: RefObject<number>;
   paused: boolean;
@@ -57,7 +55,7 @@ export default function HeroScan(props: Props) {
 const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b);
 const smoother = (x: number) => x * x * x * (x * (x * 6 - 15) + 10);
 
-function Scene({ frameRef, hudRef, progress, onReady }: Props) {
+function Scene({ frameRef, progress, onReady }: Props) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
@@ -77,7 +75,6 @@ function Scene({ frameRef, hudRef, progress, onReady }: Props) {
     laserOn: 0,
     rotX: 0,
     rotY: 0,
-    hud: 0,
   });
 
   // World units = CSS pixels at z = 0.
@@ -278,13 +275,6 @@ function Scene({ frameRef, hudRef, progress, onReady }: Props) {
       fan.hide();
     }
 
-    // 6) Read-outs, ~10 Hz.
-    s.hud += dt;
-    if (s.hud > 0.1) {
-      s.hud = 0;
-      writeHud(hudRef.current, cloud, s.laserOn > 0.3 ? s.laserV : null, armOn ? arm.readout() : null);
-    }
-
     if (!s.ready) {
       s.ready = true;
       onReady();
@@ -308,27 +298,3 @@ const V_WRIST = new THREE.Vector3();
 const V_EMIT = new THREE.Vector3();
 const V_A = new THREE.Vector3();
 const V_B = new THREE.Vector3();
-
-const signed = (deg: number) =>
-  `${deg < 0 ? "−" : "+"}${Math.abs(deg).toFixed(1).padStart(5, "0")}°`;
-
-function writeHud(
-  root: HTMLElement | null,
-  cloud: PortraitCloud,
-  laserV: number | null,
-  joints: number[] | null,
-) {
-  if (!root) return;
-  const set = (key: string, text: string) => {
-    const el = root.querySelector(`[data-hud="${key}"]`);
-    if (el && el.textContent !== text) el.textContent = text;
-  };
-  const pct = Math.round(cloud.scanned * 100);
-  set("pts", `${(cloud.cols * cloud.rows).toLocaleString("en-US")} pts · depth segmented`);
-  set("laser", laserV === null ? "Laser idle" : `Laser y ${clamp(laserV).toFixed(3)}`);
-  set("scanned", `Scanned ${pct}%`);
-  set(
-    "joints",
-    joints ? `J1 ${signed(joints[0])} J2 ${signed(joints[1])} J3 ${signed(joints[2])}` : "",
-  );
-}

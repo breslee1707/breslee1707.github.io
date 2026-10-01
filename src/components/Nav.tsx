@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { nav, profile, site } from "../data/content";
+import { nav, profile } from "../data/content";
 import { useScrollSpy } from "../hooks/useScrollSpy";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -52,9 +52,6 @@ export function Nav() {
           className="font-display text-[0.95rem] font-bold tracking-tight"
         >
           {profile.name}
-          <span className="ml-2 hidden align-middle text-faint xl:inline label">
-            {site.volume}
-          </span>
         </a>
 
         {/* Desktop nav */}

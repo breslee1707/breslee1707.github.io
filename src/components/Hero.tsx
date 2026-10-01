@@ -15,7 +15,6 @@ export function Hero() {
   const [live, setLive] = useState(false);
   const [paused, setPaused] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
-  const hudRef = useRef<HTMLDivElement>(null);
 
   // One scroll value, three overlapping phases (see .hero-stage in index.css).
   const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>({
@@ -103,7 +102,6 @@ export function Hero() {
             <Suspense fallback={null}>
               <HeroScan
                 frameRef={frameRef}
-                hudRef={hudRef}
                 progress={progress}
                 paused={paused}
                 onReady={onReady}
@@ -111,41 +109,19 @@ export function Hero() {
             </Suspense>
           ) : null}
 
-          {/* Instrument read-outs; the scene writes live values into [data-hud]. */}
-          <div ref={hudRef} className="hero-hud">
-            <div className="hud-tl" aria-hidden>
-              <span className="hud-accent">■</span> {hero.scan.id}
-              <br />
-              <span data-hud="pts">1792 × 2400 px</span>
-            </div>
-            <div className="hud-tr" aria-hidden>
-              {hero.scan.place}
-              <br />
-              {hero.scan.coords}
-            </div>
-            {live ? (
-              <div className="hud-bl">
-                <span aria-hidden>
-                  <span data-hud="laser">Laser —</span> ·{" "}
-                  <span data-hud="scanned">Scanned 0%</span>
-                </span>
-                <br />
-                <span data-hud="joints" className="hud-joints" aria-hidden>
-                  IK 6-DOF
-                </span>
-                <br />
-                <button
-                  type="button"
-                  className="hero-pause"
-                  onClick={() => setPaused((v) => !v)}
-                  aria-pressed={paused}
-                >
-                  {paused ? <Play size={11} aria-hidden /> : <Pause size={11} aria-hidden />}
-                  {paused ? "Resume motion" : "Pause motion"}
-                </button>
-              </div>
-            ) : null}
-          </div>
+          {/* The scan moves on its own, so it can always be stopped. */}
+          {live ? (
+            <button
+              type="button"
+              className="hero-pause"
+              onClick={() => setPaused((v) => !v)}
+              aria-label="Pause motion"
+              aria-pressed={paused}
+              title={paused ? "Resume motion" : "Pause motion"}
+            >
+              {paused ? <Play size={13} aria-hidden /> : <Pause size={13} aria-hidden />}
+            </button>
+          ) : null}
 
           {reduced ? null : (
             <div className="hero-cue label" aria-hidden>

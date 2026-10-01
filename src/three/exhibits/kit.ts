@@ -33,8 +33,6 @@ export interface Exhibit {
   setPresence(v: number): void;
   update(ctx: FrameCtx): void;
   setPalette(p: Palette): void;
-  /** One live line for the stage HUD. */
-  readout(): string;
   dispose(): void;
 }
 

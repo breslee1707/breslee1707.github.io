@@ -523,61 +523,29 @@
   display: block;
 }
 
-/* Instrument read-outs in the four corners. */
-.hero-hud {
-  position: absolute;
-  inset: 5.25rem clamp(1rem, 3vw, 2.25rem) 1.6rem;
-  z-index: 4;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto 1fr auto;
-  pointer-events: none;
-  opacity: calc(1 - var(--p-expand, 0) * 2.5);
-}
-.hero-hud > * {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  line-height: 1.7;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-faint);
-  font-variant-numeric: tabular-nums;
-}
-.hero-hud .hud-tr {
-  text-align: right;
-}
-.hero-hud .hud-bl {
-  grid-row: 3;
-  align-self: end;
-}
-.hero-hud .hud-br {
-  grid-row: 3;
-  align-self: end;
-  text-align: right;
-}
-.hero-hud b {
-  font-weight: 500;
-  color: var(--color-ink);
-}
-.hero-hud .hud-accent {
-  color: var(--color-accent);
-}
+/* Motion control for the live scan; fades out with the stage. */
 .hero-pause {
-  pointer-events: auto;
-  margin-top: 0.5rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.55rem;
+  position: absolute;
+  z-index: 4;
+  left: clamp(1rem, 3vw, 2.25rem);
+  bottom: 1.5rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
   border: 1px solid var(--color-line);
-  border-radius: 4px;
+  border-radius: 999px;
   color: var(--color-muted);
   background: color-mix(in srgb, var(--bg) 70%, transparent);
+  opacity: calc(1 - var(--p-expand, 0) * 2.5);
   transition: color 0.2s, border-color 0.2s;
 }
 .hero-pause:hover {
   color: var(--color-ink);
   border-color: var(--color-accent);
+}
+.hero-pause:focus-visible {
+  opacity: 1;
 }
 
 .hero-cue {
@@ -614,11 +582,6 @@
     --name-size: clamp(2.4rem, 13.6vw, 4rem);
     --tuck: 0.1;
   }
-  .hero-hud {
-    inset: 5rem 1rem 1.25rem;
-  }
-  .hero-hud .hud-tr,
-  .hero-hud .hud-joints,
   .hero-cue {
     display: none;
   }
@@ -749,38 +712,6 @@
   color: var(--color-accent);
 }
 
-/* Stage read-outs. */
-.exhibit-hud {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0.9rem 1.5rem;
-  pointer-events: none;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  line-height: 1.6;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--color-faint);
-  font-variant-numeric: tabular-nums;
-}
-.exhibit-hud-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.25rem 1.5rem;
-}
-.exhibit-hud [data-hud] {
-  /* Live values read as data: lower case, so units stay correct (µg/m³). */
-  color: var(--color-ink);
-  text-transform: none;
-  letter-spacing: 0.06em;
-}
-.exhibit-hint {
-  color: var(--color-accent);
-}
 .exhibit-stage .crop-marks {
   --o: -1px;
   --l: 14px;
@@ -872,12 +803,6 @@
   background:
     repeating-linear-gradient(180deg, var(--pad) 0 9px, transparent 9px 19px) left / 5px 100% no-repeat,
     repeating-linear-gradient(180deg, var(--pad) 0 9px, transparent 9px 19px) right / 5px 100% no-repeat;
-}
-.die-mark {
-  position: absolute;
-  left: 3.2rem;
-  bottom: 1.15rem;
-  font-size: 0.62rem;
 }
 /* The die itself: a faint silicon grid under the blocks. */
 .die-core {
@@ -1105,17 +1030,6 @@
 /* ============================================================
    Contact & footer.
    ============================================================ */
-.local-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  margin-right: 0.7em;
-  vertical-align: 0.1em;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
-  animation: rail-pulse 2.6s var(--ease-out-quart) infinite;
-}
 .contact-row {
   position: relative;
   display: flex;
@@ -1172,11 +1086,6 @@
   line-height: 1.22;
   letter-spacing: -0.04em;
   text-transform: uppercase;
-}
-@media (prefers-reduced-motion: reduce) {
-  .local-dot {
-    animation: none;
-  }
 }
 
 /* ============================================================

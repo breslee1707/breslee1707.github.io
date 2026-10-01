@@ -6,7 +6,7 @@ Live: https://breslee1707.github.io/
 
 ## Design
 
-*"Ochre & Ink"* — a technical catalogue printed on the ochre wall from the portrait: warm ink and paper grounds, one ochre accent, Archivo (with its width axis) for display, Spectral for text, JetBrains Mono for instrument read-outs. Every 3D moment draws something the work actually does:
+*"Ochre & Ink"* — a technical catalogue printed on the ochre wall from the portrait: warm ink and paper grounds, one ochre accent, Archivo (with its width axis) for display, Spectral for text, JetBrains Mono for labels. Every 3D moment draws something the work actually does:
 
 - **Hero — Scan 01.** A six-axis arm (procedural three.js, analytic IK) sweeps a line laser over a depth-mapped point cloud of the portrait. Scrolling resolves it into the real photograph, which then opens up.
 - **Work — Exhibits 01–05.** A sticky stage draws each project live: the agent loop, agentic retrieval, the arm inspecting a part, a LIDAR rover mapping a room, the stroke early-warning smartwatch.

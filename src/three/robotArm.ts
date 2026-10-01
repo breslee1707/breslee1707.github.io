@@ -216,16 +216,6 @@ export class RobotArm {
       new THREE.Vector3(-0.075, L1 - 0.04, 0),
     ]);
     add(this.j2, new THREE.TubeGeometry(run, 20, 0.012, 8, false), pal.rubber);
-    // Nameplate decals on both faces.
-    const decal = this.decal(own, variant);
-    if (decal) {
-      for (const side of [1, -1]) {
-        const plane = new THREE.Mesh(own(new THREE.PlaneGeometry(0.1, 0.034)), decal);
-        plane.position.set(0, L1 * 0.36, side * 0.0765);
-        plane.rotation.set(0, side > 0 ? 0 : Math.PI, Math.PI / 2);
-        this.j2.add(plane);
-      }
-    }
 
     // ---- J3 elbow ----
     this.j3.position.set(0, L1, 0);
@@ -258,31 +248,6 @@ export class RobotArm {
     this.tool.add(this.emitter);
     // Status LED on the turret.
     add(this.j1, new THREE.SphereGeometry(0.009, 12, 12), pal.glow, [0.11, 0.26, 0.07]);
-  }
-
-  /** "GH-6" nameplate, drawn once to a canvas texture (studio only). */
-  private decal(own: <T extends { dispose(): void }>(x: T) => T, variant: ArmVariant) {
-    if (variant !== "studio") return null;
-    const c = document.createElement("canvas");
-    c.width = 512;
-    c.height = 174;
-    const g = c.getContext("2d");
-    if (!g) return null;
-    g.fillStyle = "#1c1916";
-    g.fillRect(0, 0, c.width, c.height);
-    g.fillStyle = "#e9e2d4";
-    g.font = '600 74px "JetBrains Mono Variable", ui-monospace, monospace';
-    g.textBaseline = "middle";
-    g.fillText("GH-6", 34, 70);
-    g.font = '500 30px "JetBrains Mono Variable", ui-monospace, monospace';
-    g.fillStyle = "#b5ab9a";
-    g.fillText("6-AXIS · SCAN", 36, 132);
-    g.fillStyle = "#f2af48";
-    g.fillRect(440, 34, 40, 40);
-    const tex = own(new THREE.CanvasTexture(c));
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 4;
-    return own(new THREE.MeshStandardMaterial({ map: tex, roughness: 0.5, metalness: 0.1 }));
   }
 
   /**
@@ -348,14 +313,6 @@ export class RobotArm {
     return Q3.copy(parent).multiply(world);
   }
 
-  /** Joint read-outs in degrees, J1–J6 (J4–J6 from the wrist rotation). */
-  readout(): number[] {
-    E1.setFromQuaternion(this.tool.quaternion, "YXZ");
-    return [this.q.yaw, this.q.shoulder, this.q.elbow, E1.y, E1.x, E1.z].map(
-      (r) => (r * 180) / Math.PI,
-    );
-  }
-
   dispose() {
     this.owned.forEach((o) => o.dispose());
   }
@@ -370,4 +327,3 @@ const Q1 = new THREE.Quaternion();
 const Q2 = new THREE.Quaternion();
 const Q3 = new THREE.Quaternion();
 const M1 = new THREE.Matrix4();
-const E1 = new THREE.Euler();

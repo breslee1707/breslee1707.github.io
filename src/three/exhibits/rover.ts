@@ -115,7 +115,6 @@ export class RoverExhibit implements Exhibit {
   private u = 0;
   private angle = 0;
   private head = 0;
-  private mapped = 0;
 
   constructor() {
     const { inks } = this;
@@ -285,18 +284,12 @@ export class RoverExhibit implements Exhibit {
         hitPos.setXYZ(this.head, hx, LIDAR_Y, hz);
         hitBorn.setX(this.head, this.t);
         this.head = (this.head + 1) % MAP_SIZE;
-        this.mapped = Math.min(MAP_SIZE, this.mapped + 1);
       }
     }
     rayAttr.needsUpdate = true;
     rayBorn.needsUpdate = true;
     hitPos.needsUpdate = true;
     hitBorn.needsUpdate = true;
-  }
-
-  readout() {
-    const live = Math.round(Math.min(this.mapped, RAYS_PER_REV * REV * MAP_LIFE * 0.8));
-    return `lidar · ${RAYS_PER_REV} rays/rev · map ${live.toLocaleString("en-US")} pts`;
   }
 
   dispose() {
